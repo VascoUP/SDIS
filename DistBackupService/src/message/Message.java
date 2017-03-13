@@ -1,4 +1,4 @@
-package service;
+package message;
 
 public class Message {
 	private String version;

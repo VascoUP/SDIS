@@ -17,11 +17,10 @@ public class SLMCast {
 	private final MulticastSocket mcast_socket;
 	private final InetAddress mcast_address;
 	
-	
-	public SLMCast() throws IOException {
-		mcast_port = 2015;
+	public SLMCast(String addr, int port) throws IOException {
+		mcast_port = port;
 		
-		mcast_address = InetAddress.getByName("localhost");
+		mcast_address = InetAddress.getByName(addr);
 		
 		mcast_socket = new MulticastSocket(mcast_port);
 		mcast_socket.joinGroup(mcast_address);
