@@ -13,6 +13,18 @@ public class Message {
 		this.fileId = fileId;
 	}
 	
+	public int getOffset() {
+		return 0;
+	}
+	
+	public int getLength() {
+		return 64000;
+	}
+	
+	public byte[] getMessage() {
+		return ("" + this).getBytes();
+	}
+	
 	@Override
 	public String toString() {
 		return messageType + " " + version + " " + senderId + " " + fileId;

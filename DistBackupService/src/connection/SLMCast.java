@@ -6,6 +6,8 @@ import java.net.InetAddress;
 import java.net.MulticastSocket;
 import java.net.SocketTimeoutException;
 
+import message.Message;
+
 /**
  * Serverless multicast group
  * @author vasco
@@ -37,7 +39,13 @@ public class SLMCast {
     }
     
     
-    public void send(DatagramPacket packet) throws IOException {
+    public void send(Message message) throws IOException {
+    	DatagramPacket packet = new DatagramPacket(
+    			message.getMessage(),
+    			message.getOffset(),
+				message.getLength(),
+				mcast_address,
+				mcast_port);
     	mcast_socket.send(packet);
     }
     

@@ -2,12 +2,12 @@ package message.backup;
 
 import message.Message;
 
-public class ChunkStored extends Message {
+public class StoreChunkMessage extends Message {
 
 	private int chunkId;
 	private String chunk;
 
-	public ChunkStored(String version, int senderId, int fileId, int chunkId, String chunk) {
+	public StoreChunkMessage(String version, int senderId, int fileId, int chunkId, String chunk) {
 		super(ChunkConst.ANSWER_MESSAGE_TYPE, version, senderId, fileId);
 		
 		this.chunkId = chunkId;
