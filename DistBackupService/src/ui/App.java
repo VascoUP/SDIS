@@ -7,7 +7,7 @@ import service.backup.WaitBackUp;
 
 public class App {
 
-	public static void main(String[] args) throws IOException {
+	public static void main(String[] args) throws IOException, InterruptedException {
 		if(args.length != 1)
 			return ;
 		if( args[0].equals("BACKUP") )
@@ -21,7 +21,7 @@ public class App {
 		b.backup_file();
 	}
 	
-	private static void wait_backup() throws IOException {
+	private static void wait_backup() throws IOException, InterruptedException {
 		WaitBackUp w = new WaitBackUp();
 		w.backup_file();
 	}

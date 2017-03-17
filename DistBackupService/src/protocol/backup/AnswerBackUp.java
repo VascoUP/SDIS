@@ -6,16 +6,17 @@ import java.net.SocketTimeoutException;
 
 import connection.ConnectionConstants;
 import connection.ReceivingSocekt;
-import connection.SLMCast;
 import connection.SendingSocket;
 import message.Message;
-import message.backup.StoredChunkMessage;
+import message.backup.StoreChunkMessage;
 import protocol.Answer;
 import protocol.Protocol;
 
 public class AnswerBackUp extends Protocol implements Answer {
 
-	private SLMCast mdb;
+	private ReceivingSocekt mdb;
+	private SendingSocket mc;
+	
 	private Message message;
 	
 	public AnswerBackUp() throws IOException {
@@ -23,25 +24,24 @@ public class AnswerBackUp extends Protocol implements Answer {
 		
 		mdb = new ReceivingSocekt(ConnectionConstants.MDB_GROUP, ConnectionConstants.MDB_GROUP_PORT);
 		mc = new SendingSocket(ConnectionConstants.MC_GROUP, ConnectionConstants.MC_GROUP_PORT);
-		message = new StoredChunkMessage(
-				/*version*/"1.0", 
+		message = new StoreChunkMessage(
+				/*version*/	"1.0", 
 				/*senderId*/1, 
-				/*fileId*/1, 
-				/*hunkId*/1);
+				/*fileId*/	1, 
+				/*hunkId*/	1, 
+				/*body*/	"SHI WHY AT SHINE");
 	}
 
 	
 	
 	@Override
 	public void send() throws IOException {
-		System.out.println("Send answer");
-		mc.send("hello dankness".getBytes());
+		mc.send("" + message);
 	}
 
 	@Override
 	public String receive() throws SocketTimeoutException, IOException {
-		System.out.println("Receive request");
 		DatagramPacket packet = mdb.receive();
-		return packet.toString();
+		return new String(packet.getData());
 	}
 }

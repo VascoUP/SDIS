@@ -15,6 +15,8 @@ import protocol.Request;
 public class RequestBackUp extends Protocol implements Request {
 
 	private SendingSocket mdb;
+	private ReceivingSocekt mc;
+	
 	private Message message;
 	
 	public RequestBackUp() throws IOException {
@@ -34,14 +36,12 @@ public class RequestBackUp extends Protocol implements Request {
 	
 	@Override
 	public void send() throws IOException {
-		System.out.println("Send answer");
 		mdb.send("" + message);
 	}
 
 	@Override
 	public String receive() throws SocketTimeoutException, IOException {
-		System.out.println("Receive request");
 		DatagramPacket packet = mc.receive();
-		return packet.toString();
+		return new String(packet.getData());
 	}
 }
