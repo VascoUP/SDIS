@@ -2,6 +2,7 @@ package protocol.backup;
 
 import java.io.IOException;
 import java.net.DatagramPacket;
+import java.net.SocketException;
 import java.net.SocketTimeoutException;
 
 import connection.ConnectionConstants;
@@ -25,14 +26,16 @@ public class RequestBackUp extends Protocol implements Request {
 		mdb = new SendingSocket(ConnectionConstants.MDB_GROUP, ConnectionConstants.MDB_GROUP_PORT);
 		mc = new ReceivingSocekt(ConnectionConstants.MC_GROUP, ConnectionConstants.MC_GROUP_PORT);
 		message = new StoreChunkMessage(
-				/*version*/"1.0", 
+				/*version*/	"1.0", 
 				/*senderId*/1, 
-				/*fileId*/1, 
-				/*hunkId*/1, 
-				/*body*/"SHI WHY AT SHINE");
+				/*fileId*/	1, 
+				/*chunkId*/	1, 
+				/*body*/	"SHI WHY AT SHINE");
 	}
 	
-	
+	public void socketTimeout(int t) throws SocketException {
+		mc.setTimeout(t);
+	}
 	
 	@Override
 	public void send() throws IOException {

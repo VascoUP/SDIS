@@ -8,7 +8,7 @@ import connection.ConnectionConstants;
 import connection.ReceivingSocekt;
 import connection.SendingSocket;
 import message.Message;
-import message.backup.StoreChunkMessage;
+import message.backup.StoredChunkMessage;
 import protocol.Answer;
 import protocol.Protocol;
 
@@ -24,12 +24,11 @@ public class AnswerBackUp extends Protocol implements Answer {
 		
 		mdb = new ReceivingSocekt(ConnectionConstants.MDB_GROUP, ConnectionConstants.MDB_GROUP_PORT);
 		mc = new SendingSocket(ConnectionConstants.MC_GROUP, ConnectionConstants.MC_GROUP_PORT);
-		message = new StoreChunkMessage(
+		message = new StoredChunkMessage(
 				/*version*/	"1.0", 
 				/*senderId*/1, 
 				/*fileId*/	1, 
-				/*hunkId*/	1, 
-				/*body*/	"SHI WHY AT SHINE");
+				/*chunkId*/	1);
 	}
 
 	

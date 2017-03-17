@@ -17,7 +17,7 @@ public class App {
 	}
 	
 	private static void backup() throws IOException {
-		BackUp b = new BackUp();
+		BackUp b = new BackUp("yomama.pdf");
 		b.backup_file();
 	}
 	

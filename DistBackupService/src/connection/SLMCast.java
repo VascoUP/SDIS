@@ -3,6 +3,7 @@ package connection;
 import java.io.IOException;
 import java.net.InetAddress;
 import java.net.MulticastSocket;
+import java.net.SocketException;
 
 /**
  * Serverless multicast group
@@ -18,6 +19,10 @@ public abstract class SLMCast {
 	public SLMCast(String addr, int port) throws IOException {
 		mcast_port = port;
 		mcast_address = InetAddress.getByName(addr);
+	}
+	
+	public void setTimeout(int timeOut) throws SocketException {
+		mcast_socket.setSoTimeout(timeOut);
 	}
 	
 	public void join() throws IOException {
