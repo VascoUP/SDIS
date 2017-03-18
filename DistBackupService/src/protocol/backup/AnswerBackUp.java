@@ -31,7 +31,11 @@ public class AnswerBackUp extends Protocol implements Answer {
 				/*chunkId*/	1);
 	}
 
-	
+
+	public void close() throws IOException {
+		this.mdb.leave();
+		this.mc.leave();
+	}
 	
 	@Override
 	public void send() throws IOException {

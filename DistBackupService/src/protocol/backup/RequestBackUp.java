@@ -37,6 +37,11 @@ public class RequestBackUp extends Protocol implements Request {
 		mc.setTimeout(t);
 	}
 	
+	public void close() throws IOException {
+		this.mdb.leave();
+		this.mc.leave();
+	}
+	
 	@Override
 	public void send() throws IOException {
 		mdb.send("" + message);

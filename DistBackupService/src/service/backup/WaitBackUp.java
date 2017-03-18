@@ -6,7 +6,7 @@ import java.util.concurrent.TimeUnit;
 
 import protocol.backup.AnswerBackUp;
 
-public class WaitBackUp {
+public class WaitBackUp implements Runnable {
 
 	private AnswerBackUp abu;
 	
@@ -27,6 +27,17 @@ public class WaitBackUp {
 		//Check if it can store
 		//If not, don't send message
 		randomWait();
-		abu.send(); 
+		abu.send();
+		
+		abu.close();
+	}
+
+	@Override
+	public void run() {
+		try {
+			backup_file();
+		} catch (IOException | InterruptedException e) {
+			e.printStackTrace();
+		}
 	}
 }

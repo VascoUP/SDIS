@@ -5,7 +5,7 @@ import java.net.SocketTimeoutException;
 
 import protocol.backup.RequestBackUp;
 
-public class BackUp {
+public class BackUp implements Runnable {
 	private String filePath;
 	private RequestBackUp rbu;
 	
@@ -49,5 +49,18 @@ public class BackUp {
 		
 		//If number of rcv is lower than expected, resend the same chunk
 		//If not, advance to the next one
+		
+		this.rbu.close();
+		
+		
+	}
+
+	@Override
+	public void run() {
+		try {
+			backup_file();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
 	}
 }
