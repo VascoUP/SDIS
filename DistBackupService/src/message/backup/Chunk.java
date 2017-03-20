@@ -1,4 +1,4 @@
-package chunk;
+package message.backup;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -33,7 +33,7 @@ public class Chunk {
  * 
 vector<Chunk>chunks;
 
-byte[] buffer = new byte[MAX_CHUNK_SIZE]; //64000
+byte[] buffer = new byte[Packet_Size]; //64000
 
 try (FileInputStream input = new FileInputStream(filename) {
 
@@ -43,7 +43,7 @@ try (FileInputStream input = new FileInputStream(filename) {
         while ((chunkSize = input.read(buffer)) >= 0) {
 
 		String chunkPathName = chunkID + "-" + filename;
-		byte[] newBuffer = Array.copyOf(buffer, MAX_CHUNK_SIZE);
+		byte[] newBuffer = Array.copyOf(buffer, chunkSize);
                 Chunk chunk =  new Chunk(chunkPathName, chunkID, repdegree, newBuffer);
                 chunks.add(chunk);
 		
