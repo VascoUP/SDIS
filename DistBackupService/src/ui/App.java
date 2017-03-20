@@ -1,81 +1,118 @@
 package ui;
 
 import java.io.IOException;
-import java.util.ArrayList;
 
 import service.backup.BackUp;
 import service.backup.WaitBackUp;
 
-public class App {
-	private static ArrayList<Thread> important_threads = new ArrayList<Thread>();
-	private static ArrayList<Thread> listener_threads = new ArrayList<Thread>();
+public class App {	
+	private static Thread ui_thread;
+	private static UserInterface ui;
+	
+	private static Thread backup_thread;
+	private static BackUp backup;
+	
+	private static Thread wait_backup_thread;
+	private static WaitBackUp wait_backup;
 
 	public static void main(String[] args) {
-		if(args.length != 1)
+		if(args.length != 0)
 			return ;
-		
-		//listeners();
-		
-		if( args[0].equals("BACKUP") )
-			backup();
-		else if( args[0].equals("SERVER") )
-			important_threads.add(wait_backup());
-		
-		wait_threads();
-		close_threads();
+
+		prog();
 	}
 	
-	private static void wait_threads() {
-		System.out.println("Waiting for imp threads...");
-		for( int i = 0; i < important_threads.size(); i++ ) {
-			try {
-				important_threads.get(i).join();
-			} catch (InterruptedException e) {
-				e.printStackTrace();
-			}
+	private static void prog() {
+		init();
+
+		try {
+			ui_thread.join();
+		} catch (InterruptedException e) {
+			e.printStackTrace();
+			end();
+			return ;
 		}
 		
-		System.out.println("Closed imp threads");
+		end();
 	}
+
+
 	
-	private static void close_threads() {
-		for( int i = 0; i < important_threads.size(); i++ )
-			important_threads.get(i).interrupt();
+	public static void init() {
+		ui = new UserInterface();
 		
-		System.out.println("Closed all other threads");	
+		init_wait_backup();
+		init_UI();
 	}
 	
-	private static void listeners() {
-		listener_threads.add(wait_backup());
+	private static void end() {
+		wait_threads();
+		close_threads();
+	}	
+	
+	
+	public static void wait_threads() {
+		end_backup();
 	}
 	
-	private static void backup() {
-		BackUp b = null;
+	public static void close_threads() {
+		end_wait_backup();
+	}
+	
+	
+	public static void init_UI() {
+		ui_thread = new Thread(ui);
+		ui_thread.start();
+	}
+	
+	
+	public static void init_backup() {
 		try {
-			b = new BackUp("yomama.pdf");
+			backup = new BackUp("yomama.pdf");
 		} catch (IOException e) {
 			e.printStackTrace();
 			System.exit(0);
 		}
 		
-		Thread t = new Thread(b);
-		t.start();
-		important_threads.add(t);
+		backup_thread = new Thread(backup);
+		backup_thread.start();
 	}
 	
-	private static Thread wait_backup() {
-		WaitBackUp w = null;
+	public static void end_backup() {
+		if(backup_thread == null )
+			return ;
+		
 		try {
-			w = new WaitBackUp();
+			backup_thread.join();
+		} catch (InterruptedException e) {
+			e.printStackTrace();
+		}
+	}
+
+	
+	public static void init_wait_backup() {
+		wait_backup = null;
+		try {
+			wait_backup = new WaitBackUp();
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 			System.exit(0);
 		}
 		
-		Thread t = new Thread(w);
-		t.start();
-		return t;
+		wait_backup_thread = new Thread(wait_backup);
+		wait_backup_thread.start();
+	}
+
+	public static void end_wait_backup() {
+		wait_backup_thread.interrupt();
+		
+		try {
+			wait_backup.end();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 
 }

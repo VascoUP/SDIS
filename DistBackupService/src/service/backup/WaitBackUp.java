@@ -20,24 +20,29 @@ public class WaitBackUp implements Runnable {
 		TimeUnit.MILLISECONDS.sleep(wait);
 	}
 	
-	public void backup_file() throws IOException, InterruptedException {
-		String rcv = abu.receive();
-		System.out.println(rcv);
+	public void backup_file() throws IOException, InterruptedException  {
+		String rcv = "";
+	
+		rcv = abu.receive();
+		System.out.println("Rcv: " + rcv);
 		
-		//Check if it can store
-		//If not, don't send message
 		randomWait();
-		abu.send();
 		
+		abu.send();
+	}
+	
+	public void end() throws IOException {
 		abu.close();
 	}
 
 	@Override
 	public void run() {
-		try {
-			backup_file();
-		} catch (IOException | InterruptedException e) {
-			e.printStackTrace();
+		while( true ) {
+			try {
+				backup_file();
+			} catch (IOException | InterruptedException e) {
+				return ;
+			}
 		}
 	}
 }

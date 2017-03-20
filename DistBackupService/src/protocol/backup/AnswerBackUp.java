@@ -2,7 +2,6 @@ package protocol.backup;
 
 import java.io.IOException;
 import java.net.DatagramPacket;
-import java.net.SocketTimeoutException;
 
 import connection.ConnectionConstants;
 import connection.ReceivingSocekt;
@@ -31,7 +30,6 @@ public class AnswerBackUp extends Protocol implements Answer {
 				/*chunkId*/	1);
 	}
 
-
 	public void close() throws IOException {
 		this.mdb.leave();
 		this.mc.leave();
@@ -43,7 +41,7 @@ public class AnswerBackUp extends Protocol implements Answer {
 	}
 
 	@Override
-	public String receive() throws SocketTimeoutException, IOException {
+	public String receive() throws IOException {
 		DatagramPacket packet = mdb.receive();
 		return new String(packet.getData());
 	}

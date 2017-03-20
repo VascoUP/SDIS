@@ -1,7 +1,6 @@
 package service.backup;
 
 import java.io.IOException;
-import java.net.SocketTimeoutException;
 
 import protocol.backup.RequestBackUp;
 
@@ -29,11 +28,7 @@ public class BackUp implements Runnable {
 		while((t = end - System.currentTimeMillis()) > 0 ){
 			rbu.socketTimeout((int)t);
 			
-			try {
-				rcv = rbu.receive();
-			} catch(SocketTimeoutException e) {
-				break;
-			}
+			rcv = rbu.receive();
 			
 			System.out.println(rcv);
 			i++;
@@ -42,25 +37,33 @@ public class BackUp implements Runnable {
 		return i;
 	}
 	
-	public void backup_file() throws IOException {
-		rbu.send();
-		int i = wait_answers();
-		System.out.println("" + i);
+	public void backup_file() {
+		try {
+			rbu.send();
+			
+			wait_answers();
+			
+			rbu.close();
+		} catch (IOException e) {
+			System.out.println("Error during backup protocol");
+			return ;
+		}
 		
 		//If number of rcv is lower than expected, resend the same chunk
 		//If not, advance to the next one
 		
-		this.rbu.close();
-		
-		
+	}
+	
+	public void end() {
+		try {
+			rbu.close();
+		} catch (IOException e) {
+			System.out.println("Error closing");
+		}
 	}
 
 	@Override
 	public void run() {
-		try {
-			backup_file();
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
+		backup_file();
 	}
 }

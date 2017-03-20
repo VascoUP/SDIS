@@ -33,11 +33,15 @@ public class RequestBackUp extends Protocol implements Request {
 				/*body*/	"SHI WHY AT SHINE");
 	}
 	
-	public void socketTimeout(int t) throws SocketException {
-		mc.setTimeout(t);
+	public void socketTimeout(int t) {
+		try {
+			mc.setTimeout(t);
+		} catch (SocketException e) {
+			System.out.println("Couldn't set a timeout");
+		}
 	}
 	
-	public void close() throws IOException {
+	public void close() throws IOException  {
 		this.mdb.leave();
 		this.mc.leave();
 	}
