@@ -8,7 +8,6 @@ import java.net.SocketTimeoutException;
 import connection.ConnectionConstants;
 import connection.ReceivingSocekt;
 import connection.SendingSocket;
-import message.Message;
 import message.backup.StoreChunkMessage;
 import protocol.Protocol;
 import protocol.Request;
@@ -18,7 +17,7 @@ public class RequestBackUp extends Protocol implements Request {
 	private SendingSocket mdb;
 	private ReceivingSocekt mc;
 	
-	private Message message;
+	private StoreChunkMessage message;
 	
 	public RequestBackUp() throws IOException {
 		super();
@@ -30,7 +29,10 @@ public class RequestBackUp extends Protocol implements Request {
 				/*senderId*/1, 
 				/*fileId*/	1, 
 				/*chunkId*/	1, 
-				/*body*/	"SHI WHY AT SHINE");
+				/*body*/	"SHI WHY AT SHINE".getBytes());
+		
+		message.setChunkID(2);
+		message.setChunkInformation("BOO".getBytes());
 	}
 	
 	public void socketTimeout(int t) {

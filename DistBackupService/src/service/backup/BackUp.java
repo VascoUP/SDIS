@@ -1,12 +1,20 @@
 package service.backup;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Arrays;
 
+import message.backup.*;
 import protocol.backup.RequestBackUp;
 
 public class BackUp implements Runnable {
 	private String filePath;
 	private RequestBackUp rbu;
+	private ArrayList<StoreChunkMessage>chunks = new ArrayList<StoreChunkMessage>();
 	
 	public BackUp(String filePath) throws IOException {
 		rbu = new RequestBackUp();
@@ -65,5 +73,38 @@ public class BackUp implements Runnable {
 	@Override
 	public void run() {
 		backup_file();
+	}
+	
+	public void createChunks() throws IOException{
+		
+		byte[] buffer = new byte[ChunkConst.CHUNKSIZE]; //64000
+
+		try {
+			FileInputStream input = new FileInputStream(this.filePath);
+			
+			int IDchunk = 1;
+			int chunkSize = 0;
+
+			while ((chunkSize = input.read(buffer)) >= 0) {
+
+				String chunkPathName = IDchunk + "-" + this.filePath;
+				byte[] newBuffer = Arrays.copyOf(buffer, chunkSize);
+				StoreChunkMessage chunk =  new StoreChunkMessage("1", 1, 1, IDchunk, newBuffer);
+				chunks.add(chunk);
+				
+				File newFile = new File(chunkPathName);
+				FileOutputStream output = new FileOutputStream(newFile);
+		        output.write(newBuffer);
+		        
+		        output.close();
+		        
+				IDchunk++;		
+			}
+			
+			input.close();
+			
+		} catch (FileNotFoundException e) {
+			System.out.println(e.getMessage() + this.filePath);
+		}
 	}
 }
