@@ -17,18 +17,22 @@ public class BackUp implements Runnable {
 		return filePath;
 	}
 	
-	private int wait_answers() throws IOException {
+	private int wait_answers() {
 		int i = 0;
 		
 		long t = System.currentTimeMillis();
 		long end = t + 1000;
 
-		String rcv;
+		String rcv = "";
 		
 		while((t = end - System.currentTimeMillis()) > 0 ){
 			rbu.socketTimeout((int)t);
 			
-			rcv = rbu.receive();
+			try {
+				rcv = rbu.receive();
+			} catch (IOException e) {
+				break;
+			}
 			
 			System.out.println(rcv);
 			i++;
@@ -40,12 +44,17 @@ public class BackUp implements Runnable {
 	public void backup_file() {
 		try {
 			rbu.send();
-			
-			wait_answers();
-			
+		} catch (IOException e) {
+			System.out.println("Error sending chunk");
+			return ;
+		}
+		
+		wait_answers();
+
+		try {
 			rbu.close();
 		} catch (IOException e) {
-			System.out.println("Error during backup protocol");
+			System.out.println("Error closing sockets");
 			return ;
 		}
 		

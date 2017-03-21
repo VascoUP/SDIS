@@ -15,6 +15,7 @@ public class UserInterface implements Runnable {
 		end = false;
 	}
 	
+	
 	public String getInstruction() {
 		return instruction;
 	}
@@ -25,15 +26,25 @@ public class UserInterface implements Runnable {
 	
 	
 	public void action(String inst) {
-		if( inst.equals("BACKUP") ) {
-			App.init_backup();
-			App.end_backup();
-		} else if( inst.equals("HELP") ) {
-			System.out.println("INSTRUCTIONS:");
-			System.out.println("Write \"BACKUP\" to backup a file");
-			System.out.println("Write \"HELP\" for instruction");
-		} else if( inst.equals("CLOSE") )
+		if( inst.equals("BACKUP") )
+			action_backup();
+		else if( inst.equals("HELP") )
+			action_help();
+		else if( inst.equals("CLOSE") )
 			end = true;
+	}
+	
+	public void action_backup() {
+		//App.end_wait_backup();
+		App.init_backup();
+		App.end_backup();
+		//App.init_wait_backup();
+	}
+	
+	public void action_help() {
+		System.out.println("INSTRUCTIONS:");
+		System.out.println("Write \"BACKUP\" to backup a file");
+		System.out.println("Write \"HELP\" for instruction");
 	}
 	
 	
