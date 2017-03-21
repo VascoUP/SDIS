@@ -8,8 +8,7 @@ import java.net.SocketTimeoutException;
 import connection.ConnectionConstants;
 import connection.ReceivingSocekt;
 import connection.SendingSocket;
-import message.Message;
-import message.backup.StoreChunkMessage;
+import message.backup.BackUpMessage;
 import protocol.Protocol;
 import protocol.Request;
 
@@ -18,14 +17,14 @@ public class RequestBackUp extends Protocol implements Request {
 	private SendingSocket mdb;
 	private ReceivingSocekt mc;
 	
-	private Message message;
+	private BackUpMessage message;
 	
 	public RequestBackUp() throws IOException {
 		super();
 		
 		mdb = new SendingSocket(ConnectionConstants.MDB_GROUP, ConnectionConstants.MDB_GROUP_PORT);
 		mc = new ReceivingSocekt(ConnectionConstants.MC_GROUP, ConnectionConstants.MC_GROUP_PORT);
-		message = new StoreChunkMessage(
+		message = new BackUpMessage(
 				/*version*/	"1.0", 
 				/*senderId*/1, 
 				/*fileId*/	1, 

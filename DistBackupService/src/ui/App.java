@@ -37,7 +37,7 @@ public class App {
 	}
 
 
-	
+
 	public static void init() {
 		ui = new UserInterface();
 		

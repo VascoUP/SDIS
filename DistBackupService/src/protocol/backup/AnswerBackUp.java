@@ -6,8 +6,7 @@ import java.net.DatagramPacket;
 import connection.ConnectionConstants;
 import connection.ReceivingSocekt;
 import connection.SendingSocket;
-import message.Message;
-import message.backup.StoredChunkMessage;
+import message.backup.StoredMessage;
 import protocol.Answer;
 import protocol.Protocol;
 
@@ -16,14 +15,14 @@ public class AnswerBackUp extends Protocol implements Answer {
 	private ReceivingSocekt mdb;
 	private SendingSocket mc;
 	
-	private Message message;
+	private StoredMessage message;
 	
 	public AnswerBackUp() throws IOException {
 		super();
 		
 		mdb = new ReceivingSocekt(ConnectionConstants.MDB_GROUP, ConnectionConstants.MDB_GROUP_PORT);
 		mc = new SendingSocket(ConnectionConstants.MC_GROUP, ConnectionConstants.MC_GROUP_PORT);
-		message = new StoredChunkMessage(
+		message = new StoredMessage(
 				/*version*/	"1.0", 
 				/*senderId*/1, 
 				/*fileId*/	1, 
