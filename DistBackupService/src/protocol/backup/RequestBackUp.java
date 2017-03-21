@@ -30,9 +30,6 @@ public class RequestBackUp extends Protocol implements Request {
 				/*fileId*/	1, 
 				/*chunkId*/	1, 
 				/*body*/	"SHI WHY AT SHINE".getBytes());
-		
-		message.setChunkID(2);
-		message.setChunkInformation("BOO".getBytes());
 	}
 	
 	public void socketTimeout(int t) {
@@ -57,5 +54,10 @@ public class RequestBackUp extends Protocol implements Request {
 	public String receive() throws SocketTimeoutException, IOException {
 		DatagramPacket packet = mc.receive();
 		return new String(packet.getData());
+	}
+	
+	public void setChunk(int id, byte[] data){
+		message.setChunkID(id);
+		message.setChunkInformation(data);
 	}
 }
