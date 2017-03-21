@@ -1,7 +1,11 @@
 package service.backup;
 
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.util.Arrays;
 
+import message.backup.ChunkConst;
 import protocol.backup.RequestBackUp;
 
 public class BackUp implements Runnable {
@@ -74,5 +78,34 @@ public class BackUp implements Runnable {
 	@Override
 	public void run() {
 		backup_file();
+	}
+	
+	public void createChunks() throws IOException{
+		
+		byte[] buffer = new byte[ChunkConst.CHUNKSIZE]; //64000
+
+		FileInputStream input;
+		
+		try {
+			input = new FileInputStream(this.filePath);			
+		} catch (FileNotFoundException e) {
+			System.out.println(e.getMessage() + this.filePath);
+			return;
+		}
+		
+
+		int IDchunk = 1;
+		int chunkSize = 0;
+
+		while ((chunkSize = input.read(buffer)) >= 0) {
+
+			byte[] newBuffer = Arrays.copyOf(buffer, chunkSize);
+			rbu.setChunk(IDchunk, newBuffer);
+			backup_file();
+	        
+			IDchunk++;		
+		}
+		
+		input.close();
 	}
 }
