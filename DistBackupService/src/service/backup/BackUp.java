@@ -5,7 +5,7 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.Arrays;
 
-import message.backup.ChunkConst;
+import message.MessageConst;
 import protocol.backup.RequestBackUp;
 
 public class BackUp implements Runnable {
@@ -82,7 +82,7 @@ public class BackUp implements Runnable {
 	
 	public void createChunks() throws IOException{
 		
-		byte[] buffer = new byte[ChunkConst.CHUNKSIZE]; //64000
+		byte[] buffer = new byte[MessageConst.CHUNKSIZE]; //64000
 
 		FileInputStream input;
 		

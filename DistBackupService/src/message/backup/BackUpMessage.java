@@ -1,5 +1,6 @@
 package message.backup;
 
+import message.MessageConst;
 import message.Message;
 
 public class BackUpMessage extends Message {
@@ -8,7 +9,7 @@ public class BackUpMessage extends Message {
 	private byte[] chunk;
 
 	public BackUpMessage(String version, int senderId, int fileId, int chunkId, byte[] chunk) {
-		super(ChunkConst.ANSWER_MESSAGE_TYPE, version, senderId, fileId);
+		super(MessageConst.ANSWER_MESSAGE_TYPE, version, senderId, fileId);
 		
 		this.chunkId = chunkId;
 		this.chunk = chunk;
