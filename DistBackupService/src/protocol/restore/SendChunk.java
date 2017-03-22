@@ -6,23 +6,24 @@ import java.net.DatagramPacket;
 import connection.ConnectionConstants;
 import connection.ReceivingSocekt;
 import connection.SendingSocket;
-import message.backup.StoredMessage;
+import message.restore.ChunkMessage;
 import protocol.Answer;
 import protocol.Protocol;
 
 public class SendChunk extends Protocol implements Answer {
 
-	private ReceivingSocekt mdr;
-	private SendingSocket mc;
+	private ReceivingSocekt mc;
+	private SendingSocket mdr;
 	
-	private StoredMessage message;
+	private ChunkMessage message;
 	
 	public SendChunk() throws IOException {
 		super();
 		
-		mdr = new ReceivingSocekt(ConnectionConstants.MDR_GROUP, ConnectionConstants.MDR_GROUP_PORT);
-		mc = new SendingSocket(ConnectionConstants.MC_GROUP, ConnectionConstants.MC_GROUP_PORT);
-		message = new StoredMessage(
+		mc = new ReceivingSocekt(ConnectionConstants.MC_GROUP, ConnectionConstants.MC_GROUP_PORT);
+		mdr = new SendingSocket(ConnectionConstants.MDR_GROUP, ConnectionConstants.MDR_GROUP_PORT);
+
+		message = new ChunkMessage(
 				/*version*/	"1.0", 
 				/*senderId*/1, 
 				/*fileId*/	1, 
@@ -36,12 +37,12 @@ public class SendChunk extends Protocol implements Answer {
 	
 	@Override
 	public void send() throws IOException {
-		mc.send("" + message);
+		mdr.send("" + message);
 	}
 
 	@Override
 	public String receive() throws IOException {
-		DatagramPacket packet = mdr.receive();
+		DatagramPacket packet = mc.receive();
 		return new String(packet.getData());
 	}
 }

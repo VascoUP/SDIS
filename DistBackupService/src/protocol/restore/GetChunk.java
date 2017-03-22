@@ -8,56 +8,51 @@ import java.net.SocketTimeoutException;
 import connection.ConnectionConstants;
 import connection.ReceivingSocekt;
 import connection.SendingSocket;
-import message.backup.BackUpMessage;
+import message.restore.GetChunkMessage;
 import protocol.Protocol;
 import protocol.Request;
 
 public class GetChunk extends Protocol implements Request {
 
-	private SendingSocket mdb;
-	private ReceivingSocekt mc;
+	private SendingSocket mc;
+	private ReceivingSocekt mdr;
 	
-	private BackUpMessage message;
+	private GetChunkMessage message;
 	
 	public GetChunk() throws IOException {
 		super();
-		
-		mdb = new SendingSocket(ConnectionConstants.MDB_GROUP, ConnectionConstants.MDB_GROUP_PORT);
-		mc = new ReceivingSocekt(ConnectionConstants.MC_GROUP, ConnectionConstants.MC_GROUP_PORT);
-		message = new BackUpMessage(
+
+		mc = new SendingSocket(ConnectionConstants.MC_GROUP, ConnectionConstants.MC_GROUP_PORT);
+		mdr = new ReceivingSocekt(ConnectionConstants.MDR_GROUP, ConnectionConstants.MDR_GROUP_PORT);
+
+		message = new GetChunkMessage(
 				/*version*/	"1.0", 
 				/*senderId*/1, 
 				/*fileId*/	1, 
-				/*chunkId*/	1, 
-				/*body*/	"SHI WHY AT SHINE".getBytes());
+				/*chunkId*/	1);
 	}
 	
 	public void socketTimeout(int t) {
 		try {
-			mc.setTimeout(t);
+			mdr.setTimeout(t);
 		} catch (SocketException e) {
 			System.out.println("Couldn't set a timeout");
 		}
 	}
 	
 	public void close() throws IOException  {
-		this.mdb.leave();
+		this.mdr.leave();
 		this.mc.leave();
 	}
 	
 	@Override
 	public void send() throws IOException {
-		mdb.send("" + message);
+		mc.send("" + message);
 	}
 
 	@Override
 	public String receive() throws SocketTimeoutException, IOException {
-		DatagramPacket packet = mc.receive();
+		DatagramPacket packet = mdr.receive();
 		return new String(packet.getData());
-	}
-	
-	public void setChunk(int id, byte[] data){
-		message.setChunkID(id);
-		message.setChunkInformation(data);
 	}
 }
