@@ -77,7 +77,12 @@ public class BackUp implements Runnable {
 
 	@Override
 	public void run() {
-		backup_file();
+		 try {
+			createChunks();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 	
 	public void createChunks() throws IOException{
@@ -96,9 +101,12 @@ public class BackUp implements Runnable {
 
 		int IDchunk = 1;
 		int chunkSize = 0;
-
+		
+		System.out.println("\n"+chunkSize);
 		while ((chunkSize = input.read(buffer)) >= 0) {
 
+			System.out.println("\n"+chunkSize);
+			
 			byte[] newBuffer = Arrays.copyOf(buffer, chunkSize);
 			rbu.setChunk(IDchunk, newBuffer);
 			backup_file();
