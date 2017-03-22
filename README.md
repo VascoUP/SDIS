@@ -2,4 +2,4 @@
 
 ### Run:
 
-javac connection/*.java message/*.java message/backup/*.java protocol/*.java protocol/backup/*.java service/backup/*.java ui/*.java
+javac connection/\*.java message/\*.java message/\*/\*.java protocol/\*.java protocol/\*/\*.java service/\*/\*.java ui/\*.java
