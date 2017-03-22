@@ -102,10 +102,10 @@ public class BackUp implements Runnable {
 		int IDchunk = 1;
 		int chunkSize = 0;
 		
-		System.out.println("\n"+chunkSize);
-		while ((chunkSize = input.read(buffer)) >= 0) {
+		while ((chunkSize = input.read(buffer)) > 0) {
 
 			System.out.println("\n"+chunkSize);
+			System.out.println(IDchunk);
 			
 			byte[] newBuffer = Arrays.copyOf(buffer, chunkSize);
 			rbu.setChunk(IDchunk, newBuffer);
