@@ -25,12 +25,6 @@ public class RequestBackUp extends Protocol implements Request {
 		
 		mdb = new SendingSocket(ConnectionConstants.MDB_GROUP, ConnectionConstants.MDB_GROUP_PORT);
 		mc = new ReceivingSocekt(ConnectionConstants.MC_GROUP, ConnectionConstants.MC_GROUP_PORT);
-		message = new BackUpMessage(
-				/*version*/	App.getVersionProtocol(),
-				/*senderId*/App.getServerId(), 
-				/*fileId*/	1, 
-				/*chunkId*/	1, 
-				/*body*/	"SHI WHY AT SHINE".getBytes());
 	}
 	
 	public void socketTimeout(int t) {
@@ -57,8 +51,12 @@ public class RequestBackUp extends Protocol implements Request {
 		return new String(packet.getData());
 	}
 	
-	public void setChunk(int id, byte[] data){
-		message.setChunkID(id);
-		message.setChunkInformation(data);
+	public void setMessage(int fileId, int chunkId, byte[] data) {
+		message = new BackUpMessage(
+				/*version*/	App.getVersionProtocol(),
+				/*senderId*/App.getServerId(), 
+				/*fileId*/	fileId, 
+				/*chunkId*/	chunkId, 
+				/*body*/	data);
 	}
 }

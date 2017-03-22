@@ -23,11 +23,14 @@ public class AnswerBackUp extends Protocol implements Answer {
 		
 		mdb = new ReceivingSocekt(ConnectionConstants.MDB_GROUP, ConnectionConstants.MDB_GROUP_PORT);
 		mc = new SendingSocket(ConnectionConstants.MC_GROUP, ConnectionConstants.MC_GROUP_PORT);
+	}
+	
+	public void setMessage(int fileId, int chunkId) {
 		message = new StoredMessage(
 				/*version*/	App.getVersionProtocol(),
 				/*senderId*/App.getServerId(), 
-				/*fileId*/	1, 
-				/*chunkId*/	1);
+				/*fileId*/	fileId, 
+				/*chunkId*/	chunkId);
 	}
 
 	public void close() throws IOException {

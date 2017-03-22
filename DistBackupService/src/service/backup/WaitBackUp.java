@@ -28,6 +28,7 @@ public class WaitBackUp implements Runnable {
 		
 		randomWait();
 		
+		abu.setMessage(1, 1);
 		abu.send();
 	}
 	
