@@ -11,6 +11,7 @@ import connection.SendingSocket;
 import message.restore.GetChunkMessage;
 import protocol.Protocol;
 import protocol.Request;
+import ui.App;
 
 public class GetChunk extends Protocol implements Request {
 
@@ -26,8 +27,8 @@ public class GetChunk extends Protocol implements Request {
 		mdr = new ReceivingSocekt(ConnectionConstants.MDR_GROUP, ConnectionConstants.MDR_GROUP_PORT);
 
 		message = new GetChunkMessage(
-				/*version*/	"1.0", 
-				/*senderId*/1, 
+				/*version*/	App.getVersionProtocol(), 
+				/*senderId*/App.getServerId(), 
 				/*fileId*/	1, 
 				/*chunkId*/	1);
 	}

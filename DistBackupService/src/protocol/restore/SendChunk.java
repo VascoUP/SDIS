@@ -9,6 +9,7 @@ import connection.SendingSocket;
 import message.restore.ChunkMessage;
 import protocol.Answer;
 import protocol.Protocol;
+import ui.App;
 
 public class SendChunk extends Protocol implements Answer {
 
@@ -24,8 +25,8 @@ public class SendChunk extends Protocol implements Answer {
 		mdr = new SendingSocket(ConnectionConstants.MDR_GROUP, ConnectionConstants.MDR_GROUP_PORT);
 
 		message = new ChunkMessage(
-				/*version*/	"1.0", 
-				/*senderId*/1, 
+				/*version*/	App.getVersionProtocol(), 
+				/*senderId*/App.getServerId(), 
 				/*fileId*/	1, 
 				/*chunkId*/	1);
 	}

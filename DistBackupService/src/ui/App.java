@@ -5,7 +5,10 @@ import java.io.IOException;
 import service.backup.BackUp;
 import service.backup.WaitBackUp;
 
-public class App {	
+public class App {
+	private static int serverId;
+	private static String versionProtocol;
+
 	private static Thread ui_thread;
 	private static UserInterface ui;
 	
@@ -16,8 +19,11 @@ public class App {
 	private static WaitBackUp wait_backup;
 
 	public static void main(String[] args) {
-		if(args.length != 0)
+		if(args.length != 2)
 			return ;
+
+		versionProtocol = args[0];
+		serverId = Integer.parseInt(args[1]);
 
 		prog();
 	}
@@ -68,7 +74,7 @@ public class App {
 	
 	public static void init_backup() {
 		try {
-			backup = new BackUp("yomama.pdf");
+			backup = new BackUp("Yomama.pdf");
 		} catch (IOException e) {
 			e.printStackTrace();
 			System.exit(0);
@@ -115,4 +121,11 @@ public class App {
 		}
 	}
 
+	public static int getServerId() {
+		return serverId;
+	}
+
+	public static String getVersionProtocol() {
+		return versionProtocol;
+	}
 }

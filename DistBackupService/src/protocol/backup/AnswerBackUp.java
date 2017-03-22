@@ -9,6 +9,7 @@ import connection.SendingSocket;
 import message.backup.StoredMessage;
 import protocol.Answer;
 import protocol.Protocol;
+import ui.App;
 
 public class AnswerBackUp extends Protocol implements Answer {
 
@@ -23,8 +24,8 @@ public class AnswerBackUp extends Protocol implements Answer {
 		mdb = new ReceivingSocekt(ConnectionConstants.MDB_GROUP, ConnectionConstants.MDB_GROUP_PORT);
 		mc = new SendingSocket(ConnectionConstants.MC_GROUP, ConnectionConstants.MC_GROUP_PORT);
 		message = new StoredMessage(
-				/*version*/	"1.0", 
-				/*senderId*/1, 
+				/*version*/	App.getVersionProtocol(),
+				/*senderId*/App.getServerId(), 
 				/*fileId*/	1, 
 				/*chunkId*/	1);
 	}

@@ -35,14 +35,13 @@ public class UserInterface implements Runnable {
 	}
 	
 	public void action_backup() {
-		//App.end_wait_backup();
 		App.init_backup();
 		App.end_backup();
-		//App.init_wait_backup();
 	}
 	
 	public void action_help() {
 		System.out.println("INSTRUCTIONS:");
+		System.out.println("Write \"CLOSE\" to close the program");
 		System.out.println("Write \"BACKUP\" to backup a file");
 		System.out.println("Write \"HELP\" for instruction");
 	}

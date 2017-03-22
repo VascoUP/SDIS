@@ -11,6 +11,7 @@ import connection.SendingSocket;
 import message.backup.BackUpMessage;
 import protocol.Protocol;
 import protocol.Request;
+import ui.App;
 
 public class RequestBackUp extends Protocol implements Request {
 
@@ -25,8 +26,8 @@ public class RequestBackUp extends Protocol implements Request {
 		mdb = new SendingSocket(ConnectionConstants.MDB_GROUP, ConnectionConstants.MDB_GROUP_PORT);
 		mc = new ReceivingSocekt(ConnectionConstants.MC_GROUP, ConnectionConstants.MC_GROUP_PORT);
 		message = new BackUpMessage(
-				/*version*/	"1.0", 
-				/*senderId*/1, 
+				/*version*/	App.getVersionProtocol(),
+				/*senderId*/App.getServerId(), 
 				/*fileId*/	1, 
 				/*chunkId*/	1, 
 				/*body*/	"SHI WHY AT SHINE".getBytes());

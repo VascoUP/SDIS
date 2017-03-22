@@ -54,13 +54,6 @@ public class BackUp implements Runnable {
 		}
 		
 		wait_answers();
-
-		try {
-			rbu.close();
-		} catch (IOException e) {
-			System.out.println("Error closing sockets");
-			return ;
-		}
 		
 		//If number of rcv is lower than expected, resend the same chunk
 		//If not, advance to the next one
@@ -115,5 +108,12 @@ public class BackUp implements Runnable {
 		}
 		
 		input.close();
+
+		try {
+			rbu.close();
+		} catch (IOException e) {
+			System.out.println("Error closing sockets");
+			return ;
+		}
 	}
 }
