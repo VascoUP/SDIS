@@ -7,11 +7,9 @@ import connection.ConnectionConstants;
 import connection.ReceivingSocekt;
 import connection.SendingSocket;
 import message.backup.StoredMessage;
-import protocol.Answer;
-import protocol.Protocol;
 import ui.App;
 
-public class AnswerBackUp extends Protocol implements Answer {
+public class AnswerBackUp {
 
 	private ReceivingSocekt mdb;
 	private SendingSocket mc;
@@ -38,12 +36,10 @@ public class AnswerBackUp extends Protocol implements Answer {
 		this.mc.leave();
 	}
 	
-	@Override
 	public void send() throws IOException {
 		mc.send("" + message);
 	}
 
-	@Override
 	public String receive() throws IOException {
 		DatagramPacket packet = mdb.receive();
 		return new String(packet.getData());

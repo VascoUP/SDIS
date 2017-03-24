@@ -9,11 +9,9 @@ import connection.ConnectionConstants;
 import connection.ReceivingSocekt;
 import connection.SendingSocket;
 import message.backup.BackUpMessage;
-import protocol.Protocol;
-import protocol.Request;
 import ui.App;
 
-public class RequestBackUp extends Protocol implements Request {
+public class RequestBackUp {
 
 	private SendingSocket mdb;
 	private ReceivingSocekt mc;
@@ -40,12 +38,10 @@ public class RequestBackUp extends Protocol implements Request {
 		this.mc.leave();
 	}
 	
-	@Override
 	public void send() throws IOException {
 		mdb.send("" + message);
 	}
 
-	@Override
 	public String receive() throws SocketTimeoutException, IOException {
 		DatagramPacket packet = mc.receive();
 		return new String(packet.getData());

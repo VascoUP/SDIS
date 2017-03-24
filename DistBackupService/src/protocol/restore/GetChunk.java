@@ -9,11 +9,9 @@ import connection.ConnectionConstants;
 import connection.ReceivingSocekt;
 import connection.SendingSocket;
 import message.restore.GetChunkMessage;
-import protocol.Protocol;
-import protocol.Request;
 import ui.App;
 
-public class GetChunk extends Protocol implements Request {
+public class GetChunk {
 
 	private SendingSocket mc;
 	private ReceivingSocekt mdr;
@@ -46,12 +44,10 @@ public class GetChunk extends Protocol implements Request {
 		this.mc.leave();
 	}
 	
-	@Override
 	public void send() throws IOException {
 		mc.send("" + message);
 	}
 
-	@Override
 	public String receive() throws SocketTimeoutException, IOException {
 		DatagramPacket packet = mdr.receive();
 		return new String(packet.getData());
