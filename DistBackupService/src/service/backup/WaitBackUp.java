@@ -52,11 +52,10 @@ public class WaitBackUp extends Service implements Storable {
 	}
 	
 	public String[] getAttributesRCV(String rcv){
-		
 		String[] tmp = rcv.split("\n");
-		String tmpSplit = tmp.toString();
-		String[] result = tmpSplit.split(" ");
+		String[] result = tmp[0].split(" ");
 		
 		return result;
 	}
 }
+

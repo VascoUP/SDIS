@@ -3,7 +3,6 @@ package service.backup;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.util.Arrays;
 
 import information.Storable;
 import message.MessageConst;
@@ -35,6 +34,7 @@ public class BackUp extends Service implements Storable {
 	}
 	
 	public void createChunks() throws IOException{
+	
 		RequestBackUp rbu = (RequestBackUp) protocol;
 		
 		byte[] buffer = new byte[MessageConst.CHUNKSIZE]; //64000
@@ -51,8 +51,9 @@ public class BackUp extends Service implements Storable {
 		int IDchunk = 1;
 		int chunkSize = 0;
 		
-		while ((chunkSize = input.read(buffer)) > 0) {			
-			byte[] newBuffer = Arrays.copyOf(buffer, chunkSize);
+		while ((chunkSize = input.read(buffer)) != -1) {
+			byte[] newBuffer = new byte[chunkSize];
+			System.arraycopy(buffer, 0, newBuffer, 0, chunkSize);
 			
 			rbu.setMessage(1, IDchunk, newBuffer);
 			run_pontual_service();
