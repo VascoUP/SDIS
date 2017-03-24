@@ -1,48 +1,33 @@
 package service.restore;
 
 import java.io.IOException;
-import java.util.Random;
-import java.util.concurrent.TimeUnit;
 
+import information.Storable;
 import protocol.restore.SendChunk;
+import service.general.Service;
 
-public class WaitRestore implements Runnable {
-	private SendChunk sc;
+public class WaitRestore extends Service implements Storable {
 	
 	public WaitRestore() throws IOException {
-		sc = new SendChunk();
+		super();
+		
+		protocol = new SendChunk();
 	}
 	
-	private void randomWait() throws InterruptedException {
-		Random r = new Random();
-		int wait = r.nextInt(400);
-		TimeUnit.MILLISECONDS.sleep(wait);
-	}
-	
-	public void restore_file() throws IOException, InterruptedException  {
+	protected void run_continuous_service() throws IOException, InterruptedException  {
 		String rcv = "";
 	
-		rcv = sc.receive();
+		rcv = protocol.receive();
 		System.out.println("Rcv: " + rcv);
 		
 		randomWait();
 		
 		//sc.setMessage(1, 1);
-		sc.send();
-	}
-	
-	public void end() throws IOException {
-		sc.close();
+		protocol.send();
 	}
 
 	@Override
 	public void run() {
-		while( true ) {
-			try {
-				restore_file();
-			} catch (IOException | InterruptedException e) {
-				return ;
-			}
-		}
+		run_continuous();
 	}
 }

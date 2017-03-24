@@ -1,46 +1,43 @@
 package service.backup;
 
-import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.util.Random;
-import java.util.concurrent.TimeUnit;
 
 import information.Storable;
 import protocol.backup.AnswerBackUp;
+import service.general.Service;
 
-public class WaitBackUp implements Runnable, Storable {
-
-	private AnswerBackUp abu;
+public class WaitBackUp extends Service implements Storable {
 	
 	public WaitBackUp() throws IOException {
-		abu = new AnswerBackUp();
+		super();
+		
+		protocol = new AnswerBackUp();
 	}
 	
-	private void randomWait() throws InterruptedException {
-		Random r = new Random();
-		int wait = r.nextInt(400);
-		TimeUnit.MILLISECONDS.sleep(wait);
-	}
-	
-	public void backup_file() throws IOException, InterruptedException, FileNotFoundException  {
-		String rcv = "";
+	protected void run_continuous_service() throws IOException, InterruptedException  {
+		AnswerBackUp abu = (AnswerBackUp) protocol;
+		String rcv = "", fileName = "";
+		FileOutputStream output;
+		int fileID, chunkID;
+		String[] values;
+		byte[] data;
 	
 		rcv = abu.receive();
 		System.out.println("Rcv: " + rcv);
 		
 		randomWait();
 		
-		String[] values = getAttributesRCV(rcv);
+		values = getAttributesRCV(rcv);
 		
-		int fileID = Integer.parseInt(values[3]);
-		int chunkID = Integer.parseInt(values[4]);
+		fileID = Integer.parseInt(values[3]);
+		chunkID = Integer.parseInt(values[4]);
 		
-		byte[] data = rcv.getBytes();
+		data = rcv.getBytes();
 		
-		String fileName = "Chunk " + chunkID;
+		fileName = "Chunk " + chunkID;
 		
-		FileOutputStream output = new FileOutputStream(fileName);
+		output = new FileOutputStream(fileName);
 		output.write(data);
 		
 		output.close();
@@ -48,20 +45,10 @@ public class WaitBackUp implements Runnable, Storable {
 		abu.setMessage(fileID, chunkID);
 		abu.send();
 	}
-	
-	public void end() throws IOException {
-		abu.close();
-	}
 
 	@Override
 	public void run() {
-		while( true ) {
-			try {
-				backup_file();
-			} catch (IOException | InterruptedException e) {
-				return ;
-			}
-		}
+		run_continuous();
 	}
 	
 	public String[] getAttributesRCV(String rcv){

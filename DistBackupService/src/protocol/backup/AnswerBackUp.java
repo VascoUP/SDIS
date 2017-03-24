@@ -1,26 +1,17 @@
 package protocol.backup;
 
 import java.io.IOException;
-import java.net.DatagramPacket;
 
 import connection.ConnectionConstants;
-import connection.ReceivingSocekt;
-import connection.SendingSocket;
 import message.backup.StoredMessage;
+import protocol.general.Protocol;
 import ui.App;
 
-public class AnswerBackUp {
-
-	private ReceivingSocekt mdb;
-	private SendingSocket mc;
-	
-	private StoredMessage message;
-	
-	public AnswerBackUp() throws IOException {
-		super();
+public class AnswerBackUp extends Protocol {
 		
-		mdb = new ReceivingSocekt(ConnectionConstants.MDB_GROUP, ConnectionConstants.MDB_GROUP_PORT);
-		mc = new SendingSocket(ConnectionConstants.MC_GROUP, ConnectionConstants.MC_GROUP_PORT);
+	public AnswerBackUp() throws IOException {
+		super(	ConnectionConstants.MDB_GROUP, ConnectionConstants.MDB_GROUP_PORT,
+				ConnectionConstants.MC_GROUP, ConnectionConstants.MC_GROUP_PORT);
 	}
 	
 	public void setMessage(int fileId, int chunkId) {
@@ -29,19 +20,5 @@ public class AnswerBackUp {
 				/*senderId*/App.getServerId(), 
 				/*fileId*/	fileId, 
 				/*chunkId*/	chunkId);
-	}
-
-	public void close() throws IOException {
-		this.mdb.leave();
-		this.mc.leave();
-	}
-	
-	public void send() throws IOException {
-		mc.send("" + message);
-	}
-
-	public String receive() throws IOException {
-		DatagramPacket packet = mdb.receive();
-		return new String(packet.getData());
 	}
 }

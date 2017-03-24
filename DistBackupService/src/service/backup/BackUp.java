@@ -8,65 +8,20 @@ import java.util.Arrays;
 import information.Storable;
 import message.MessageConst;
 import protocol.backup.RequestBackUp;
+import service.general.Service;
 
-public class BackUp implements Runnable, Storable {
+public class BackUp extends Service implements Storable {
 	private String filePath;
-	private RequestBackUp rbu;
 	
 	public BackUp(String filePath) throws IOException {
-		rbu = new RequestBackUp();
+		super();
+		
+		protocol = new RequestBackUp();
 		this.filePath = filePath;
 	}
 	
 	public String getFilePath() {
 		return filePath;
-	}
-	
-	private int wait_answers() {
-		int i = 0;
-		
-		long t = System.currentTimeMillis();
-		long end = t + 1000;
-
-		String rcv = "";
-		
-		while((t = end - System.currentTimeMillis()) > 0 ){
-			rbu.socketTimeout((int)t);
-			
-			try {
-				rcv = rbu.receive();
-			} catch (IOException e) {
-				break;
-			}
-			
-			System.out.println(rcv);
-			i++;
-		}
-		
-		return i;
-	}
-	
-	public void backup_file() {
-		try {
-			rbu.send();
-		} catch (IOException e) {
-			System.out.println("Error sending chunk");
-			return ;
-		}
-		
-		wait_answers();
-		
-		//If number of rcv is lower than expected, resend the same chunk
-		//If not, advance to the next one
-		
-	}
-	
-	public void end() {
-		try {
-			rbu.close();
-		} catch (IOException e) {
-			System.out.println("Error closing");
-		}
 	}
 
 	@Override
@@ -80,9 +35,9 @@ public class BackUp implements Runnable, Storable {
 	}
 	
 	public void createChunks() throws IOException{
+		RequestBackUp rbu = (RequestBackUp) protocol;
 		
 		byte[] buffer = new byte[MessageConst.CHUNKSIZE]; //64000
-
 		FileInputStream input;
 		
 		try {
@@ -98,8 +53,9 @@ public class BackUp implements Runnable, Storable {
 		
 		while ((chunkSize = input.read(buffer)) > 0) {			
 			byte[] newBuffer = Arrays.copyOf(buffer, chunkSize);
+			
 			rbu.setMessage(1, IDchunk, newBuffer);
-			backup_file();
+			run_pontual_service();
 	        
 			IDchunk++;		
 		}
@@ -107,7 +63,7 @@ public class BackUp implements Runnable, Storable {
 		input.close();
 
 		try {
-			rbu.close();
+			rbu.end_protocol();
 		} catch (IOException e) {
 			System.out.println("Error closing sockets");
 			return ;

@@ -103,14 +103,9 @@ public class App {
 
 	public static void end_wait_backup() {
 		AppInfo.getWaitBackupThread().interrupt();
-		
-		try {
-			WaitBackUp wbp = (WaitBackUp)AppInfo.getWaitBackup();
-			wbp.end();
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+
+		WaitBackUp wbp = (WaitBackUp)AppInfo.getWaitBackup();
+		wbp.end_service();
 	}
 
 	
