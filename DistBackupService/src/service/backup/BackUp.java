@@ -5,10 +5,11 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.Arrays;
 
+import information.Storable;
 import message.MessageConst;
 import protocol.backup.RequestBackUp;
 
-public class BackUp implements Runnable {
+public class BackUp implements Runnable, Storable {
 	private String filePath;
 	private RequestBackUp rbu;
 	

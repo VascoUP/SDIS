@@ -5,9 +5,10 @@ import java.util.ArrayList;
 import java.util.Random;
 import java.util.concurrent.TimeUnit;
 
+import information.Storable;
 import protocol.backup.AnswerBackUp;
 
-public class WaitBackUp implements Runnable {
+public class WaitBackUp implements Runnable, Storable {
 
 	private AnswerBackUp abu;
 	

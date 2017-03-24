@@ -2,21 +2,13 @@ package ui;
 
 import java.io.IOException;
 
+import information.AppInfo;
 import service.backup.BackUp;
 import service.backup.WaitBackUp;
 
-public class App {
+public class App {	
 	private static int serverId;
 	private static String versionProtocol;
-
-	private static Thread ui_thread;
-	private static UserInterface ui;
-	
-	private static Thread backup_thread;
-	private static BackUp backup;
-	
-	private static Thread wait_backup_thread;
-	private static WaitBackUp wait_backup;
 
 	public static void main(String[] args) {
 		if(args.length != 2)
@@ -32,7 +24,7 @@ public class App {
 		init();
 
 		try {
-			ui_thread.join();
+			AppInfo.getUIThread().join();
 		} catch (InterruptedException e) {
 			e.printStackTrace();
 			end();
@@ -45,7 +37,7 @@ public class App {
 
 
 	public static void init() {
-		ui = new UserInterface();
+		AppInfo.setUI(new UserInterface());
 		
 		init_wait_backup();
 		init_UI();
@@ -67,29 +59,29 @@ public class App {
 	
 	
 	public static void init_UI() {
-		ui_thread = new Thread(ui);
-		ui_thread.start();
+		AppInfo.setUIThread(new Thread((Runnable)AppInfo.getUI()));
+		AppInfo.getUIThread().start();
 	}
 	
 	
 	public static void init_backup() {
 		try {
-			backup = new BackUp("Yomama.pdf");
+			AppInfo.setBackup(new BackUp("Yomama.pdf"));
 		} catch (IOException e) {
 			e.printStackTrace();
 			System.exit(0);
 		}
 		
-		backup_thread = new Thread(backup);
-		backup_thread.start();
+		AppInfo.setBackupThread(new Thread((Runnable)AppInfo.getBackup()));
+		AppInfo.getBackupThread().start();
 	}
 	
 	public static void end_backup() {
-		if(backup_thread == null )
+		if(AppInfo.getBackupThread() == null )
 			return ;
 		
 		try {
-			backup_thread.join();
+			AppInfo.getBackupThread().join();
 		} catch (InterruptedException e) {
 			e.printStackTrace();
 		}
@@ -97,30 +89,31 @@ public class App {
 
 	
 	public static void init_wait_backup() {
-		wait_backup = null;
 		try {
-			wait_backup = new WaitBackUp();
+			AppInfo.setWaitBackp(new WaitBackUp());
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 			System.exit(0);
 		}
 		
-		wait_backup_thread = new Thread(wait_backup);
-		wait_backup_thread.start();
+		AppInfo.setWaitBackupThread(new Thread((Runnable)AppInfo.getWaitBackup()));
+		AppInfo.getWaitBackupThread().start();
 	}
 
 	public static void end_wait_backup() {
-		wait_backup_thread.interrupt();
+		AppInfo.getWaitBackupThread().interrupt();
 		
 		try {
-			wait_backup.end();
+			WaitBackUp wbp = (WaitBackUp)AppInfo.getWaitBackup();
+			wbp.end();
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 	}
 
+	
 	public static int getServerId() {
 		return serverId;
 	}
@@ -128,4 +121,5 @@ public class App {
 	public static String getVersionProtocol() {
 		return versionProtocol;
 	}
+
 }

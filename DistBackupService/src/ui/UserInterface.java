@@ -2,7 +2,9 @@ package ui;
 
 import java.util.Scanner;
 
-public class UserInterface implements Runnable {
+import information.Storable;
+
+public class UserInterface implements Runnable, Storable {
 
 	private Scanner scan;
 	private String instruction;
