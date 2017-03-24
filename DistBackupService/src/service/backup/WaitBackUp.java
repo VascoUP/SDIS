@@ -1,7 +1,8 @@
 package service.backup;
 
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.Random;
 import java.util.concurrent.TimeUnit;
 
@@ -22,19 +23,29 @@ public class WaitBackUp implements Runnable, Storable {
 		TimeUnit.MILLISECONDS.sleep(wait);
 	}
 	
-	public void backup_file() throws IOException, InterruptedException  {
+	public void backup_file() throws IOException, InterruptedException, FileNotFoundException  {
 		String rcv = "";
 	
 		rcv = abu.receive();
 		System.out.println("Rcv: " + rcv);
 		
-		ArrayList<Integer> rcvAttr = getAttributesRCV(rcv);
 		randomWait();
 		
-		System.out.println(rcvAttr.get(0));
-		System.out.println(rcvAttr.get(1));
+		String[] values = getAttributesRCV(rcv);
 		
-		abu.setMessage(rcvAttr.get(0), rcvAttr.get(1));
+		int fileID = Integer.parseInt(values[3]);
+		int chunkID = Integer.parseInt(values[4]);
+		
+		byte[] data = rcv.getBytes();
+		
+		String fileName = "Chunk " + chunkID;
+		
+		FileOutputStream output = new FileOutputStream(fileName);
+		output.write(data);
+		
+		output.close();
+		
+		abu.setMessage(fileID, chunkID);
 		abu.send();
 	}
 	
@@ -53,22 +64,11 @@ public class WaitBackUp implements Runnable, Storable {
 		}
 	}
 	
-	public ArrayList<Integer> getAttributesRCV(String rcv){
-		ArrayList<Integer> result = new ArrayList<Integer>();
+	public String[] getAttributesRCV(String rcv){
 		
-		int i = 0;
-		
-		while (rcv.charAt(i) != '\n')
-			i++;
-		
-		String idFile = Character.toString(rcv.charAt(i--));
-		String idSender = Character.toString(rcv.charAt(i-2));
-		
-		int fileID = Integer.parseInt(idFile);
-		int senderID = Integer.parseInt(idSender);
-		
-		result.add(senderID);
-		result.add(fileID);
+		String[] tmp = rcv.split("\n");
+		String tmpSplit = tmp.toString();
+		String[] result = tmpSplit.split(" ");
 		
 		return result;
 	}
