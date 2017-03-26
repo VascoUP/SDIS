@@ -19,6 +19,11 @@ public abstract class Service implements Runnable {
 		int wait = r.nextInt(400);
 		TimeUnit.MILLISECONDS.sleep(wait);
 	}
+	
+	
+	public boolean validateMessage(byte[] message) {
+		return false;
+	}
 
 	protected int wait_answers() {
 		int i = 0;
@@ -26,7 +31,7 @@ public abstract class Service implements Runnable {
 		long t = System.currentTimeMillis();
 		long end = t + 1000;
 
-		String rcv = "";
+		byte[] rcv;
 		
 		while((t = end - System.currentTimeMillis()) > 0 ){
 			protocol.socketTimeout((int)t);
@@ -37,8 +42,8 @@ public abstract class Service implements Runnable {
 				break;
 			}
 			
-			System.out.println(rcv);
-			i++;
+			if(validateMessage(rcv))
+				i++;
 		}
 		
 		return i;

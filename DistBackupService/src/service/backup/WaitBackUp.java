@@ -4,8 +4,10 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 
 import information.Storable;
+import message.backup.BackUpMessage;
 import protocol.backup.AnswerBackUp;
 import service.general.Service;
+import ui.App;
 
 public class WaitBackUp extends Service implements Storable {
 	
@@ -17,28 +19,35 @@ public class WaitBackUp extends Service implements Storable {
 	
 	protected void run_continuous_service() throws IOException, InterruptedException  {
 		AnswerBackUp abu = (AnswerBackUp) protocol;
-		String rcv = "", fileName = "";
+		int fileID, chunkID, serverID;
 		FileOutputStream output;
-		int fileID, chunkID;
-		String[] values;
-		byte[] data;
+		String fileName = "";
+		byte[] rcv;
 	
 		rcv = abu.receive();
-		System.out.println("Rcv: " + rcv);
+		
+		BackUpMessage bum;
+		
+		try {
+			bum = new BackUpMessage(rcv);
+		} catch( Error e ) {
+			System.out.println(e);
+			return ;
+		}
+		
+		serverID = bum.getSenderId();
+		if( serverID == App.getServerId() )
+			return ;
+		
+		fileID = bum.getFileId();
+		chunkID = bum.getChunkId();
+		
+		fileName = "Chunk_" + chunkID;
 		
 		randomWait();
 		
-		values = getAttributesRCV(rcv);
-		
-		fileID = Integer.parseInt(values[3]);
-		chunkID = Integer.parseInt(values[4]);
-		
-		data = rcv.getBytes();
-		
-		fileName = "Chunk " + chunkID;
-		
 		output = new FileOutputStream(fileName);
-		output.write(data);
+		output.write(bum.getBody());
 		
 		output.close();
 		
@@ -49,13 +58,6 @@ public class WaitBackUp extends Service implements Storable {
 	@Override
 	public void run() {
 		run_continuous();
-	}
-	
-	public String[] getAttributesRCV(String rcv){
-		String[] tmp = rcv.split("\n");
-		String[] result = tmp[0].split(" ");
-		
-		return result;
 	}
 }
 

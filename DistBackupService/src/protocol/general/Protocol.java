@@ -6,7 +6,7 @@ import java.net.SocketException;
 
 import connection.ReceivingSocekt;
 import connection.SendingSocket;
-import message.Message;
+import message.general.Message;
 
 public abstract class Protocol {
 	
@@ -28,17 +28,22 @@ public abstract class Protocol {
 		}
 	}
 	
-	public String receive() throws IOException {
+	public byte[] receive() throws IOException {
 		DatagramPacket packet = receiver.receive();
-		return new String(packet.getData());
+		return packet.getData();
 	}
 	
 	public void send() throws IOException {
-		sender.send("" + message);
+		byte[] m = message.getMessage();
+		sender.send(m);
 	}
 	
 	public void end_protocol() throws IOException {
 		receiver.leave();
 		sender.leave();
+	}
+	
+	public Message getMessage() {
+		return message;
 	}
 }

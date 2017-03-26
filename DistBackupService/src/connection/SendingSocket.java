@@ -10,18 +10,16 @@ public class SendingSocket extends SLMCast {
 		super(addr, port);
 
 		mcast_socket = new MulticastSocket();
-		isClosed();
 	}
 	
-	public void isClosed() {
-		System.out.println("Is sending mcast_socket closed?" + mcast_socket.isClosed());
+	public boolean isClosed() {
+		return mcast_socket.isClosed();
 	}
 	
-    public void send(String message) throws IOException {
-    	byte[] m = message.getBytes();
+    public void send(byte[] message) throws IOException {
     	DatagramPacket packet = new DatagramPacket(
-    			m,
-    			m.length,
+    			message,
+    			message.length,
 				mcast_address,
 				mcast_port);
     	mcast_socket.send(packet);
