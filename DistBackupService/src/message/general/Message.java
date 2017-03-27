@@ -1,6 +1,7 @@
 package message.general;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 
 public abstract class Message {
 
@@ -23,6 +24,8 @@ public abstract class Message {
 	}
 	
 	public Message(byte[] message) {
+		message = trim(message);
+		
 		if(!parseMessage(message))
 			throw new Error("Parser " + MessageConst.MESSAGE_ERROR);
 		
@@ -96,7 +99,7 @@ public abstract class Message {
 		byte[] message;
 		byte[] h = getHead();
 		byte[] b = getBody();
-		
+				
 		message = new byte[h.length + b.length + 8];
 		
 		System.arraycopy(MessageConst.MESSAGE_FLAG, 0, 
@@ -111,16 +114,10 @@ public abstract class Message {
 				message, 6 + h.length, b.length);
 		System.arraycopy(MessageConst.MESSAGE_FLAG, 0, 
 				message, 6 + h.length + b.length, 2);
-		
+
+		parseMessage(message);
+				
 		return message;
-	}
-	
-	public int getOffset() {
-		return 0;
-	}
-	
-	public int getLength() {
-		return 64000;
 	}
 
 	
@@ -132,7 +129,7 @@ public abstract class Message {
 		}
 		return index;
 	}
-	
+		
 	public int parsePart(byte[] message, int index, int type) {
 		int messageIndex = index, tmp;
 		
@@ -141,36 +138,41 @@ public abstract class Message {
 			return -1;
 		messageIndex = tmp;
 		
-		for( ; messageIndex < message.length; messageIndex++ ) {
-			tmp = parseFlag(message, messageIndex);
-			if( tmp == messageIndex + 2 ) {
-				//end of the head				
-				
-				if( type == MessageConst.STORE_TYPE_HEAD ) {
-					
-					head = new byte[messageIndex - 2 - index];
-					System.arraycopy(message, index + 2, head, 0, messageIndex - 2 - index);
 
-				} else if ( type == MessageConst.STORE_TYPE_BODY ) {
-					
-					body = new byte[messageIndex - 2 - index];
-					System.arraycopy(message, index + 2, body, 0, messageIndex - 2 - index);
-
+		if( type == MessageConst.STORE_TYPE_HEAD ) {
+			
+			for( ; messageIndex < message.length; messageIndex++ ) {
+				tmp = parseFlag(message, messageIndex);
+				if( tmp == messageIndex + 2 ) {
+					//end of the head				
+					head = new byte[messageIndex - (2 + index)];
+					System.arraycopy(message, index + 2, head, 0, messageIndex - (2 + index));
+					return tmp;
 				}
-				
+			}
+			
+		} else if ( type == MessageConst.STORE_TYPE_BODY ) {
+			
+			int endIndex = message.length - 2;
+			tmp = parseFlag(message, endIndex);
+			if( tmp == endIndex + 2 ) {
+				body = new byte[endIndex - (index + 2)];
+				System.arraycopy(message, index + 2, body, 0, endIndex - (2 + index));
 				return tmp;
 			}
+			
 		}
-
+		
 		return -1;
 	}
 
 	public boolean parseMessage(byte[] message) {
 		int messageIndex = 0;
-		
+				
 		messageIndex = parsePart(message, messageIndex, MessageConst.STORE_TYPE_HEAD);
 		if( messageIndex < 0 )
 			return false;
+		
 		
 		messageIndex = parsePart(message, messageIndex, MessageConst.STORE_TYPE_BODY);
 		
@@ -190,6 +192,14 @@ public abstract class Message {
 			arrayList.add(b);		
 	}
 	
+	public static byte[] trim(byte[] mArr) {
+		int i = mArr.length - 1;
+	    while (i >= 0 && mArr[i] == 0)
+	        --i;
+	    
+        return Arrays.copyOf(mArr, i + 1);
+	}
+
 	public static byte[] tobyte(Object[] arrByte) {
 		byte[] arrbyte = new byte[arrByte.length];
 	    

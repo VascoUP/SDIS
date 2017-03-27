@@ -16,8 +16,8 @@ public class ReceivingSocekt extends SLMCast {
 	
     public DatagramPacket receive() throws SocketTimeoutException, IOException {
     	DatagramPacket packet = new DatagramPacket(
-    			new byte[ConnectionConstants.PACKET_SIZE], 
-    			ConnectionConstants.PACKET_SIZE);
+    			new byte[ConnectionConstants.PACKET_SIZE_OVERHEAD], 
+    			ConnectionConstants.PACKET_SIZE_OVERHEAD);
     	
     	mcast_socket.receive(packet);
     	

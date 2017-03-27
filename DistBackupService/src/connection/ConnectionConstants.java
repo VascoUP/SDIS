@@ -2,6 +2,7 @@ package connection;
 
 public class ConnectionConstants {
 	public static final int PACKET_SIZE = 64000;
+	public static final int PACKET_SIZE_OVERHEAD = 64256;
 	
 	public static final int MC_GROUP_PORT = 5000;
 	public static final int MDB_GROUP_PORT = 5001;

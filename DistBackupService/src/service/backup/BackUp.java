@@ -46,11 +46,12 @@ public class BackUp extends Service implements Storable {
 		
 		
 		while (offset < buffer.length) {
-			byte[] newBuffer = new byte[MessageConst.CHUNKSIZE];
 			
 			int size = (offset + MessageConst.CHUNKSIZE >= buffer.length) ? 
 							buffer.length - offset : 
 							MessageConst.CHUNKSIZE;
+			byte[] newBuffer = new byte[size];
+			
 			System.arraycopy(buffer, offset, newBuffer, 0, size);
 						
 			rbu.setMessage(1, IDchunk, newBuffer);
