@@ -36,7 +36,7 @@ public class WaitBackUp extends Service implements Storable {
 		}
 		
 		serverID = bum.getSenderId();
-		if( serverID == App.getServerId() )
+		if( serverID != App.getServerId() )
 			return ;
 		
 		fileID = bum.getFileId();
