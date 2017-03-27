@@ -5,9 +5,9 @@ import java.io.IOException;
 import information.Storable;
 import message.general.Message;
 import protocol.restore.SendChunk;
-import service.general.Service;
+import service.general.ContinuousService;
 
-public class WaitRestore extends Service implements Storable {
+public class WaitRestore extends ContinuousService implements Storable {
 	
 	public WaitRestore() throws IOException {
 		super();
@@ -15,7 +15,7 @@ public class WaitRestore extends Service implements Storable {
 		protocol = new SendChunk();
 	}
 	
-	protected void run_continuous_service() throws IOException, InterruptedException  {
+	public void run_service() throws IOException, InterruptedException  {
 		byte[] rcv;
 	
 		rcv = protocol.receive();
@@ -24,10 +24,5 @@ public class WaitRestore extends Service implements Storable {
 		randomWait();
 		
 		protocol.send();
-	}
-
-	@Override
-	public void run() {
-		run_continuous();
 	}
 }

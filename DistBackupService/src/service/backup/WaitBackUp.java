@@ -6,10 +6,10 @@ import java.io.IOException;
 import information.Storable;
 import message.backup.BackUpMessage;
 import protocol.backup.AnswerBackUp;
-import service.general.Service;
+import service.general.ContinuousService;
 import ui.App;
 
-public class WaitBackUp extends Service implements Storable {
+public class WaitBackUp extends ContinuousService implements Storable {
 	
 	public WaitBackUp() throws IOException {
 		super();
@@ -17,7 +17,7 @@ public class WaitBackUp extends Service implements Storable {
 		protocol = new AnswerBackUp();
 	}
 	
-	protected void run_continuous_service() throws IOException, InterruptedException  {
+	public void run_service() throws IOException, InterruptedException  {
 		AnswerBackUp abu = (AnswerBackUp) protocol;
 		int fileID, chunkID, serverID;
 		FileOutputStream output;
@@ -53,11 +53,6 @@ public class WaitBackUp extends Service implements Storable {
 		
 		abu.setMessage(fileID, chunkID);
 		abu.send();
-	}
-
-	@Override
-	public void run() {
-		run_continuous();
 	}
 }
 

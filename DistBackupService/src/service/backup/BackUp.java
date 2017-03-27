@@ -10,9 +10,9 @@ import message.backup.BackUpMessage;
 import message.backup.StoredMessage;
 import message.general.MessageConst;
 import protocol.backup.RequestBackUp;
-import service.general.Service;
+import service.general.PontualService;
 
-public class BackUp extends Service implements Storable {
+public class BackUp extends PontualService implements Storable {
 	private String filePath;
 	
 	public BackUp(String filePath) throws IOException {
@@ -24,6 +24,15 @@ public class BackUp extends Service implements Storable {
 	
 	public String getFilePath() {
 		return filePath;
+	}
+	
+	public boolean validateMessage(byte[] message) {
+		StoredMessage stm = new StoredMessage(message);
+		BackUpMessage bum = (BackUpMessage)protocol.getMessage();
+		
+		return (stm.getMessageType().equals(MessageConst.STORED_MESSAGE_TYPE) &&
+				stm.getFileId() == bum.getFileId() &&
+				stm.getChunkId() == bum.getChunkId());
 	}
 
 	@Override
@@ -55,7 +64,7 @@ public class BackUp extends Service implements Storable {
 			System.arraycopy(buffer, offset, newBuffer, 0, size);
 						
 			rbu.setMessage(1, IDchunk, newBuffer);
-			run_pontual_service();
+			run_service();
 	        
 			IDchunk++;
 			offset += MessageConst.CHUNKSIZE;
@@ -67,15 +76,5 @@ public class BackUp extends Service implements Storable {
 			System.out.println("Error closing sockets");
 			return ;
 		}
-	}
-	
-	
-	public boolean validateMessage(byte[] message) {
-		StoredMessage stm = new StoredMessage(message);
-		BackUpMessage bum = (BackUpMessage)protocol.getMessage();
-		
-		return (stm.getMessageType().equals(MessageConst.STORED_MESSAGE_TYPE) &&
-				stm.getFileId() == bum.getFileId() &&
-				stm.getChunkId() == bum.getChunkId());
 	}
 }

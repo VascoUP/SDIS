@@ -4,9 +4,9 @@ import java.io.IOException;
 
 import information.Storable;
 import protocol.restore.GetChunk;
-import service.general.Service;
+import service.general.PontualService;
 
-public class Restore extends Service implements Storable {	
+public class Restore extends PontualService implements Storable {	
 	public Restore() throws IOException {
 		super();
 		
