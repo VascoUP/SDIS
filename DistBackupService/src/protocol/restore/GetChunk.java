@@ -11,11 +11,13 @@ public class GetChunk extends Protocol {
 	public GetChunk() throws IOException {
 		super(	ConnectionConstants.MDR_GROUP, ConnectionConstants.MDR_GROUP_PORT, 
 				ConnectionConstants.MC_GROUP, ConnectionConstants.MC_GROUP_PORT);
-		
+	}
+	
+	public void setMessage(String fileId, int chunkId) {
 		message = new GetChunkMessage(
-				/*version*/	App.getVersionProtocol(), 
+				/*version*/	App.getVersionProtocol(),
 				/*senderId*/App.getServerId(), 
-				/*fileId*/	1, 
-				/*chunkId*/	1);
+				/*fileId*/	fileId, 
+				/*chunkId*/	chunkId);
 	}
 }

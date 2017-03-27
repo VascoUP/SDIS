@@ -9,12 +9,12 @@ public abstract class Message {
 	protected final String version;
 	protected final String messageType;
 	protected final int senderId;
-	protected final int fileId;
+	protected final String fileId;
 	
 	protected byte[] body;
 	protected byte[] head;
 	
-	public Message(String messageType, String version, int senderId, int fileId) {
+	public Message(String messageType, String version, int senderId, String fileId) {
 		this.messageType = messageType;
 		this.version = version;
 		this.senderId = senderId;
@@ -36,7 +36,7 @@ public abstract class Message {
 		messageType = dividedHead[0];
 		version = dividedHead[1];
 		senderId = Integer.parseInt(dividedHead[2]);
-		fileId = Integer.parseInt(dividedHead[3]);
+		fileId = dividedHead[3];
 	}
 	
 	
@@ -59,7 +59,7 @@ public abstract class Message {
 			addBytes(message, mArr);
 			addBytes(message, " ".getBytes());
 			
-			mArr = ("" + fileId).getBytes();
+			mArr = fileId.getBytes();
 			addBytes(message, mArr);
 			addBytes(message, " ".getBytes());
 					
@@ -89,7 +89,7 @@ public abstract class Message {
 		return senderId;
 	}
 
-	public int getFileId() {
+	public String getFileId() {
 		return fileId;
 	}
 	

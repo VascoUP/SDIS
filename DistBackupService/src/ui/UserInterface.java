@@ -1,7 +1,10 @@
 package ui;
 
+import java.util.ArrayList;
 import java.util.Scanner;
 
+import information.AppInfo;
+import information.Chunk;
 import information.Storable;
 
 public class UserInterface implements Runnable, Storable {
@@ -30,6 +33,8 @@ public class UserInterface implements Runnable, Storable {
 	public void action(String inst) {
 		if( inst.equals("BACKUP") )
 			action_backup();
+		else if( inst.equals("CHUNKS") )
+			action_chunks();
 		else if( inst.equals("HELP") )
 			action_help();
 		else if( inst.equals("CLOSE") )
@@ -41,10 +46,19 @@ public class UserInterface implements Runnable, Storable {
 		App.end_backup();
 	}
 	
+	public void action_chunks() {
+		ArrayList<Chunk> chunks = AppInfo.getStoredChunks();
+		System.out.println("Found " + chunks.size() + " chunks");
+		for( Chunk c : chunks )
+			System.out.println("Chunk " + c.getChunkId() + " from " + c.getFileId() + "\n" + 
+								"Store in: " + c.getStorePath());
+	}
+	
 	public void action_help() {
 		System.out.println("INSTRUCTIONS:");
 		System.out.println("Write \"CLOSE\" to close the program");
 		System.out.println("Write \"BACKUP\" to backup a file");
+		System.out.println("Write \"CHUNKS\" to backup a file");
 		System.out.println("Write \"HELP\" for instruction");
 	}
 	

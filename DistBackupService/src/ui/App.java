@@ -37,7 +37,7 @@ public class App {
 
 
 	public static void init() {
-		AppInfo.setUI(new UserInterface());
+		AppInfo.init();
 		
 		init_wait_backup();
 		init_UI();

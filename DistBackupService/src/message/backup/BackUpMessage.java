@@ -9,7 +9,7 @@ public class BackUpMessage extends Message {
 
 	private int chunkId;
 
-	public BackUpMessage(String version, int senderId, int fileId, int chunkId, byte[] chunk) {
+	public BackUpMessage(String version, int senderId, String fileId, int chunkId, byte[] chunk) {
 		super(MessageConst.PUTCHUNK_MESSAGE_TYPE, version, senderId, fileId);
 		
 		this.chunkId = chunkId;

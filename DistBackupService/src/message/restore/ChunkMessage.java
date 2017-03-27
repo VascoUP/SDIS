@@ -9,7 +9,7 @@ public class ChunkMessage extends Message {
 	
 	private int chunkId; 
 
-	public ChunkMessage(String version, int senderId, int fileId, int chunkId) {
+	public ChunkMessage(String version, int senderId, String fileId, int chunkId) {
 		super(MessageConst.CHUNK_MESSAGE_TYPE, version, senderId, fileId);
 		
 		this.chunkId = chunkId;

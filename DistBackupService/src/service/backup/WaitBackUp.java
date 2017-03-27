@@ -1,8 +1,9 @@
 package service.backup;
 
-import java.io.FileOutputStream;
 import java.io.IOException;
 
+import file.HandleXMLFile;
+import information.Chunk;
 import information.Storable;
 import message.backup.BackUpMessage;
 import protocol.backup.AnswerBackUp;
@@ -17,42 +18,56 @@ public class WaitBackUp extends ContinuousService implements Storable {
 		protocol = new AnswerBackUp();
 	}
 	
-	public void run_service() throws IOException, InterruptedException  {
+	public BackUpMessage get_message() throws IOException {
 		AnswerBackUp abu = (AnswerBackUp) protocol;
-		int fileID, chunkID, serverID;
-		FileOutputStream output;
-		String fileName = "";
-		byte[] rcv;
-	
-		rcv = abu.receive();
-		
 		BackUpMessage bum;
+		byte[] rcv = abu.receive();
 		
 		try {
 			bum = new BackUpMessage(rcv);
 		} catch( Error e ) {
 			System.out.println(e);
-			return ;
+			return null;
 		}
 		
+		return bum;
+	}
+	
+	public boolean handle_message(BackUpMessage bum) throws IOException {
+		AnswerBackUp abu = (AnswerBackUp) protocol;
+		String fileName, fileID;
+		int chunkID, serverID;
+		Chunk chunk;
+		
 		serverID = bum.getSenderId();
-		if( serverID != App.getServerId() )
-			return ;
+		if( serverID == App.getServerId() )
+			return false;
 		
 		fileID = bum.getFileId();
 		chunkID = bum.getChunkId();
+		fileName = fileID + "_" + chunkID;
 		
-		fileName = "Chunk_" + chunkID;
-		
-		randomWait();
-		
-		output = new FileOutputStream(fileName);
-		output.write(bum.getBody());
-		
-		output.close();
+		chunk = new Chunk(fileName, fileID, chunkID, bum.getBody());
+		chunk.store();
+		try {
+			HandleXMLFile.addChunk(chunk);
+		} catch (Exception e) {
+			e.printStackTrace();
+			return false;
+		}
 		
 		abu.setMessage(fileID, chunkID);
 		abu.send();
+		
+		return true;
+	}
+	
+	public void run_service() throws IOException, InterruptedException  {
+		BackUpMessage bum = get_message();
+		
+		randomWait();
+		
+		handle_message(bum);
 	}
 }
 

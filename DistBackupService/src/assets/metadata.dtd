@@ -1,0 +1,4 @@
+<!ELEMENT metadata (chunk*)>
+<!ELEMENT chunk (fileID)>
+<!ELEMENT fileID (#PCDATA)>
+<!ATTLIST chunk chunkID CDATA #REQUIRED>

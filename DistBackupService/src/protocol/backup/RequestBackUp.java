@@ -14,7 +14,7 @@ public class RequestBackUp extends Protocol {
 				ConnectionConstants.MDB_GROUP, ConnectionConstants.MDB_GROUP_PORT);
 	}
 
-	public void setMessage(int fileId, int chunkId, byte[] data) {
+	public void setMessage(String fileId, int chunkId, byte[] data) {
 		message = new BackUpMessage(
 				/*version*/	App.getVersionProtocol(),
 				/*senderId*/App.getServerId(), 

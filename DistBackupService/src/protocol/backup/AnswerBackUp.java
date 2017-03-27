@@ -14,7 +14,7 @@ public class AnswerBackUp extends Protocol {
 				ConnectionConstants.MC_GROUP, ConnectionConstants.MC_GROUP_PORT);
 	}
 	
-	public void setMessage(int fileId, int chunkId) {
+	public void setMessage(String fileId, int chunkId) {
 		message = new StoredMessage(
 				/*version*/	App.getVersionProtocol(),
 				/*senderId*/App.getServerId(), 
