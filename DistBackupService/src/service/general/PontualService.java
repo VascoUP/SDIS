@@ -24,7 +24,7 @@ public abstract class PontualService extends Service {
 				break;
 			}
 			
-			if(validateMessage(rcv))
+			if(validateMessage(rcv) != null)
 				i++;
 		}
 		

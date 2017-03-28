@@ -14,11 +14,12 @@ public class SendChunk extends Protocol {
 				ConnectionConstants.MDR_GROUP, ConnectionConstants.MDR_GROUP_PORT);
 	}
 	
-	public void setMessage(String fileId, int chunkId) {
+	public void setMessage(String fileId, int chunkId, byte[] data) {
 		message = new ChunkMessage(
 				/*version*/	App.getVersionProtocol(),
 				/*senderId*/App.getServerId(), 
 				/*fileId*/	fileId, 
-				/*chunkId*/	chunkId);
+				/*chunkId*/	chunkId,
+				/*chunk*/	data);
 	}
 }

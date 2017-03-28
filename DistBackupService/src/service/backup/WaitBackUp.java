@@ -6,6 +6,7 @@ import file.HandleXMLFile;
 import information.Chunk;
 import information.Storable;
 import message.backup.BackUpMessage;
+import message.general.Message;
 import protocol.backup.AnswerBackUp;
 import service.general.ContinuousService;
 import ui.App;
@@ -18,31 +19,33 @@ public class WaitBackUp extends ContinuousService implements Storable {
 		protocol = new AnswerBackUp();
 	}
 	
-	public BackUpMessage get_message() throws IOException {
+	public byte[] get_message() throws IOException {
 		AnswerBackUp abu = (AnswerBackUp) protocol;
+		return abu.receive();
+	}
+	
+	public Message validateMessage(byte[] message) {
 		BackUpMessage bum;
-		byte[] rcv = abu.receive();
 		
 		try {
-			bum = new BackUpMessage(rcv);
+			bum = new BackUpMessage(message);
 		} catch( Error e ) {
-			System.out.println(e);
 			return null;
 		}
 		
-		return bum;
+		return (bum.getSenderId() != App.getServerId()) ? bum : null;
 	}
 	
-	public boolean handle_message(BackUpMessage bum) throws IOException {
+	public boolean handle_message(byte[] message) throws IOException {
 		AnswerBackUp abu = (AnswerBackUp) protocol;
-		String fileName, fileID;
-		int chunkID, serverID;
+		BackUpMessage bum;
 		Chunk chunk;
+		String fileName, fileID;
+		int chunkID;
 		
-		serverID = bum.getSenderId();
-		if( serverID == App.getServerId() )
+		if ((bum = (BackUpMessage) validateMessage(message)) == null)
 			return false;
-		
+				
 		fileID = bum.getFileId();
 		chunkID = bum.getChunkId();
 		fileName = fileID + "_" + chunkID;
@@ -63,11 +66,11 @@ public class WaitBackUp extends ContinuousService implements Storable {
 	}
 	
 	public void run_service() throws IOException, InterruptedException  {
-		BackUpMessage bum = get_message();
+		byte[] rcv = get_message();
 		
 		randomWait();
 		
-		handle_message(bum);
+		handle_message(rcv);
 	}
 }
 

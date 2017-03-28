@@ -9,10 +9,11 @@ public class ChunkMessage extends Message {
 	
 	private int chunkId; 
 
-	public ChunkMessage(String version, int senderId, String fileId, int chunkId) {
+	public ChunkMessage(String version, int senderId, String fileId, int chunkId, byte[] chunk) {
 		super(MessageConst.CHUNK_MESSAGE_TYPE, version, senderId, fileId);
 		
 		this.chunkId = chunkId;
+		this.body = chunk;
 	}
 	
 	public ChunkMessage(byte[] message) throws Error {
@@ -26,7 +27,6 @@ public class ChunkMessage extends Message {
 	}
 	
 	
-	
 	public int getChunkId() {
 		return chunkId;
 	}
@@ -34,6 +34,8 @@ public class ChunkMessage extends Message {
 	public void setChunkId(int chunkId) {
 		this.chunkId = chunkId;
 	}
+	
+	
 	public byte[] getHead() {
 		if( head == null ) {
 		

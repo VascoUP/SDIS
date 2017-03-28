@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.util.Random;
 import java.util.concurrent.TimeUnit;
 
+import message.general.Message;
 import protocol.general.Protocol;
 
 public abstract class Service implements Runnable {
@@ -19,8 +20,8 @@ public abstract class Service implements Runnable {
 		TimeUnit.MILLISECONDS.sleep(wait);
 	}
 	
-	public boolean validateMessage(byte[] message) {
-		return false;
+	public Message validateMessage(byte[] message) {
+		return null;
 	}
 	
 	public void run_service() throws IOException, InterruptedException {

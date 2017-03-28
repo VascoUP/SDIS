@@ -9,9 +9,11 @@ import information.Chunk;
 import information.Storable;
 import message.backup.BackUpMessage;
 import message.backup.StoredMessage;
+import message.general.Message;
 import message.general.MessageConst;
 import protocol.backup.RequestBackUp;
 import service.general.PontualService;
+import ui.App;
 
 public class BackUp extends PontualService implements Storable {
 	private String filePath;
@@ -27,13 +29,20 @@ public class BackUp extends PontualService implements Storable {
 		return filePath;
 	}
 	
-	public boolean validateMessage(byte[] message) {
-		StoredMessage stm = new StoredMessage(message);
+	public Message validateMessage(byte[] message) {
+		StoredMessage stm; 
 		BackUpMessage bum = (BackUpMessage)protocol.getMessage();
+		
+		try {
+			stm = new StoredMessage(message);
+		} catch( Error e ) {
+			return null;
+		}
 		
 		return (stm.getMessageType().equals(MessageConst.STORED_MESSAGE_TYPE) &&
 				stm.getFileId() == bum.getFileId() &&
-				stm.getChunkId() == bum.getChunkId());
+				stm.getChunkId() == bum.getChunkId() &&
+				stm.getSenderId() != App.getServerId()) ? stm : null;
 	}
 	
 	public void createChunks() throws IOException {

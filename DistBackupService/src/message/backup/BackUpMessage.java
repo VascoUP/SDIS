@@ -27,7 +27,6 @@ public class BackUpMessage extends Message {
 	}
 	
 	
-	
 	public int getChunkId() {
 		return chunkId;
 	}
@@ -36,9 +35,6 @@ public class BackUpMessage extends Message {
 		this.chunkId = chunkId;
 	}
 	
-	public void setChunkInformation(byte[] chunk){
-		setBody(chunk);
-	}
 	
 	public byte[] getHead() {
 		if( head == null ) {

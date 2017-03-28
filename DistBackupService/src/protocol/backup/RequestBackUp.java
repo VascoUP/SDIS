@@ -8,7 +8,6 @@ import protocol.general.Protocol;
 import ui.App;
 
 public class RequestBackUp extends Protocol {
-	
 	public RequestBackUp() throws IOException {
 		super(	ConnectionConstants.MC_GROUP, ConnectionConstants.MC_GROUP_PORT,
 				ConnectionConstants.MDB_GROUP, ConnectionConstants.MDB_GROUP_PORT);
