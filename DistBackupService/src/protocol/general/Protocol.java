@@ -20,6 +20,10 @@ public abstract class Protocol {
 		sender = new SendingSocket(snd_addr, snd_port);
 	}
 	
+	public boolean isClosed() {
+		return receiver.isClosed();
+	}
+	
 	public void socketTimeout(int t) {
 		try {
 			receiver.setTimeout(t);

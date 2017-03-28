@@ -9,7 +9,7 @@ public abstract class ContinuousService extends Service {
 	
 	@Override
 	public void run() {
-		while( true ) {
+		while( !Thread.interrupted() ) {
 			try {
 				run_service();
 			} catch (IOException | InterruptedException e) {

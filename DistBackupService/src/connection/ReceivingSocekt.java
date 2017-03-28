@@ -14,6 +14,10 @@ public class ReceivingSocekt extends SLMCast {
 		mcast_socket.joinGroup(mcast_address);
 	}
 	
+	public boolean isClosed() {
+		return mcast_socket.isClosed();
+	}
+	
     public DatagramPacket receive() throws SocketTimeoutException, IOException {
     	DatagramPacket packet = new DatagramPacket(
     			new byte[ConnectionConstants.PACKET_SIZE_OVERHEAD], 

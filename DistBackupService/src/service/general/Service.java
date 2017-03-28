@@ -14,15 +14,32 @@ public abstract class Service implements Runnable {
 		
 	}
 	
-	public void randomWait() throws InterruptedException {
-		Random r = new Random();
-		int wait = r.nextInt(400);
-		TimeUnit.MILLISECONDS.sleep(wait);
+	public byte[] receive() {
+		byte[] rcv;
+				
+		try {
+			rcv = protocol.receive();
+		} catch (IOException e) {
+			return null;
+		}
+		
+		return rcv;
 	}
 	
-	public Message validateMessage(byte[] message) {
-		return null;
+	public byte[] receive(int time) {
+		protocol.socketTimeout(time);	
+		return receive();
 	}
+	
+	public boolean send() {
+		try {
+			protocol.send();
+		} catch (IOException e) {
+			return false;
+		}
+		return true;
+	}
+	
 	
 	public void run_service() throws IOException, InterruptedException {
 		System.out.println("Running on service class error");
@@ -32,7 +49,6 @@ public abstract class Service implements Runnable {
 		try {
 			protocol.end_protocol();
 		} catch (IOException e) {
-			System.out.println("Error closing");
 		}
 	}
 	
@@ -41,4 +57,20 @@ public abstract class Service implements Runnable {
 		System.out.println("Running on service class error");
 	}
 
+	
+	
+	public void randomWait() throws InterruptedException {
+		int wait = randomTime();
+		TimeUnit.MILLISECONDS.sleep(wait);
+	}
+	
+	public int randomTime() {
+		Random r = new Random();
+		return r.nextInt(400);
+	}
+	
+	public Message validateMessage(byte[] message) {
+		return null;
+	}
+	
 }

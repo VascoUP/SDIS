@@ -1,5 +1,6 @@
 package file;
 
+import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.nio.file.Files;
@@ -54,11 +55,31 @@ public class HandleFile {
 		FileOutputStream output = new FileOutputStream(path);
 		output.write(buffer);
 		output.close();
+	}	
+	
+	public static void appendToFile(byte[] buffer, String path) throws IOException {
+		FileOutputStream output = new FileOutputStream(path, true);
+		try {
+		   output.write(buffer);
+		} finally {
+		   output.close();
+		}
+	}
+	
+	public static boolean isFile(String path) {
+		return new File(path).isFile();
 	}
 	
 	public static byte[] readFile(String path) throws IOException {
+		if( !isFile(path) )
+			return null;
+			
 		Path p = Paths.get(path);
 		byte[] buffer = Files.readAllBytes(p);
 		return buffer;
+	}
+	
+	public static String getFileName(String fileId, int chunkId) {
+		return fileId + "_" + chunkId;
 	}
 }

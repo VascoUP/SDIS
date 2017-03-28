@@ -33,6 +33,8 @@ public class UserInterface implements Runnable, Storable {
 	public void action(String inst) {
 		if( inst.equals("BACKUP") )
 			action_backup();
+		else if( inst.equals("RESTORE") )
+			action_restore();
 		else if( inst.equals("CHUNKS") )
 			action_chunks();
 		else if( inst.equals("HELP") )
@@ -44,6 +46,11 @@ public class UserInterface implements Runnable, Storable {
 	public void action_backup() {
 		App.init_backup();
 		App.end_backup();
+	}
+	
+	public void action_restore() {
+		App.init_restore();
+		App.end_restore();		
 	}
 	
 	public void action_chunks() {
@@ -58,6 +65,7 @@ public class UserInterface implements Runnable, Storable {
 		System.out.println("INSTRUCTIONS:");
 		System.out.println("Write \"CLOSE\" to close the program");
 		System.out.println("Write \"BACKUP\" to backup a file");
+		System.out.println("Write \"RESTORE\" to backup a file");
 		System.out.println("Write \"CHUNKS\" to backup a file");
 		System.out.println("Write \"HELP\" for instruction");
 	}

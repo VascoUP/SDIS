@@ -2,11 +2,13 @@ package service.backup;
 
 import java.io.IOException;
 
+import file.HandleFile;
 import file.HandleXMLFile;
 import information.Chunk;
 import information.Storable;
 import message.backup.BackUpMessage;
 import message.general.Message;
+import message.general.MessageConst;
 import protocol.backup.AnswerBackUp;
 import service.general.ContinuousService;
 import ui.App;
@@ -18,22 +20,20 @@ public class WaitBackUp extends ContinuousService implements Storable {
 		
 		protocol = new AnswerBackUp();
 	}
-	
-	public byte[] get_message() throws IOException {
-		AnswerBackUp abu = (AnswerBackUp) protocol;
-		return abu.receive();
-	}
-	
+		
 	public Message validateMessage(byte[] message) {
 		BackUpMessage bum;
 		
 		try {
 			bum = new BackUpMessage(message);
 		} catch( Error e ) {
+			System.out.println("Message error");
+			e.printStackTrace();
 			return null;
 		}
 		
-		return (bum.getSenderId() != App.getServerId()) ? bum : null;
+		return (bum.getMessageType().equals(MessageConst.PUTCHUNK_MESSAGE_TYPE) &&
+				bum.getSenderId() != App.getServerId()) ? bum : null;
 	}
 	
 	public boolean handle_message(byte[] message) throws IOException {
@@ -48,7 +48,7 @@ public class WaitBackUp extends ContinuousService implements Storable {
 				
 		fileID = bum.getFileId();
 		chunkID = bum.getChunkId();
-		fileName = fileID + "_" + chunkID;
+		fileName = HandleFile.getFileName(fileID, chunkID);
 		
 		chunk = new Chunk(fileName, fileID, chunkID, bum.getBody());
 		chunk.store();
@@ -60,13 +60,13 @@ public class WaitBackUp extends ContinuousService implements Storable {
 		}
 		
 		abu.setMessage(fileID, chunkID);
-		abu.send();
+		send();
 		
 		return true;
 	}
 	
 	public void run_service() throws IOException, InterruptedException  {
-		byte[] rcv = get_message();
+		byte[] rcv = receive();
 		
 		randomWait();
 		

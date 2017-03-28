@@ -44,9 +44,7 @@ public class HandleXMLFile {
 		                
 	                    fileID = el.getElementsByTagName("fileID").item(0).getTextContent();
 	                    chunkID = Integer.parseInt(el.getAttribute("chunkID"));
-	                    
-	                    System.out.println(fileID + " - " + chunkID);
-	                    
+	                    	                    
 	                    Chunk c = new Chunk(fileID + "_" + chunkID, fileID, chunkID);
 	                    c.storeAppInfo();
 	                }
