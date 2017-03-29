@@ -16,13 +16,14 @@ import ui.App;
 
 public class BackUp extends PontualService implements Storable {
 	private String filePath;
-	
+
 	public BackUp(String filePath) throws IOException {
 		super();
 		
 		protocol = new RequestBackUp();
 		this.filePath = filePath;
 	}
+
 	
 	public Message validateMessage(byte[] message) {
 		StoredMessage stm; 
@@ -39,48 +40,22 @@ public class BackUp extends PontualService implements Storable {
 				stm.getChunkId() == bum.getChunkId() &&
 				stm.getSenderId() != App.getServerId()) ? stm : null;
 	}
-	
-	public int getAnswer() {
-		int i = 0;
-		long t = System.currentTimeMillis();
-		long end = t + 1000;
-		byte[] rcv;
-		
-		while((t = end - System.currentTimeMillis()) > 0 ){
-			rcv = receive((int)t);
-			
-			if( rcv != null && validateMessage(rcv) != null )
-				i++;
-		}
-		
-		return i;
-	}
-	
-	public void run_service() {
-		if(!send())
-			return ;
-		getAnswer();
-	}
-	
-	public void endProtocol() {
-		RequestBackUp rbu = (RequestBackUp) protocol;
-		try {
-			rbu.end_protocol();
-		} catch (IOException e) {
-			System.out.println("Error closing sockets");
-			e.printStackTrace();
-			return ;
-		}
-	}
-	
+
+
 	public void setMessage(String fileID, int chunkID, byte[] buffer) {
 		RequestBackUp rbu = (RequestBackUp) protocol;
 		rbu.setMessage(fileID, chunkID, buffer);
 	}
 	
-	public void storeChunkInfo(String filePath, String fileID, int chunkID) throws IOException {
+	
+	public void storeChunkInfo(String filePath, String fileID, int chunkID) {
 		Chunk c = new Chunk(filePath, fileID, chunkID);
-		c.backUp();
+		try {
+			c.backUp();
+		} catch (IOException e) {
+			e.printStackTrace();
+			return ;
+		}
 		AppInfo.fileAddBackedUpChunk(c);
 	}
 	
@@ -100,20 +75,50 @@ public class BackUp extends PontualService implements Storable {
 		System.arraycopy(buffer, offset, newBuffer, 0, size);
 		return newBuffer;
 	}
+
+
+	public int getAnswer() {
+		int i = 0;
+		long t = System.currentTimeMillis();
+		long end = t + 1000;
+		byte[] rcv;
+		
+		while((t = end - System.currentTimeMillis()) > 0 ){
+			rcv = receive((int)t);
+			
+			if( rcv != null && validateMessage(rcv) != null )
+				i++;
+		}
+		
+		return i;
+	}
 	
-	public void createChunks() throws IOException {
+	public void service() {
+		if(!send())
+			return ;
+		getAnswer();
+	}
+	
+	public void run_service() {
 		int offset = 0, chunkID = 1;
 		String fileID = Chunk.getFileId(filePath);
 		System.out.println(fileID);
 		
-		byte[] buffer = HandleFile.readFile(filePath);
+		byte[] buffer;
+		try {
+			buffer = HandleFile.readFile(filePath);
+		} catch (IOException e) {
+			e.printStackTrace();
+			return ;
+		}
+		
 		byte[] chunk;
 		
 		while (offset <= buffer.length) {
 			chunk = getNextChunk(offset, buffer);
 			
 			setMessage(fileID, chunkID, chunk);
-			run_service();
+			service();
 			storeChunkInfo(filePath, fileID, chunkID);
 			
 			System.out.println("Status: " +  getPercentage(offset, buffer.length));
@@ -121,17 +126,12 @@ public class BackUp extends PontualService implements Storable {
 			chunkID++;
 			offset += MessageConst.CHUNKSIZE;
 		}
-		
-		endProtocol();
 	}
 
+	
 	@Override
 	public void run() {
-		 try {
-			createChunks();
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+		run_service();
+		end_service();
 	}
 }
