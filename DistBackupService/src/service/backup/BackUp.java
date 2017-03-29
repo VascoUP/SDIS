@@ -3,6 +3,7 @@ package service.backup;
 import java.io.IOException;
 
 import file.HandleFile;
+import information.AppInfo;
 import information.Chunk;
 import information.Storable;
 import message.backup.BackUpMessage;
@@ -61,38 +62,8 @@ public class BackUp extends PontualService implements Storable {
 		getAnswer();
 	}
 	
-	public void createChunks() throws IOException {
-		int offset = 0;
-		int IDchunk = 1;
-		String fileID = Chunk.getFileId(filePath);
-		System.out.println(filePath);
-		System.out.println(fileID);
-		
-		byte[] buffer = HandleFile.readFile(filePath);
-		
+	public void endProtocol() {
 		RequestBackUp rbu = (RequestBackUp) protocol;
-		
-		
-		while (offset <= buffer.length) {
-			
-			int size = (offset + MessageConst.CHUNKSIZE > buffer.length) ? 
-							buffer.length - offset : 
-							MessageConst.CHUNKSIZE;
-			byte[] newBuffer = new byte[size];
-			
-			System.arraycopy(buffer, offset, newBuffer, 0, size);
-						
-			rbu.setMessage(fileID, IDchunk, newBuffer);
-			run_service();
-			
-			System.out.println(offset);
-	        
-			IDchunk++;
-			offset += MessageConst.CHUNKSIZE;
-		}
-		
-		System.out.println("end");
-		
 		try {
 			rbu.end_protocol();
 		} catch (IOException e) {
@@ -100,6 +71,58 @@ public class BackUp extends PontualService implements Storable {
 			e.printStackTrace();
 			return ;
 		}
+	}
+	
+	public void setMessage(String fileID, int chunkID, byte[] buffer) {
+		RequestBackUp rbu = (RequestBackUp) protocol;
+		rbu.setMessage(fileID, chunkID, buffer);
+	}
+	
+	public void storeChunkInfo(String filePath, String fileID, int chunkID) throws IOException {
+		Chunk c = new Chunk(filePath, fileID, chunkID);
+		c.backUp();
+		AppInfo.fileAddBackedUpChunk(c);
+	}
+	
+	public int getPercentage(int offset, int size) {
+		int percentage;
+		if( (percentage = size - offset / 100) > 100 )
+			percentage = 100;
+		return percentage;
+	}
+	
+	public byte[] getNextChunk(int offset, byte[] buffer) {
+		int size = (offset + MessageConst.CHUNKSIZE > buffer.length) ? 
+						buffer.length - offset : 
+						MessageConst.CHUNKSIZE;
+		byte[] newBuffer = new byte[size];
+		
+		System.arraycopy(buffer, offset, newBuffer, 0, size);
+		return newBuffer;
+	}
+	
+	public void createChunks() throws IOException {
+		int offset = 0, chunkID = 1;
+		String fileID = Chunk.getFileId(filePath);
+		System.out.println(fileID);
+		
+		byte[] buffer = HandleFile.readFile(filePath);
+		byte[] chunk;
+		
+		while (offset <= buffer.length) {
+			chunk = getNextChunk(offset, buffer);
+			
+			setMessage(fileID, chunkID, chunk);
+			run_service();
+			storeChunkInfo(filePath, fileID, chunkID);
+			
+			System.out.println("Status: " +  getPercentage(offset, buffer.length));
+			
+			chunkID++;
+			offset += MessageConst.CHUNKSIZE;
+		}
+		
+		endProtocol();
 	}
 
 	@Override

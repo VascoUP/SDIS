@@ -8,6 +8,7 @@ import message.general.Message;
 import message.general.MessageConst;
 import message.restore.ChunkMessage;
 import message.restore.GetChunkMessage;
+import protocol.restore.GetChunk;
 import protocol.restore.SendChunk;
 import service.general.ContinuousService;
 import ui.App;
@@ -19,20 +20,22 @@ public class WaitRestore extends ContinuousService implements Storable {
 		
 		protocol = new SendChunk();
 	}
-	
-	public byte[] get_message() throws IOException {
-		SendChunk abu = (SendChunk) protocol;
-		return abu.receive();
-	}	
-	
+		
 	public boolean checkOtherAnswers(int time) {
+		GetChunk gcp;
+		try {
+			gcp = new GetChunk();
+		} catch (IOException e) {
+			return false;
+		}
+		
 		long t = System.currentTimeMillis();
 		long end = t + time;
 		byte[] rcv;
 		
 		while((t = end - System.currentTimeMillis()) > 0 ){
-			rcv = receive((int)t);
-			
+			rcv = receive(gcp, (int)t);
+			System.out.println(rcv == null ? "null" : rcv);
 			if( rcv != null && sameMessage(rcv) )
 				return true;
 		}
@@ -74,6 +77,7 @@ public class WaitRestore extends ContinuousService implements Storable {
 		byte[] chunk;
 		String fileName, fileID;
 		int chunkID;
+		
 		if ((gcm = (GetChunkMessage) validateMessage(message)) == null)
 			return false;
 		
@@ -88,14 +92,11 @@ public class WaitRestore extends ContinuousService implements Storable {
 		sc.setMessage(fileID, chunkID, chunk);
 		
 		int wait = randomTime();
-		if( !checkOtherAnswers(wait) )
-			sc.send();
+		if( !checkOtherAnswers(wait) ) {
+			System.out.println(wait + " - sending message");
+			send();
+		}
 		
 		return true;
-	}
-	
-	public void run_service() throws IOException, InterruptedException  {
-		byte[] rcv = get_message();
-		handle_message(rcv);
 	}
 }

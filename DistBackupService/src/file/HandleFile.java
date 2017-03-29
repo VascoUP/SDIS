@@ -6,6 +6,8 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.ArrayList;
+import java.util.Iterator;
 
 public class HandleFile {
 	private byte[] content;
@@ -50,6 +52,20 @@ public class HandleFile {
 		return readFile(path);
 	}
 	
+	public static void writeFile(ArrayList<byte[]> wChunks, String path) throws IOException {
+		Iterator<byte[]> iter = wChunks.iterator();
+		int chunkID = 1;
+		
+		while( iter.hasNext() ) {
+			byte[] chunk = iter.next();
+			
+			if( chunkID == 1 )
+				writeFile(chunk, path);
+			else 
+				appendToFile(chunk, path);
+		}
+	}
+	
 	
 	public static void writeFile(byte[] buffer, String path) throws IOException {
 		FileOutputStream output = new FileOutputStream(path);
@@ -70,8 +86,12 @@ public class HandleFile {
 		return new File(path).isFile();
 	}
 	
+	public static boolean exists(String path) {
+		return new File(path).exists();
+	}
+	
 	public static byte[] readFile(String path) throws IOException {
-		if( !isFile(path) )
+		if( !exists(path) )
 			return null;
 			
 		Path p = Paths.get(path);

@@ -14,11 +14,25 @@ public abstract class Service implements Runnable {
 		
 	}
 	
+	
 	public byte[] receive() {
+		return receive(protocol);
+	}
+	
+	public byte[] receive(int time) {
+		return receive(protocol, time);
+	}
+	
+	public boolean send() {
+		return send(protocol);
+	}
+
+	
+	public static byte[] receive(Protocol p) {
 		byte[] rcv;
 				
 		try {
-			rcv = protocol.receive();
+			rcv = p.receive();
 		} catch (IOException e) {
 			return null;
 		}
@@ -26,14 +40,14 @@ public abstract class Service implements Runnable {
 		return rcv;
 	}
 	
-	public byte[] receive(int time) {
-		protocol.socketTimeout(time);	
-		return receive();
+	public static byte[] receive(Protocol p, int time) {
+		p.socketTimeout(time);	
+		return receive(p);
 	}
 	
-	public boolean send() {
+	public static boolean send(Protocol p) {
 		try {
-			protocol.send();
+			p.send();
 		} catch (IOException e) {
 			return false;
 		}
@@ -57,7 +71,6 @@ public abstract class Service implements Runnable {
 		System.out.println("Running on service class error");
 	}
 
-	
 	
 	public void randomWait() throws InterruptedException {
 		int wait = randomTime();

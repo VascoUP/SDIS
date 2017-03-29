@@ -60,13 +60,23 @@ public class Chunk {
 	
 	
 	public void store() throws IOException {
-		storeAppInfo();
 		HandleFile.writeFile(chunk, storePath);
+		storeAppInfo();
+	}
+	
+	public void backUp() throws IOException {
+		backUpAppInfo();
 	}
 	
 	public void storeAppInfo() {
-		AppInfo.addChunk(this);		
+		AppInfo.storeChunk(this);		
 	}
+	
+
+	public void backUpAppInfo() {
+		AppInfo.backupChunk(this);		
+	}
+	
 	
 	
 	public static String getFileId(String path) {

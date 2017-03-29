@@ -1,4 +1,7 @@
-<!ELEMENT metadata (chunk*)>
-<!ELEMENT chunk (fileID)>
+<!ELEMENT metadata ((storedChunk | backedupChunk )*)>
+<!ELEMENT storedChunk (fileID)>
+<!ELEMENT backedupChunk (fileID, filePath)>
 <!ELEMENT fileID (#PCDATA)>
-<!ATTLIST chunk chunkID CDATA #REQUIRED>
+<!ELEMENT filePath (#PCDATA)>
+<!ATTLIST storedChunk chunkID CDATA #REQUIRED>
+<!ATTLIST backedupChunk chunkID CDATA #REQUIRED>

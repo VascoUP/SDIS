@@ -35,8 +35,10 @@ public class UserInterface implements Runnable, Storable {
 			action_backup();
 		else if( inst.equals("RESTORE") )
 			action_restore();
-		else if( inst.equals("CHUNKS") )
-			action_chunks();
+		else if( inst.equals("STOREDCHUNKS") )
+			action_stored_chunks();
+		else if( inst.equals("BACKEDUPCHUNKS") )
+			action_bu_chunks();
 		else if( inst.equals("HELP") )
 			action_help();
 		else if( inst.equals("CLOSE") )
@@ -53,8 +55,16 @@ public class UserInterface implements Runnable, Storable {
 		App.end_restore();		
 	}
 	
-	public void action_chunks() {
+	public void action_stored_chunks() {
 		ArrayList<Chunk> chunks = AppInfo.getStoredChunks();
+		System.out.println("Found " + chunks.size() + " chunks");
+		for( Chunk c : chunks )
+			System.out.println("Chunk " + c.getChunkId() + " from " + c.getFileId() + "\n" + 
+								"Store in: " + c.getStorePath());
+	}
+	
+	public void action_bu_chunks() {
+		ArrayList<Chunk> chunks = AppInfo.getBackedUpChunks();
 		System.out.println("Found " + chunks.size() + " chunks");
 		for( Chunk c : chunks )
 			System.out.println("Chunk " + c.getChunkId() + " from " + c.getFileId() + "\n" + 
@@ -65,8 +75,9 @@ public class UserInterface implements Runnable, Storable {
 		System.out.println("INSTRUCTIONS:");
 		System.out.println("Write \"CLOSE\" to close the program");
 		System.out.println("Write \"BACKUP\" to backup a file");
-		System.out.println("Write \"RESTORE\" to backup a file");
-		System.out.println("Write \"CHUNKS\" to backup a file");
+		System.out.println("Write \"RESTORE\" to restore a file");
+		System.out.println("Write \"STOREDCHUNKS\" to check localy stored chunks");
+		System.out.println("Write \"BACKEDUPCHUNKS\" to check backed up chunks");
 		System.out.println("Write \"HELP\" for instruction");
 	}
 	

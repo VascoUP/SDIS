@@ -1,8 +1,10 @@
 package service.restore;
 
 import java.io.IOException;
+import java.util.ArrayList;
 
 import file.HandleFile;
+import information.AppInfo;
 import information.Chunk;
 import information.Storable;
 import message.general.Message;
@@ -49,11 +51,6 @@ public class Restore extends PontualService implements Storable {
 		
 		while((t = end - System.currentTimeMillis()) > 0 ){
 			rcv = receive((int)t);
-			
-			/*
-			if( rcv != null && (m = validateMessage(rcv)) != null)
-				return m.getBody();
-			*/
 
 			if( rcv == null )
 				continue;
@@ -65,28 +62,39 @@ public class Restore extends PontualService implements Storable {
 		return null;
 	}
 	
-	public boolean storeChunk(int chunkID, byte[] chunk) {
-		try {
-			if( chunkID == 1 )
-				HandleFile.writeFile(chunk, filePath);
-			else
-				HandleFile.appendToFile(chunk, filePath);
-		} catch (IOException e) {
-			e.printStackTrace();
-			return false;
-		}
-		
-		return false;
+	public void setMessage(String fileID, int chunkID) {
+		GetChunk prot = (GetChunk)protocol;
+		prot.setMessage(fileID, chunkID);
 	}
 	
+	public String getFileID() {
+		Chunk buChunk = AppInfo.findBackedUpChunk(filePath);
+		if( buChunk == null ) {
+			System.out.println("Restore of a non backed up file");
+			return null;
+		}
+		return buChunk.getFileId();
+	}
+	
+	public void writeArrayList(ArrayList<byte[]> chunks) {
+		try {
+			HandleFile.writeFile(chunks, filePath);
+		} catch (IOException e) {
+			System.out.println("Error writting to file " + filePath);
+		}
+	}
+
 	public void run_service() {
-		String fileID = Chunk.getFileId(filePath);
-		GetChunk prot = (GetChunk)protocol;
-		boolean end = false;
+		ArrayList<byte[]> chunks = new ArrayList<byte[]>();
+		String fileID = getFileID();
 		int chunkID = 1, nTries = 0;
-		prot.setMessage(fileID, chunkID);
 		
-		while( !end && nTries < ServiceConst.MAXIMUM_TRIES ) {
+		if( fileID == null )
+			return;
+		System.out.println(fileID);
+		setMessage(fileID, chunkID);
+		
+		while( nTries < ServiceConst.MAXIMUM_TRIES ) {
 			if( !send() )
 				return;
 			
@@ -96,11 +104,17 @@ public class Restore extends PontualService implements Storable {
 				continue;
 			}
 			
+			chunks.add(chunk);
 			if( chunk.length < 64000 )
-				end = true;
+				break;
 
-			if(storeChunk(chunkID, chunk))
-				prot.setMessage(fileID, ++chunkID);
+			setMessage(fileID, chunkID);
+			nTries = 0;
 		}
+		
+		if( nTries >= ServiceConst.MAXIMUM_TRIES )
+			System.out.println("Error restoring the file" + filePath);
+		else
+			writeArrayList(chunks);
 	}
 }

@@ -3,7 +3,7 @@ package service.backup;
 import java.io.IOException;
 
 import file.HandleFile;
-import file.HandleXMLFile;
+import information.AppInfo;
 import information.Chunk;
 import information.Storable;
 import message.backup.BackUpMessage;
@@ -36,7 +36,7 @@ public class WaitBackUp extends ContinuousService implements Storable {
 				bum.getSenderId() != App.getServerId()) ? bum : null;
 	}
 	
-	public boolean handle_message(byte[] message) throws IOException {
+	public boolean handle_message(byte[] message) throws IOException, InterruptedException {
 		AnswerBackUp abu = (AnswerBackUp) protocol;
 		BackUpMessage bum;
 		Chunk chunk;
@@ -52,25 +52,13 @@ public class WaitBackUp extends ContinuousService implements Storable {
 		
 		chunk = new Chunk(fileName, fileID, chunkID, bum.getBody());
 		chunk.store();
-		try {
-			HandleXMLFile.addChunk(chunk);
-		} catch (Exception e) {
-			e.printStackTrace();
-			return false;
-		}
+		AppInfo.fileAddStoredChunk(chunk);
 		
 		abu.setMessage(fileID, chunkID);
+		randomWait();
 		send();
 		
 		return true;
-	}
-	
-	public void run_service() throws IOException, InterruptedException  {
-		byte[] rcv = receive();
-		
-		randomWait();
-		
-		handle_message(rcv);
 	}
 }
 

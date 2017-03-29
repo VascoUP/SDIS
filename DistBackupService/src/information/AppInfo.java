@@ -3,12 +3,14 @@ package information;
 import java.util.ArrayList;
 import java.util.Iterator;
 
+import file.HandleFile;
 import file.HandleXMLFile;
 import ui.UserInterface;
 
 
 public class AppInfo {
 	private static ArrayList<Chunk> storedChunks;
+	private static ArrayList<Chunk> backedUpChunks;
 	
 	private static Thread ui_thread;
 	private static Storable ui;
@@ -29,6 +31,7 @@ public class AppInfo {
 	
 	public static void init() {
 		initStoredChunks();
+		initBackedUpChunks();
 		try {
 			HandleXMLFile.readDocument();
 		} catch (Exception e) {
@@ -38,6 +41,7 @@ public class AppInfo {
 		initUI();
 	}
 
+	
 	public static Thread getUIThread() {
 		return ui_thread;
 	}
@@ -58,6 +62,8 @@ public class AppInfo {
 		ui = s;
 	}
 	
+	
+	
 	public static Thread getBackupThread() {
 		return backup_thread;
 	}
@@ -73,6 +79,7 @@ public class AppInfo {
 	public static void setBackup( Storable s ) {
 		backup = s;
 	}
+	
 	
 	public static Thread getWaitBackupThread() {
 		return wait_backup_thread;
@@ -90,6 +97,8 @@ public class AppInfo {
 		wait_backup = s;
 	}
 	
+	
+	
 	public static Thread getRestoreThread() {
 		return restore_thread;
 	}
@@ -106,6 +115,7 @@ public class AppInfo {
 		AppInfo.restore = restore;
 	}
 
+	
 	public static Thread getWaitRestoreThread() {
 		return wait_restore_thread;
 	}
@@ -132,19 +142,96 @@ public class AppInfo {
 		storedChunks = new ArrayList<Chunk>();
 	}
 	
-	public static void addChunk(Chunk chunk) {
+	public static void addStoredChunk(Chunk chunk) {
+		String path = chunk.getStorePath();
+		if( HandleFile.isFile(path) )
+			storeChunk(chunk);
+		else
+			fileElimStoredChunk(chunk);
+	}
+	
+	public static void storeChunk(Chunk chunk) {
 		storedChunks.add(chunk);
 	}
 	
-	public static void removeChunk(Chunk chunk) {
+	public static void removeStoredChunk(Chunk chunk) {
 		storedChunks.remove(chunk);
+		fileElimStoredChunk(chunk);
 	}
 	
-	public static Chunk findChunk(Chunk chunk) {
+	public static void fileElimStoredChunk(Chunk chunk) {
+		try {
+			HandleXMLFile.removeStoredChunk(chunk.getFileId(), "" + chunk.getChunkId());
+		} catch (Exception e) {
+			
+		}
+	}
+	
+	public static void fileAddStoredChunk(Chunk chunk) {
+		try {
+			HandleXMLFile.addStoreChunk(chunk);
+		} catch (Exception e) {
+			e.printStackTrace();
+			return ;
+		}
+	}
+	
+	public static Chunk findStoredChunk(Chunk chunk) {
 		Iterator<Chunk> iter = storedChunks.iterator();
 		while(iter.hasNext()) {
 			Chunk c = iter.next();
 			if(iter.equals(chunk))
+				return c;
+		}
+		return null;
+	}
+	
+	
+	
+	public static ArrayList<Chunk> getBackedUpChunks() {
+		return backedUpChunks;
+	}
+	
+	public static void initBackedUpChunks() {
+		backedUpChunks = new ArrayList<Chunk>();
+	}
+	
+	public static void addBackedUpChunk(Chunk chunk) {
+		eliminateBackedUpChunk(chunk);
+	}
+
+	public static void backupChunk(Chunk chunk) {
+		backedUpChunks.add(chunk);
+	}
+	
+	public static void removeBackedUpChunk(Chunk chunk) {
+		backedUpChunks.remove(chunk);
+		eliminateBackedUpChunk(chunk);
+	}
+	
+	public static void eliminateBackedUpChunk(Chunk chunk) {
+		try {
+			HandleXMLFile.removeBackedUpChunk(chunk.getFileId(), "" + chunk.getChunkId(), chunk.getStorePath());
+		} catch (Exception e) {
+			
+		}
+	}
+	
+	public static void fileAddBackedUpChunk(Chunk chunk) {
+		System.out.println("Backing up file to xml");
+		try {
+			HandleXMLFile.addBackedUpChunk(chunk);
+		} catch (Exception e) {
+			e.printStackTrace();
+			return ;
+		}
+	}
+	
+	public static Chunk findBackedUpChunk(String path) {
+		Iterator<Chunk> iter = backedUpChunks.iterator();
+		while(iter.hasNext()) {
+			Chunk c = iter.next();
+			if(c.getStorePath().equals(path))
 				return c;
 		}
 		return null;
