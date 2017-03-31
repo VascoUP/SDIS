@@ -68,9 +68,9 @@ public class App {
 	}
 	
 	
-	public static void init_backup() {
+	public static void init_backup(String path) {
 		try {
-			AppInfo.setBackup(new BackUp("Test1.c"));
+			AppInfo.setBackup(new BackUp(path));
 		} catch (IOException e) {
 			e.printStackTrace();
 			System.exit(0);
@@ -113,9 +113,9 @@ public class App {
 	}
 
 	
-	public static void init_restore() {
+	public static void init_restore(String path) {
 		try {
-			AppInfo.setRestore(new Restore("Test1.c"));
+			AppInfo.setRestore(new Restore(path));
 		} catch (IOException e) {
 			e.printStackTrace();
 			System.exit(0);

@@ -33,7 +33,6 @@ public class WaitRestore extends ContinuousService implements Storable {
 		
 		while((t = end - System.currentTimeMillis()) > 0 ){
 			rcv = receive(gcp, (int)t);
-			System.out.println(rcv == null ? "null" : rcv);
 			if( rcv != null && sameMessage(rcv) )
 				return true;
 		}
@@ -89,10 +88,8 @@ public class WaitRestore extends ContinuousService implements Storable {
 		sc.setMessage(fileID, chunkID, chunk);
 		
 		int wait = randomTime();
-		if( !checkOtherAnswers(wait) ) {
-			System.out.println(wait + " - sending message");
+		if( !checkOtherAnswers(wait) )
 			send();
-		}
 		
 		return true;
 	}

@@ -100,7 +100,6 @@ public class BackUp extends PontualService implements Storable {
 	public void run_service() {
 		int offset = 0, chunkID = 1;
 		String fileID = Chunk.getFileId(filePath);
-		System.out.println(fileID);
 		
 		byte[] buffer;
 		try {
@@ -118,8 +117,6 @@ public class BackUp extends PontualService implements Storable {
 			setMessage(fileID, chunkID, chunk);
 			service();
 			storeChunkInfo(filePath, fileID, chunkID);
-			
-			System.out.println("Status: " +  getPercentage(offset, buffer.length));
 			
 			chunkID++;
 			offset += MessageConst.CHUNKSIZE;

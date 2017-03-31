@@ -219,6 +219,11 @@ public class AppInfo {
 	
 	public static void fileAddBackedUpChunk(Chunk chunk) {
 		System.out.println("Backing up file to xml");
+		
+		Chunk c;		
+		if( (c = findBackedUpChunk(chunk.getStorePath())) != null )
+			removeBackedUpChunk(c);
+		
 		try {
 			HandleXMLFile.addBackedUpChunk(chunk);
 		} catch (Exception e) {

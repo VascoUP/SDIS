@@ -88,7 +88,7 @@ public class Restore extends PontualService implements Storable {
 		
 		if( fileID == null )
 			return;
-		System.out.println(fileID);
+		
 		setMessage(fileID, chunkID);
 		
 		while( nTries < ServiceConst.MAXIMUM_TRIES ) {
@@ -105,12 +105,12 @@ public class Restore extends PontualService implements Storable {
 			if( chunk.length < 64000 )
 				break;
 
-			setMessage(fileID, chunkID);
+			setMessage(fileID, chunkID++);
 			nTries = 0;
 		}
 		
 		if( nTries >= ServiceConst.MAXIMUM_TRIES )
-			System.out.println("Error restoring the file" + filePath);
+			System.out.println("Error restoring the file " + filePath);
 		else
 			writeArrayList(chunks);
 	}

@@ -31,27 +31,28 @@ public class UserInterface implements Runnable, Storable {
 	
 	
 	public void action(String inst) {
-		if( inst.equals("BACKUP") )
-			action_backup();
-		else if( inst.equals("RESTORE") )
-			action_restore();
-		else if( inst.equals("STOREDCHUNKS") )
+		String[] instTrim = inst.split("");
+		if( instTrim.length == 2 && instTrim[0].equals("BACKUP") )
+			action_backup(instTrim[1]);
+		else if( instTrim.length == 2 && instTrim[0].equals("RESTORE") )
+			action_restore(instTrim[1]);
+		else if( instTrim.length == 1 && instTrim[0].equals("STOREDCHUNKS") )
 			action_stored_chunks();
-		else if( inst.equals("BACKEDUPCHUNKS") )
+		else if( instTrim.length == 1 && instTrim[0].equals("BACKEDUPCHUNKS") )
 			action_bu_chunks();
-		else if( inst.equals("HELP") )
+		else if( instTrim.length == 1 && instTrim[0].equals("HELP") )
 			action_help();
-		else if( inst.equals("CLOSE") )
+		else if( instTrim.length == 1 && instTrim[0].equals("CLOSE")  )
 			end = true;
 	}
 	
-	public void action_backup() {
-		App.init_backup();
+	public void action_backup(String inst) {
+		App.init_backup(inst);
 		App.end_backup();
 	}
 	
-	public void action_restore() {
-		App.init_restore();
+	public void action_restore(String inst) {
+		App.init_restore(inst);
 		App.end_restore();		
 	}
 	
@@ -74,8 +75,8 @@ public class UserInterface implements Runnable, Storable {
 	public void action_help() {
 		System.out.println("INSTRUCTIONS:");
 		System.out.println("Write \"CLOSE\" to close the program");
-		System.out.println("Write \"BACKUP\" to backup a file");
-		System.out.println("Write \"RESTORE\" to restore a file");
+		System.out.println("Write \"BACKUP <file_path>\" to backup a file");
+		System.out.println("Write \"RESTORE <file_path>\" to restore a file");
 		System.out.println("Write \"STOREDCHUNKS\" to check localy stored chunks");
 		System.out.println("Write \"BACKEDUPCHUNKS\" to check backed up chunks");
 		System.out.println("Write \"HELP\" for instruction");

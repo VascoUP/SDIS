@@ -168,10 +168,11 @@ public abstract class Message {
 			}
 			
 		} else if ( type == MessageConst.STORE_TYPE_BODY ) {
-			
-				body = new byte[message.length - (index + 2)];
-				System.arraycopy(message, index + 2, body, 0, message.length - (2 + index));
-				return tmp;
+		
+			byte[] b2 = new byte[message.length - (index + 2)];
+			System.arraycopy(message, index + 2, b2, 0, message.length - (2 + index));
+			body = trim(b2);
+			return tmp;
 				
 		}
 		

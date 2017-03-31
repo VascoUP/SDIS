@@ -34,7 +34,7 @@ public class WaitBackUp extends ContinuousService implements Storable {
 		
 		while((t = end - System.currentTimeMillis()) > 0 ){
 			rcv = receive(rbu, (int)t);
-			System.out.println(rcv == null ? "null" : rcv);
+			System.out.println("BackUp " + rcv == null ? "null" : rcv);
 			if( rcv != null && rcv.equals(protocol.getMessage()) )
 				return true;
 		}
@@ -78,8 +78,8 @@ public class WaitBackUp extends ContinuousService implements Storable {
 		send();
 		
 		int wait = randomTime();
-		if( !checkOtherAnswers(wait) )
-			send();
+		checkOtherAnswers(wait);
+		send();
 		
 		return true;
 	}
