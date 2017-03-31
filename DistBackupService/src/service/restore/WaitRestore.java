@@ -5,13 +5,11 @@ import java.io.IOException;
 import file.HandleFile;
 import information.Storable;
 import message.general.Message;
-import message.general.MessageConst;
 import message.restore.ChunkMessage;
 import message.restore.GetChunkMessage;
 import protocol.restore.GetChunk;
 import protocol.restore.SendChunk;
 import service.general.ContinuousService;
-import ui.App;
 
 public class WaitRestore extends ContinuousService implements Storable {
 	
@@ -52,8 +50,7 @@ public class WaitRestore extends ContinuousService implements Storable {
 			return null;
 		}
 		
-		return (gcm.getMessageType().equals(MessageConst.RESTORE_MESSAGE_TYPE) &&
-				gcm.getSenderId() != App.getServerId())? gcm : null;
+		return gcm.isValidMessage() ? gcm : null;
 	}
 	
 	public boolean sameMessage(byte[] message) {
@@ -66,7 +63,7 @@ public class WaitRestore extends ContinuousService implements Storable {
 			return false;
 		}
 		
-		return 	gcm.getMessageType().equals(MessageConst.CHUNK_MESSAGE_TYPE) &&
+		return 	gcm.isValidMessage() &&
 				gcm.getFileId().equals(mGcm.getFileId()) &&
 				gcm.getChunkId() == mGcm.getChunkId();
 	}

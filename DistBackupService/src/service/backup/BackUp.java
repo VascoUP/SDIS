@@ -12,7 +12,6 @@ import message.general.Message;
 import message.general.MessageConst;
 import protocol.backup.RequestBackUp;
 import service.general.PontualService;
-import ui.App;
 
 public class BackUp extends PontualService implements Storable {
 	private String filePath;
@@ -35,10 +34,9 @@ public class BackUp extends PontualService implements Storable {
 			return null;
 		}
 		
-		return (stm.getMessageType().equals(MessageConst.STORED_MESSAGE_TYPE) &&
+		return (stm.isValidMessage() &&
 				stm.getFileId().equals(bum.getFileId()) &&
-				stm.getChunkId() == bum.getChunkId() &&
-				stm.getSenderId() != App.getServerId()) ? stm : null;
+				stm.getChunkId() == bum.getChunkId()) ? stm : null;
 	}
 
 

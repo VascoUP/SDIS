@@ -4,13 +4,15 @@ import java.util.ArrayList;
 
 import message.general.Message;
 import message.general.MessageConst;
+import ui.App;
 
 public class StoredMessage extends Message {
+	private static final String MESSAGE_TYPE = MessageConst.STORED_MESSAGE_TYPE;
 
 	private int chunkId; 
 
 	public StoredMessage(String version, int senderId, String fileId, int chunkId) {
-		super(MessageConst.STORED_MESSAGE_TYPE, version, senderId, fileId);
+		super(MESSAGE_TYPE, version, senderId, fileId);
 		
 		this.chunkId = chunkId;
 	}	
@@ -26,7 +28,10 @@ public class StoredMessage extends Message {
 	}
 	
 	
-	
+	/*=====================
+	 * GETTERS AND SETTERS
+	 *=====================
+	 */	
 	public int getChunkId() {
 		return chunkId;
 	}
@@ -54,5 +59,23 @@ public class StoredMessage extends Message {
 		}
 
 		return head;
+	}
+
+	
+	/*=============
+	 * COMPARATORS
+	 *=============
+	 */
+	@Override
+	public boolean equals(Object o) {
+		StoredMessage m = (StoredMessage) o;
+		return 	m.getMessageType().equals(messageType) && 
+				m.getFileId().equals(fileId) &&
+				m.getChunkId() == chunkId;
+	}
+	
+	public boolean isValidMessage() {
+		return 	messageType.equals(MESSAGE_TYPE) &&
+				senderId != App.getServerId();
 	}
 }

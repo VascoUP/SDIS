@@ -7,6 +7,13 @@ public abstract class ContinuousService extends Service {
 		super();
 	}
 	
+	public boolean checkOtherAnswers(int time) {
+		return false;
+	}
+	
+	public boolean sameMessage(byte[] message) {
+		return false;
+	}
 
 	public boolean handle_message(byte[] message) throws IOException, InterruptedException {
 		throw new Error("Handle_message running on the wrong class");

@@ -4,8 +4,6 @@ import java.util.ArrayList;
 import java.util.Arrays;
 
 public abstract class Message {
-
-
 	protected final String version;
 	protected final String messageType;
 	protected final int senderId;
@@ -40,7 +38,10 @@ public abstract class Message {
 	}
 	
 	
-	
+	/*=====================
+	 * GETTERS AND SETTERS
+	 *=====================
+	 */
 	public byte[] getHead() {
 		if( head == null ) {
 			ArrayList<Byte> message = new ArrayList<Byte>();
@@ -92,9 +93,7 @@ public abstract class Message {
 	public String getFileId() {
 		return fileId;
 	}
-	
-	
-	
+		
 	public byte[] getMessage() {
 		byte[] message;
 		byte[] h = getHead();
@@ -121,7 +120,26 @@ public abstract class Message {
 	}
 
 	
+	/*=============
+	 * COMPARATORS
+	 *=============
+	 */
+	@Override
+	public boolean equals(Object o) {
+		Message m = (Message) o;
+		return 	m.getMessageType().equals(messageType) && 
+				m.getFileId().equals(fileId);
+	}
 	
+	public boolean isValidMessage() {
+		return false;
+	}
+	
+	
+	/*=========
+	 * PARSERS
+	 *=========
+	 */
 	public int parseFlag(byte[] message, int index) {
 		for( int i = 0; i < MessageConst.MESSAGE_FLAG.length && index < message.length; i++, index++ ) {
 			if( MessageConst.MESSAGE_FLAG[i] != message[index] ) 
@@ -186,7 +204,10 @@ public abstract class Message {
 	
 	
 	
-	
+	/*====================
+	 * Message Operations
+	 *====================
+	 */
 	public static void addBytes(ArrayList<Byte> arrayList, byte[] mArr) {
 		for( byte b : mArr )
 			arrayList.add(b);		

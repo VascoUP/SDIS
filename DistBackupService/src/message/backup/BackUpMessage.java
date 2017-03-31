@@ -4,13 +4,15 @@ import java.util.ArrayList;
 
 import message.general.Message;
 import message.general.MessageConst;
+import ui.App;
 
 public class BackUpMessage extends Message {
+	private static final String MESSAGE_TYPE = MessageConst.PUTCHUNK_MESSAGE_TYPE;
 
 	private int chunkId;
 
 	public BackUpMessage(String version, int senderId, String fileId, int chunkId, byte[] chunk) {
-		super(MessageConst.PUTCHUNK_MESSAGE_TYPE, version, senderId, fileId);
+		super(MESSAGE_TYPE, version, senderId, fileId);
 		
 		this.chunkId = chunkId;
 		this.body = chunk;
@@ -27,6 +29,10 @@ public class BackUpMessage extends Message {
 	}
 	
 	
+	/*=====================
+	 * GETTERS AND SETTERS
+	 *=====================
+	 */
 	public int getChunkId() {
 		return chunkId;
 	}
@@ -34,7 +40,6 @@ public class BackUpMessage extends Message {
 	public void setChunkId(int chunkId) {
 		this.chunkId = chunkId;
 	}
-	
 	
 	public byte[] getHead() {
 		if( head == null ) {
@@ -55,5 +60,24 @@ public class BackUpMessage extends Message {
 		}
 
 		return head;
+	}
+	
+
+	
+	/*=============
+	 * COMPARATORS
+	 *=============
+	 */
+	@Override
+	public boolean equals(Object o) {
+		BackUpMessage m = (BackUpMessage) o;
+		return 	m.getMessageType().equals(messageType) && 
+				m.getFileId().equals(fileId) &&
+				m.getChunkId() == chunkId;
+	}
+
+	public boolean isValidMessage() {
+		return 	messageType.equals(MESSAGE_TYPE) &&
+				senderId != App.getServerId();
 	}
 }

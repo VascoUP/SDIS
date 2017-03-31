@@ -8,13 +8,11 @@ import information.AppInfo;
 import information.Chunk;
 import information.Storable;
 import message.general.Message;
-import message.general.MessageConst;
 import message.restore.ChunkMessage;
 import message.restore.GetChunkMessage;
 import protocol.restore.GetChunk;
 import service.general.PontualService;
 import service.general.ServiceConst;
-import ui.App;
 
 public class Restore extends PontualService implements Storable {	
 	private String filePath;
@@ -37,10 +35,9 @@ public class Restore extends PontualService implements Storable {
 			return null;
 		}
 				
-		return (cm.getMessageType().equals(MessageConst.CHUNK_MESSAGE_TYPE) &&
+		return (cm.isValidMessage() &&
 				cm.getFileId().equals(bum.getFileId()) &&
-				cm.getChunkId() == bum.getChunkId() &&
-				cm.getSenderId() != App.getServerId()) ? cm : null;
+				cm.getChunkId() == bum.getChunkId()) ? cm : null;
 	}
 
 	public byte[] getAnswer() {

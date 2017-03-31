@@ -8,10 +8,9 @@ import information.Chunk;
 import information.Storable;
 import message.backup.BackUpMessage;
 import message.general.Message;
-import message.general.MessageConst;
 import protocol.backup.AnswerBackUp;
+import protocol.backup.RequestBackUp;
 import service.general.ContinuousService;
-import ui.App;
 
 public class WaitBackUp extends ContinuousService implements Storable {
 	
@@ -19,6 +18,27 @@ public class WaitBackUp extends ContinuousService implements Storable {
 		super();
 		
 		protocol = new AnswerBackUp();
+	}
+	
+	public boolean checkOtherAnswers(int time) {
+		RequestBackUp rbu;
+		try {
+			rbu = new RequestBackUp();
+		} catch (IOException e) {
+			return false;
+		}
+		
+		long t = System.currentTimeMillis();
+		long end = t + time;
+		byte[] rcv;
+		
+		while((t = end - System.currentTimeMillis()) > 0 ){
+			rcv = receive(rbu, (int)t);
+			System.out.println(rcv == null ? "null" : rcv);
+			if( rcv != null && rcv.equals(protocol.getMessage()) )
+				return true;
+		}
+		return false;
 	}
 		
 	public Message validateMessage(byte[] message) {
@@ -32,8 +52,7 @@ public class WaitBackUp extends ContinuousService implements Storable {
 			return null;
 		}
 		
-		return (bum.getMessageType().equals(MessageConst.PUTCHUNK_MESSAGE_TYPE) &&
-				bum.getSenderId() != App.getServerId()) ? bum : null;
+		return bum.isValidMessage() ? bum : null;
 	}
 	
 	public boolean handle_message(byte[] message) throws IOException, InterruptedException {
@@ -57,6 +76,10 @@ public class WaitBackUp extends ContinuousService implements Storable {
 		abu.setMessage(fileID, chunkID);
 		randomWait();
 		send();
+		
+		int wait = randomTime();
+		if( !checkOtherAnswers(wait) )
+			send();
 		
 		return true;
 	}
