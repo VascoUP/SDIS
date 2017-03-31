@@ -99,7 +99,7 @@ public abstract class Message {
 		byte[] h = getHead();
 		byte[] b = getBody();
 				
-		message = new byte[h.length + b.length + 8];
+		message = new byte[h.length + b.length + 6];
 		
 		System.arraycopy(MessageConst.MESSAGE_FLAG, 0, 
 				message, 0, 2);
@@ -111,8 +111,6 @@ public abstract class Message {
 				message, 4 + h.length, 2);
 		System.arraycopy(b, 0, 
 				message, 6 + h.length, b.length);
-		System.arraycopy(MessageConst.MESSAGE_FLAG, 0, 
-				message, 6 + h.length + b.length, 2);
 
 		parseMessage(message);
 				
@@ -171,14 +169,10 @@ public abstract class Message {
 			
 		} else if ( type == MessageConst.STORE_TYPE_BODY ) {
 			
-			int endIndex = message.length - 2;
-			tmp = parseFlag(message, endIndex);
-			if( tmp == endIndex + 2 ) {
-				body = new byte[endIndex - (index + 2)];
-				System.arraycopy(message, index + 2, body, 0, endIndex - (2 + index));
+				body = new byte[message.length - (index + 2)];
+				System.arraycopy(message, index + 2, body, 0, message.length - (2 + index));
 				return tmp;
-			}
-			
+				
 		}
 		
 		return -1;
