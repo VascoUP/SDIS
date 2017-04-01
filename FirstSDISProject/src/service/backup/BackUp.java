@@ -1,18 +1,7 @@
 package service.backup;
 
-import java.io.IOException;
-
-import file.HandleFile;
-import information.FileInfo;
-import information.Chunk;
-import message.backup.BackUpMessage;
-import message.backup.StoredMessage;
-import message.general.Message;
-import message.general.MessageConst;
-import protocol.backup.RequestBackUp;
-import service.general.PontualService;
-
-public class BackUp extends PontualService {
+public class BackUp {
+/*
 	private String filePath;
 
 	public BackUp(String filePath) throws IOException {
@@ -132,4 +121,5 @@ public class BackUp extends PontualService {
 		run_service();
 		end_service();
 	}
+*/
 }

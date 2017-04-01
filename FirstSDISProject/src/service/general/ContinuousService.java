@@ -1,9 +1,7 @@
 package service.general;
 
-import java.io.IOException;
-
-public abstract class ContinuousService extends Service {
-	public ContinuousService() {
+public abstract class ContinuousService {
+/*	public ContinuousService() {
 		super();
 	}
 	
@@ -36,4 +34,5 @@ public abstract class ContinuousService extends Service {
 			}
 		}
 	}
+*/
 }

@@ -1,18 +1,7 @@
 package service.backup;
 
-import java.io.IOException;
-
-import file.HandleFile;
-import information.FileInfo;
-import information.Chunk;
-import message.backup.BackUpMessage;
-import message.general.Message;
-import protocol.backup.AnswerBackUp;
-import protocol.backup.RequestBackUp;
-import service.general.ContinuousService;
-
-public class WaitBackUp extends ContinuousService {
-	
+public class WaitBackUp {
+/*	
 	public WaitBackUp() throws IOException {
 		super();
 		
@@ -82,5 +71,6 @@ public class WaitBackUp extends ContinuousService {
 		
 		return true;
 	}
+*/
 }
 

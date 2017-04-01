@@ -1,14 +1,7 @@
 package service.general;
 
-import java.io.IOException;
-import java.util.Random;
-import java.util.concurrent.TimeUnit;
-
-import message.general.Message;
-import protocol.general.Protocol;
-
-public abstract class Service implements Runnable {
-	protected Protocol protocol;
+public abstract class Service {
+/*	protected Protocol protocol;
 	
 	public Service() {
 		
@@ -85,5 +78,5 @@ public abstract class Service implements Runnable {
 	public Message validateMessage(byte[] message) {
 		return null;
 	}
-	
+*/
 }

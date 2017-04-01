@@ -1,17 +1,7 @@
 package service.restore;
 
-import java.io.IOException;
-
-import file.HandleFile;
-import message.general.Message;
-import message.restore.ChunkMessage;
-import message.restore.GetChunkMessage;
-import protocol.restore.GetChunk;
-import protocol.restore.SendChunk;
-import service.general.ContinuousService;
-
-public class WaitRestore extends ContinuousService {
-	
+public class WaitRestore{
+/*	
 	public WaitRestore() throws IOException {
 		super();
 		
@@ -95,4 +85,5 @@ public class WaitRestore extends ContinuousService {
 		
 		return true;
 	}
+*/
 }

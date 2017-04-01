@@ -1,7 +1,7 @@
 package service.general;
 
-public abstract class PontualService extends Service {
-	public PontualService() {
+public abstract class PontualService {
+/*	public PontualService() {
 		super();
 	}	
 	
@@ -13,4 +13,5 @@ public abstract class PontualService extends Service {
 		run_service();
 		end_service();
 	}
+*/
 }

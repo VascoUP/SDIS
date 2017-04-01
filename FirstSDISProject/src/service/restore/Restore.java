@@ -1,20 +1,7 @@
 package service.restore;
 
-import java.io.IOException;
-import java.util.ArrayList;
-
-import file.HandleFile;
-import information.FileInfo;
-import information.Chunk;
-import message.general.Message;
-import message.restore.ChunkMessage;
-import message.restore.GetChunkMessage;
-import protocol.restore.GetChunk;
-import service.general.PontualService;
-import service.general.ServiceConst;
-
-public class Restore extends PontualService {	
-	private String filePath;
+public class Restore {	
+	/*private String filePath;
 	
 	public Restore(String filePath) throws IOException {
 		super();
@@ -114,5 +101,5 @@ public class Restore extends PontualService {
 			System.out.println("Error restoring the file " + filePath);
 		else
 			writeArrayList(chunks);
-	}
+	}*/
 }
