@@ -1,18 +1,4 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?><!DOCTYPE metadata SYSTEM "metadata.dtd">
 <metadata>
 	<!--This is where we store information about the chunks-->
-	<storedChunk chunkID="1">
-		<fileID>6340042ec3a1850b3c1810c3fae21899a89ddf78a47a3915ea2597100a88e3ce</fileID>
-	</storedChunk>
-	<backedupChunk chunkID="1">
-		<fileID>6340042ec3a1850b3c1810c3fae21899a89ddf78a47a3915ea2597100a88e3ce</fileID>
-		<filePath>testFiles/Test2.c</filePath>
-	</backedupChunk>
-	<storedChunk chunkID="2">
-		<fileID>6340042ec3a1850b3c1810c3fae21899a89ddf78a47a3915ea2597100a88e3ce</fileID>
-	</storedChunk>
-	<backedupChunk chunkID="2">
-		<fileID>6340042ec3a1850b3c1810c3fae21899a89ddf78a47a3915ea2597100a88e3ce</fileID>
-		<filePath>testFiles/Test2.c</filePath>
-	</backedupChunk>
-<storedChunk chunkID="1"><fileID>9b2edf13edc2a8fd7d3ceb04fbd8f2baae59e84ab8f13702abe51a91ec6d0430</fileID></storedChunk><backedupChunk chunkID="1"><fileID>9b2edf13edc2a8fd7d3ceb04fbd8f2baae59e84ab8f13702abe51a91ec6d0430</fileID><filePath>testFiles/Twitter.png</filePath></backedupChunk></metadata>
+</metadata>

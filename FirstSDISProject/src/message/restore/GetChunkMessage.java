@@ -4,6 +4,7 @@ import java.util.ArrayList;
 
 import message.general.Message;
 import message.general.MessageConst;
+import message.general.MessageOperation;
 import information.PeerInfo;
 
 public class GetChunkMessage extends Message {
@@ -49,13 +50,13 @@ public class GetChunkMessage extends Message {
 			
 			sHead = super.getHead();
 			
-			addBytes(message, sHead);
+			MessageOperation.addBytes(message, sHead);
 			
 			mArr = ("" + chunkId).getBytes();
-			addBytes(message, mArr);
-			addBytes(message, " ".getBytes());
+			MessageOperation.addBytes(message, mArr);
+			MessageOperation.addBytes(message, " ".getBytes());
 			
-			head = tobyte(message.toArray());
+			head = MessageOperation.tobyte(message.toArray());
 		
 		}
 

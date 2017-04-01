@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import information.PeerInfo;
 import message.general.Message;
 import message.general.MessageConst;
+import message.general.MessageOperation;
 
 public class BackUpMessage extends Message {
 	private static final String MESSAGE_TYPE = MessageConst.PUTCHUNK_MESSAGE_TYPE;
@@ -49,13 +50,13 @@ public class BackUpMessage extends Message {
 			
 			sHead = super.getHead();
 			
-			addBytes(message, sHead);
+			MessageOperation.addBytes(message, sHead);
 			
 			mArr = ("" + chunkId).getBytes();
-			addBytes(message, mArr);
-			addBytes(message, " ".getBytes());
+			MessageOperation.addBytes(message, mArr);
+			MessageOperation.addBytes(message, " ".getBytes());
 			
-			head = tobyte(message.toArray());
+			head = MessageOperation.tobyte(message.toArray());
 		
 		}
 

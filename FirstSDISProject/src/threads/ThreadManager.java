@@ -1,103 +1,178 @@
 package threads;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Iterator;
 
-import information.AppInfo;
-import service.backup.BackUp;
-import service.backup.WaitBackUp;
-import service.restore.Restore;
-import service.restore.WaitRestore;
+import listener.*;
+import message.backup.BackUpMessage;
+import message.backup.StoredMessage;
+import message.restore.ChunkMessage;
+import message.restore.GetChunkMessage;
+import sender.*;
 
 public class ThreadManager {
+	private static ArrayList<SenderThread> sender_threads = new ArrayList<SenderThread>();	
+	private static ListenerThread mc_listener;
+	private static ListenerThread mdb_listener;
+	private static ListenerThread mdr_listener;
 	
-	/*==============
-	 * INIT THREADS
-	 *==============
-	 */
 	public static void initListenerThreads() {
-		initWaitBackup();
-		initWaitRestore();
+		initMC();
+		initMDB();
+		initMDR();
 	}
 	
-	public static void initBackUpThread(String path) {
+	public static void initMC() {
+		MCListenner mc = null;
 		try {
-			AppInfo.setBackup(new BackUp(path));
+			mc = new MCListenner();
 		} catch (IOException e) {
 			e.printStackTrace();
 			System.exit(0);
 		}
 		
-		AppInfo.setBackupThread(new Thread((Runnable)AppInfo.getBackup()));
-		AppInfo.getBackupThread().start();
+		Thread mc_thread = new Thread((Runnable)mc);
+		mc_listener = new ListenerThread(mc_thread, mc);
+		mc_listener.start();
 	}
 	
-	public static void initRestoreThread(String path) {
+	public static void initMDB() {
+		MDBListenner mdb = null;
 		try {
-			AppInfo.setRestore(new Restore(path));
+			mdb = new MDBListenner();
 		} catch (IOException e) {
 			e.printStackTrace();
 			System.exit(0);
 		}
 		
-		AppInfo.setRestoreThread(new Thread((Runnable)AppInfo.getRestore()));
-		AppInfo.getRestoreThread().start();
+		Thread mdb_thread = new Thread((Runnable)mdb);
+		mdb_listener = new ListenerThread(mdb_thread, mdb);
+		mdb_listener.start();		
 	}
-
-	public static void initWaitBackup() {
+	
+	public static void initMDR() {
+		MDRListenner mdr = null;
 		try {
-			AppInfo.setWaitBackp(new WaitBackUp());
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-			System.exit(0);
-		}
-		
-		AppInfo.setWaitBackupThread(new Thread((Runnable)AppInfo.getWaitBackup()));
-		AppInfo.getWaitBackupThread().start();
-	}
-
-	public static void initWaitRestore() {
-		try {
-			AppInfo.setWaitRestore(new WaitRestore());
+			mdr = new MDRListenner();
 		} catch (IOException e) {
 			e.printStackTrace();
 			System.exit(0);
 		}
 		
-		AppInfo.setWaitRestoreThread(new Thread((Runnable) AppInfo.getWaitRestore()));
-		AppInfo.getWaitRestoreThread().start();		
+		Thread mdr_thread = new Thread((Runnable)mdr);
+		mdr_listener = new ListenerThread(mdr_thread, mdr);
+		mdr_listener.start();
+	}
+	
+	public static void initBackUp(BackUpMessage message) {
+		update();
+		System.out.println("ThreadManager: initBackUp: Updated");
+		BackUpSender backup = null;
+		try {
+			backup = new BackUpSender(message);
+		} catch (IOException e) {
+			e.printStackTrace();
+			System.exit(0);
+		}
+		
+		Thread backup_thread = new Thread((Runnable)backup);
+		SenderThread st = new SenderThread(backup_thread, backup);
+		sender_threads.add(st);
+		st.start();
+	}
+	
+	public static void initAnswerBackUp(StoredMessage message) {
+		update();
+		
+		AnswerBackUpSender aBackup = null;
+		try {
+			aBackup = new AnswerBackUpSender(message);
+		} catch (IOException e) {
+			e.printStackTrace();
+			System.exit(0);
+		}
+		
+		Thread aBackup_thread = new Thread((Runnable)aBackup);
+		SenderThread st = new SenderThread(aBackup_thread, aBackup);
+		sender_threads.add(st);
+		st.start();			
+	}
+	
+	public static void initRestore(GetChunkMessage message) {
+		update();
+		
+		RestoreSender restore = null;
+		try {
+			restore = new RestoreSender(message);
+		} catch (IOException e) {
+			e.printStackTrace();
+			System.exit(0);
+		}
+		
+		Thread restore_thread = new Thread((Runnable)restore);
+		SenderThread st = new SenderThread(restore_thread, restore);
+		sender_threads.add(st);
+		st.start();			
+	}
+	
+	public static void initAnswerRestore(ChunkMessage message) {
+		update();
+		
+		AnswerRestoreSender aRestore = null;
+		try {
+			aRestore = new AnswerRestoreSender(message);
+		} catch (IOException e) {
+			e.printStackTrace();
+			System.exit(0);
+		}
+		
+		Thread aRestore_thread = new Thread((Runnable)aRestore);
+		SenderThread st = new SenderThread(aRestore_thread, aRestore);
+		sender_threads.add(st);
+		st.start();				
 	}
 
+	public static void checkTerminatedSendThreads() throws InterruptedException {
+		Iterator<SenderThread> iter = sender_threads.iterator();
+		while( iter.hasNext() ) {
+			SenderThread t = iter.next();
+			System.out.println("checkTerminatedSendThreads: join dead thread");
+			if( !t.isAlive() )
+				t.close();
+		}
+	}
 
-	/*===============
-	 * CLOSE THREADS
-	 *===============
-	 */
+	public static void update() {
+		try {
+			checkTerminatedSendThreads();
+		} catch (InterruptedException e1) {
+		}
+	}
+	
+	public static void joinSendThreads() throws InterruptedException {
+		Iterator<SenderThread> iter = sender_threads.iterator();
+		while( iter.hasNext() ) {
+			SenderThread t = iter.next();
+			System.out.println("joinSendThreads: join dead thread");
+			t.close();
+		}
+	}
+	
+	public static void interruptThreads() throws InterruptedException {
+		mc_listener.close();
+		mdb_listener.close();
+		mdr_listener.close();
+	}
+	
 	public static void closeThreads() {
-		joinServiceThreads();
-		interruptWaitBackUp();
-	}
-	
-	public static void interruptWaitBackUp() {
-		AppInfo.getWaitBackupThread().interrupt();
-		AppInfo.getWaitRestoreThread().interrupt();
-	}
-	
-	public static void joinServiceThreads() {
-		joinBackUpThread();
-		joinRestoreThread();
-	}
-
-	public static void joinBackUpThread() {
 		try {
-			AppInfo.getBackupThread().join();
+			joinSendThreads();
 		} catch (InterruptedException e) {
 		}
-	}
-	
-	public static void joinRestoreThread() {
+
 		try {
-			AppInfo.getRestoreThread().join();
+			interruptThreads();
 		} catch (InterruptedException e) {
 		}
 	}

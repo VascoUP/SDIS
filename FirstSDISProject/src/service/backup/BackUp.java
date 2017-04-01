@@ -3,9 +3,8 @@ package service.backup;
 import java.io.IOException;
 
 import file.HandleFile;
-import information.AppInfo;
+import information.FileInfo;
 import information.Chunk;
-import information.Storable;
 import message.backup.BackUpMessage;
 import message.backup.StoredMessage;
 import message.general.Message;
@@ -13,7 +12,7 @@ import message.general.MessageConst;
 import protocol.backup.RequestBackUp;
 import service.general.PontualService;
 
-public class BackUp extends PontualService implements Storable {
+public class BackUp extends PontualService {
 	private String filePath;
 
 	public BackUp(String filePath) throws IOException {
@@ -54,7 +53,7 @@ public class BackUp extends PontualService implements Storable {
 			e.printStackTrace();
 			return ;
 		}
-		AppInfo.addBackedUpChunk(c);
+		FileInfo.addBackedUpChunk(c);
 	}
 	
 	public int getPercentage(int offset, int size) {
@@ -129,7 +128,7 @@ public class BackUp extends PontualService implements Storable {
 	
 	@Override
 	public void run() {
-		AppInfo.eliminateBackedUpFile(filePath);
+		FileInfo.eliminateBackedUpFile(filePath);
 		run_service();
 		end_service();
 	}

@@ -69,12 +69,12 @@ public class Chunk {
 	}
 	
 	public void storeAppInfo() {
-		AppInfo.storeChunk(this);		
+		FileInfo.storeChunk(this);		
 	}
 	
 
 	public void backUpAppInfo() {
-		AppInfo.backupChunk(this);		
+		FileInfo.backupChunk(this);		
 	}
 	
 	

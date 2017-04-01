@@ -4,9 +4,8 @@ import java.io.IOException;
 import java.util.ArrayList;
 
 import file.HandleFile;
-import information.AppInfo;
+import information.FileInfo;
 import information.Chunk;
-import information.Storable;
 import message.general.Message;
 import message.restore.ChunkMessage;
 import message.restore.GetChunkMessage;
@@ -14,7 +13,7 @@ import protocol.restore.GetChunk;
 import service.general.PontualService;
 import service.general.ServiceConst;
 
-public class Restore extends PontualService implements Storable {	
+public class Restore extends PontualService {	
 	private String filePath;
 	
 	public Restore(String filePath) throws IOException {
@@ -65,7 +64,7 @@ public class Restore extends PontualService implements Storable {
 	}
 	
 	public String getFileID() {
-		Chunk buChunk = AppInfo.findBackedUpChunk(filePath);
+		Chunk buChunk = FileInfo.findBackedUpChunk(filePath);
 		if( buChunk == null ) {
 			System.out.println("Restore of a non backed up file");
 			return null;

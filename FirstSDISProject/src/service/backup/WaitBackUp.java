@@ -3,16 +3,15 @@ package service.backup;
 import java.io.IOException;
 
 import file.HandleFile;
-import information.AppInfo;
+import information.FileInfo;
 import information.Chunk;
-import information.Storable;
 import message.backup.BackUpMessage;
 import message.general.Message;
 import protocol.backup.AnswerBackUp;
 import protocol.backup.RequestBackUp;
 import service.general.ContinuousService;
 
-public class WaitBackUp extends ContinuousService implements Storable {
+public class WaitBackUp extends ContinuousService {
 	
 	public WaitBackUp() throws IOException {
 		super();
@@ -71,7 +70,7 @@ public class WaitBackUp extends ContinuousService implements Storable {
 		
 		chunk = new Chunk(fileName, fileID, chunkID, bum.getBody());
 		chunk.store();
-		AppInfo.fileAddStoredChunk(chunk);
+		FileInfo.fileAddStoredChunk(chunk);
 		
 		abu.setMessage(fileID, chunkID);
 		randomWait();

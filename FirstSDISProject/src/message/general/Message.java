@@ -1,7 +1,6 @@
 package message.general;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 
 public abstract class Message {
 	protected final String version;
@@ -22,7 +21,7 @@ public abstract class Message {
 	}
 	
 	public Message(byte[] message) {
-		message = trim(message);
+		message = MessageOperation.trim(message);
 		
 		if(!parseMessage(message))
 			throw new Error("Parser " + MessageConst.MESSAGE_ERROR);
@@ -48,23 +47,23 @@ public abstract class Message {
 			byte[] mArr;
 						
 			mArr = messageType.getBytes();
-			addBytes(message, mArr);
-			addBytes(message, " ".getBytes());
+			MessageOperation.addBytes(message, mArr);
+			MessageOperation.addBytes(message, " ".getBytes());
 			
 			mArr = version.getBytes();
-			addBytes(message, mArr);
-			addBytes(message, " ".getBytes());
+			MessageOperation.addBytes(message, mArr);
+			MessageOperation.addBytes(message, " ".getBytes());
 			
 	
 			mArr = ("" + senderId).getBytes();
-			addBytes(message, mArr);
-			addBytes(message, " ".getBytes());
+			MessageOperation.addBytes(message, mArr);
+			MessageOperation.addBytes(message, " ".getBytes());
 			
 			mArr = fileId.getBytes();
-			addBytes(message, mArr);
-			addBytes(message, " ".getBytes());
+			MessageOperation.addBytes(message, mArr);
+			MessageOperation.addBytes(message, " ".getBytes());
 					
-			head = tobyte(message.toArray());
+			head = MessageOperation.tobyte(message.toArray());
 		}
 		
 		return head;
@@ -171,7 +170,7 @@ public abstract class Message {
 		
 			byte[] b2 = new byte[message.length - (index + 2)];
 			System.arraycopy(message, index + 2, b2, 0, message.length - (2 + index));
-			body = trim(b2);
+			body = MessageOperation.trim(b2);
 			return tmp;
 				
 		}
@@ -198,38 +197,5 @@ public abstract class Message {
 	}
 	
 	
-	
-	/*====================
-	 * Message Operations
-	 *====================
-	 */
-	public static void addBytes(ArrayList<Byte> arrayList, byte[] mArr) {
-		for( byte b : mArr )
-			arrayList.add(b);		
-	}
-	
-	public static byte[] trim(byte[] mArr) {
-		int i = mArr.length - 1;
-	    while (i >= 0 && mArr[i] == 0)
-	        --i;
-	    
-        return Arrays.copyOf(mArr, i + 1);
-	}
 
-	public static byte[] tobyte(Object[] arrByte) {
-		byte[] arrbyte = new byte[arrByte.length];
-	    
-		for( int i = 0; i < arrByte.length; i++ )
-			arrbyte[i] = (Byte)arrByte[i];
-		
-		return arrbyte;
-	}
-	
-	public static void printByteArray(byte[] arr) {
-	    StringBuilder sb = new StringBuilder();
-	    for (byte b : arr) {
-	        sb.append(String.format("%02X ", b));
-	    }
-	    System.out.println(sb.toString());
-	}
 }

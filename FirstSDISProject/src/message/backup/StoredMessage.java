@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import information.PeerInfo;
 import message.general.Message;
 import message.general.MessageConst;
+import message.general.MessageOperation;
 
 public class StoredMessage extends Message {
 	private static final String MESSAGE_TYPE = MessageConst.STORED_MESSAGE_TYPE;
@@ -48,13 +49,13 @@ public class StoredMessage extends Message {
 			
 			sHead = super.getHead();
 			
-			addBytes(message, sHead);
+			MessageOperation.addBytes(message, sHead);
 			
 			mArr = ("" + chunkId).getBytes();
-			addBytes(message, mArr);
-			addBytes(message, " ".getBytes());
+			MessageOperation.addBytes(message, mArr);
+			MessageOperation.addBytes(message, " ".getBytes());
 			
-			head = tobyte(message.toArray());
+			head = MessageOperation.tobyte(message.toArray());
 		
 		}
 
