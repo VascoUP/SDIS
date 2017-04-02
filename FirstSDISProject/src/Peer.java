@@ -11,8 +11,7 @@ public class Peer {
 	
 	public static void initAll() {
 		FileInfo.init();
-		ThreadManager.initListenerThreads();
-		
+		ThreadManager.initThreadManager();
 		RMIStorage.initRMI();
 		RMIStorage.getRMI().bind();
 	}

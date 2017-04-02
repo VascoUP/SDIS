@@ -1,11 +1,12 @@
 package information;
 
-import datastructure.BlockerQueue;
+import java.util.concurrent.BlockingQueue;
+import java.util.concurrent.LinkedBlockingQueue;
 
 public class MessageQueue {
-	private static BlockerQueue<byte[]> messageQueue = new BlockerQueue<byte[]>();
+	private static BlockingQueue<byte[]> messageQueue = new LinkedBlockingQueue<byte[]>(64);
 
-	public static BlockerQueue<byte[]> getMessageQueue() {
+	public static BlockingQueue<byte[]> getMessageQueue() {
 		return messageQueue;
 	}
 }

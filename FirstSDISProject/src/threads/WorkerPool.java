@@ -5,22 +5,24 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
 
 public class WorkerPool {
+	private static final int NUMBER_THREADS = 10;
+	
 	private ExecutorService service;
 	private int nThreads = 0;
 	
 	public WorkerPool() {
-		service = Executors.newFixedThreadPool(5);
+		service = Executors.newFixedThreadPool(NUMBER_THREADS);
 	}
 
 	public void startAllWorkerThreads() {
-		for( int i = 0; i < 10; i++ ) {
+		for( int i = 0; i < NUMBER_THREADS; i++ ) {
 			nThreads++;
 			startNewWorkerThread();
 		}
 	}
 	
 	public void startNewWorkerThread() {
-		Runnable worker = new WorkerThread("" + nThreads);  
+		Runnable worker = new WorkerThread(nThreads);
 		service.execute(worker);		
 	}
 	

@@ -1,27 +1,18 @@
 package threads;
 
-public class WorkerThread implements Runnable {
+import service.general.ServiceParser;
 
-	private String message;
+public class WorkerThread implements Runnable {
+	private final int id;
 	
-	public WorkerThread(String message) {
-		this.message = message;
+	public WorkerThread(int id) {
+		this.id = id;
 	}
 	
 	@Override
 	public void run() {
-		Thread.currentThread().setName("Thread " + message);
-		System.out.println(Thread.currentThread().getName()+" (Start) message = "+ message);  
-		processmessage();
-		System.out.println(Thread.currentThread().getName()+" (End)");
+		Thread.currentThread().setName("" + id);
+		while( !Thread.currentThread().isInterrupted() )
+			ServiceParser.parseService();
 	}
-	
-	public void processmessage() {
-		try {  
-			Thread.sleep(2000);  
-		} catch (InterruptedException e) { 
-			e.printStackTrace(); 
-		}
-	}
-
 }

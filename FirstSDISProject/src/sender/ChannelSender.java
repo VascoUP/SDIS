@@ -26,7 +26,6 @@ public abstract class ChannelSender implements Runnable {
 	
 	@Override
 	public void run() {
-		System.out.println("Channel Sender: run");
 		sendMessage();
 	}
 	

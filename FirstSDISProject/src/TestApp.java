@@ -41,12 +41,10 @@ public class TestApp {
         try {
 			testApp.registerRMI(peer_name);
 		} catch (RemoteException e) {
-			System.out.println(" remote exception");
-			e.printStackTrace();
+			System.out.println("Remote exception");
 			return false;
 		} catch (NotBoundException e) {
-			System.out.println(" not bound exception");
-			e.printStackTrace();
+			System.out.println("Not bound exception");
 			return false;
 		}
         
@@ -57,7 +55,6 @@ public class TestApp {
     	try {
 			stub.run(rmiArgs);
 		} catch (RemoteException e) {
-			e.printStackTrace();
 		}
     }
     

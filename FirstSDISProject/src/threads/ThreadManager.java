@@ -12,10 +12,16 @@ import message.restore.GetChunkMessage;
 import sender.*;
 
 public class ThreadManager {
-	private static ArrayList<SenderThread> sender_threads = new ArrayList<SenderThread>();	
+	private static ArrayList<SenderThread> sender_threads = new ArrayList<SenderThread>();
+	private static WorkerPool worker_pool;
 	private static ListenerThread mc_listener;
 	private static ListenerThread mdb_listener;
 	private static ListenerThread mdr_listener;
+	
+	public static void initThreadManager() {
+		initWorkerPool();
+		initListenerThreads();
+	}
 	
 	public static void initListenerThreads() {
 		initMC();
@@ -65,9 +71,14 @@ public class ThreadManager {
 		mdr_listener.start();
 	}
 	
+	public static void initWorkerPool() {
+		worker_pool = new WorkerPool();
+		worker_pool.startAllWorkerThreads();
+	}
+	
 	public static void initBackUp(BackUpMessage message) {
 		update();
-		System.out.println("ThreadManager: initBackUp: Updated");
+		
 		BackUpSender backup = null;
 		try {
 			backup = new BackUpSender(message);
@@ -166,13 +177,13 @@ public class ThreadManager {
 	}
 	
 	public static void closeThreads() {
-		try {
-			joinSendThreads();
+		worker_pool.shutdown();
+		
+		try { joinSendThreads();
 		} catch (InterruptedException e) {
 		}
 
-		try {
-			interruptThreads();
+		try { interruptThreads();
 		} catch (InterruptedException e) {
 		}
 	}

@@ -60,6 +60,7 @@ public class RMIRunner {
 	public static void close() {
 		System.out.println("Close");	
 		ThreadManager.closeThreads();
-		RMIStorage.getRMI().unbind();
+		System.exit(0);
+		//RMIStorage.getRMI().unbind();
 	}
 }

@@ -13,7 +13,6 @@ public class SenderThread implements ThreadOperations{
 
 	@Override
 	public void start() {
-		System.out.println("SenderThread: start");
 		thread.start();
 	}
 
