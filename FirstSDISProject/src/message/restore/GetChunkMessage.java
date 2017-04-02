@@ -80,4 +80,14 @@ public class GetChunkMessage extends Message {
 		return 	messageType.equals(MESSAGE_TYPE) &&
 				senderId != PeerInfo.peerInfo.getServerID();
 	}
+	
+	
+	/*==================
+	 * To String method
+	 *==================
+	 */
+	@Override
+	public String toString() {
+		return messageType + fileId + chunkId;
+	}
 }

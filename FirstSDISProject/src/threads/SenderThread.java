@@ -9,10 +9,16 @@ public class SenderThread implements ThreadOperations{
 	public SenderThread(Thread thread, ChannelSender sender) {
 		this.thread = thread;
 		this.sender = sender;
+		thread.setName("" + sender);
 	}
 
+	public ChannelSender getSender() {
+		return sender;
+	}
+	
 	@Override
 	public void start() {
+		System.out.println(Thread.currentThread().getName());
 		thread.start();
 	}
 
@@ -35,5 +41,10 @@ public class SenderThread implements ThreadOperations{
 	public void close() throws InterruptedException {
 		join();
 		sender.closeChannel();
+	}
+
+	@Override
+	public String getName() {
+		return thread.getName();
 	}
 }

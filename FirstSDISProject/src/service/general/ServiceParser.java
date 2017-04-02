@@ -3,34 +3,31 @@ package service.general;
 import information.MessageQueue;
 import message.general.BasicMessage;
 import message.general.MessageParser;
+import message.general.QueueableMessage;
 
 public class ServiceParser {	
 	public static void parseService() {
-		byte[] message = getNextQueuedMessage();
+		BasicMessage bm;
+		QueueableMessage message = getNextQueuedMessage();
+		
 		if( message == null ) {
 			//System.out.println("ServiceParser: Null message -> Error getting message");
 			return ;
 		}
-		parseMessage(message);
+		
+		bm = parseMessage(message.getData());
+		MessageToService.processMessage(message.getTime(), bm);
 	}
 	
-	public static byte[] getNextQueuedMessage() {
+	public static QueueableMessage getNextQueuedMessage() {
 		try {
-			return MessageQueue.getMessageQueue().take();
+			return MessageQueue.take();
 		} catch (InterruptedException e) {
 			return null;
 		}
 	}
 	
-	public static void parseMessage(byte[] message) {
-		BasicMessage bM = MessageParser.parseMessage(message);
-		String[] bMHead;
-		
-		if( bM != null && (bMHead = bM.getHead()) != null ) {
-			for( int i = 0; i < bMHead.length; i++ )
-				System.out.print(bMHead[i] + " ");
-			System.out.println("End message");
-		} else
-			System.out.println("ServiceParser: Null message -> Error parsing");		
+	public static BasicMessage parseMessage(byte[] message) {
+		return MessageParser.parseMessage(message);
 	}
 }

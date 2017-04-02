@@ -6,4 +6,5 @@ public interface ThreadOperations {
 	public void join() throws InterruptedException;
 	public void interrupt() throws InterruptedException;
 	public void close() throws InterruptedException;
+	public String getName();
 }

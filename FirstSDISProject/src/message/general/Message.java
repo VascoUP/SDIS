@@ -197,5 +197,13 @@ public abstract class Message {
 	}
 	
 	
+	/*==================
+	 * To String method
+	 *==================
+	 */
+	@Override
+	public String toString() {
+		return "";
+	}
 
 }

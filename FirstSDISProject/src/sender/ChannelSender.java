@@ -8,7 +8,7 @@ import message.general.Message;
 public abstract class ChannelSender implements Runnable {
 
 	private SendingSocket socket;
-	private Message message;
+	protected Message message;
 	
 	public ChannelSender(Message message, String addr, int port) throws IOException {
 		socket = new SendingSocket(addr, port);
@@ -37,5 +37,10 @@ public abstract class ChannelSender implements Runnable {
 			System.err.println("Error closing sender channel");
 		}
 	}
-
+	
+	
+	@Override
+	public String toString() {
+		return "" + message;
+	}
 }

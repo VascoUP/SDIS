@@ -79,6 +79,11 @@ public class ThreadManager {
 	public static void initBackUp(BackUpMessage message) {
 		update();
 		
+		if( findSenderThread("" + message) != null ) {
+			System.out.println("Another backup like that one is already being processed");
+			return ;
+		}
+		
 		BackUpSender backup = null;
 		try {
 			backup = new BackUpSender(message);
@@ -96,6 +101,11 @@ public class ThreadManager {
 	public static void initAnswerBackUp(StoredMessage message) {
 		update();
 		
+		if( findSenderThread("" + message) != null ) {
+			System.out.println("Another backup like that one is already being processed");
+			return ;
+		}
+		
 		AnswerBackUpSender aBackup = null;
 		try {
 			aBackup = new AnswerBackUpSender(message);
@@ -112,6 +122,11 @@ public class ThreadManager {
 	
 	public static void initRestore(GetChunkMessage message) {
 		update();
+
+		if( findSenderThread("" + message) != null ) {
+			System.out.println("Another backup like that one is already being processed");
+			return ;
+		}
 		
 		RestoreSender restore = null;
 		try {
@@ -129,6 +144,11 @@ public class ThreadManager {
 	
 	public static void initAnswerRestore(ChunkMessage message) {
 		update();
+
+		if( findSenderThread("" + message) != null ) {
+			System.out.println("Another backup like that one is already being processed");
+			return ;
+		}
 		
 		AnswerRestoreSender aRestore = null;
 		try {
@@ -186,5 +206,15 @@ public class ThreadManager {
 		try { interruptThreads();
 		} catch (InterruptedException e) {
 		}
+	}
+
+	public static SenderThread findSenderThread(String name) {
+		Iterator<SenderThread> iter = sender_threads.iterator();
+		while( iter.hasNext() ) {
+			SenderThread next = iter.next();
+			if(next.getName().equals(name) )
+				return next;
+		}
+		return null;
 	}
 }

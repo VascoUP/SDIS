@@ -28,11 +28,7 @@ public abstract class ChannelListener implements Runnable {
 	}
 	
 	private void queueInMessage(byte[] message) {
-		try {
-			MessageQueue.getMessageQueue().put(message);
-		} catch (InterruptedException e) {
-			System.err.println("Missed a missed due to an error adding it to the queue");
-		}
+		MessageQueue.put(message);
 	}
 	
 	

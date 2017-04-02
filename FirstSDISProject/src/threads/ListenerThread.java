@@ -37,5 +37,10 @@ public class ListenerThread implements ThreadOperations {
 		interrupt();
 		listener.closeChannel();
 	}
+
+	@Override
+	public String getName() {
+		return thread.getName();
+	}
 }
 
