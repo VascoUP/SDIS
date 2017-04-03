@@ -5,6 +5,7 @@ import java.io.IOException;
 import connection.SendingSocket;
 import message.MessageInfo;
 import message.MessageInfoToByteArray;
+import message.MessageToString;
 
 public abstract class ChannelSender implements Runnable {
 
@@ -42,6 +43,6 @@ public abstract class ChannelSender implements Runnable {
 	
 	@Override
 	public String toString() {
-		return "" + message;
+		return MessageToString.getName(message);
 	}
 }

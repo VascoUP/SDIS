@@ -46,4 +46,8 @@ public class MessageInfo {
 		return 	info.getMessageType().equals(messageType) &&
 				info.getFileID().equals(fileID);
 	}
+
+	public String getName() {
+		return messageType + fileID;
+	}
 }

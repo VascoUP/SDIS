@@ -31,11 +31,14 @@ public class MessageInfoChunk extends MessageInfo {
 		return arrayOfByteArrays;
 	}
 	
-	
 	@Override
 	public boolean equals(Object o) {
 		MessageInfoChunk info = (MessageInfoChunk)o;
 		return 	super.equals(o) && 
 				info.getChunkID() == chunkID;
+	}
+
+	public String getName() {
+		return super.getName() + chunkID;
 	}
 }

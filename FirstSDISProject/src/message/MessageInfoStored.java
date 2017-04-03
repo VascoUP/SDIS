@@ -25,11 +25,14 @@ public class MessageInfoStored extends MessageInfo {
 		return arrayOfByteArrays;
 	}
 	
-	
 	@Override
 	public boolean equals(Object o) {
 		MessageInfoStored info = (MessageInfoStored)o;
 		return 	super.equals(o) && 
 				info.getChunkID() == chunkID;
+	}
+	
+	public String getName() {
+		return super.getName() + chunkID;
 	}
 }
