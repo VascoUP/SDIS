@@ -26,9 +26,13 @@ public abstract class ChannelSender implements Runnable {
 		}
 	}
 	
+	public void execute() {
+		sendMessage();
+	}
+	
 	@Override
 	public void run() {
-		sendMessage();
+		execute();
 	}
 	
 	public void closeChannel() {
