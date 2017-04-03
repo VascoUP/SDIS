@@ -1,4 +1,4 @@
-package message.general;
+package message;
 
 public class MessageParser {
 	public static boolean parseFlag(byte[] message, int index) {

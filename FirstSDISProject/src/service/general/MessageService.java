@@ -1,6 +1,6 @@
 package service.general;
 
-import message.general.BasicMessage;
+import message.BasicMessage;
 
 public abstract class MessageService {
 	protected long time;

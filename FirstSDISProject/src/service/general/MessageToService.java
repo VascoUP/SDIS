@@ -1,8 +1,8 @@
 package service.general;
 
-import message.general.BasicMessage;
-import message.general.MessageConst;
 import information.PeerInfo;
+import message.BasicMessage;
+import message.MessageConst;
 
 public class MessageToService {
 	public static void processMessage(long time, BasicMessage message) {

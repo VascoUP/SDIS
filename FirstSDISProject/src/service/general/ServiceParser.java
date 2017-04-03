@@ -1,19 +1,17 @@
 package service.general;
 
 import information.MessageQueue;
-import message.general.BasicMessage;
-import message.general.MessageParser;
-import message.general.QueueableMessage;
+import message.BasicMessage;
+import message.MessageParser;
+import message.QueueableMessage;
 
 public class ServiceParser {	
 	public static void parseService() {
 		BasicMessage bm;
 		QueueableMessage message = getNextQueuedMessage();
 		
-		if( message == null ) {
-			//System.out.println("ServiceParser: Null message -> Error getting message");
+		if( message == null )
 			return ;
-		}
 		
 		bm = parseMessage(message.getData());
 		MessageToService.processMessage(message.getTime(), bm);

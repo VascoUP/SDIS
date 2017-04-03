@@ -1,6 +1,6 @@
 package service.general;
 
-import message.general.BasicMessage;
+import message.BasicMessage;
 
 public class StoreChunk extends WaitMessageService {
 	public StoreChunk(long time, BasicMessage message) {

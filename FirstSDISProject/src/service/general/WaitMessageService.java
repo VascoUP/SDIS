@@ -3,7 +3,7 @@ package service.general;
 import java.util.Random;
 import java.util.concurrent.TimeUnit;
 
-import message.general.BasicMessage;
+import message.BasicMessage;
 
 public abstract class WaitMessageService extends MessageService {
 	public WaitMessageService(long time, BasicMessage message) {

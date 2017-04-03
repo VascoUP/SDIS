@@ -1,7 +1,7 @@
 package service.general;
 
 import information.MessagesHashmap;
-import message.general.BasicMessage;
+import message.BasicMessage;
 
 public class StoreChunkReceived extends MessageService {
 	public StoreChunkReceived(long time, BasicMessage message) {

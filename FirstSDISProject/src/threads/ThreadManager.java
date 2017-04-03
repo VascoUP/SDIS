@@ -5,10 +5,10 @@ import java.util.ArrayList;
 import java.util.Iterator;
 
 import listener.*;
-import message.backup.BackUpMessage;
-import message.backup.StoredMessage;
-import message.restore.ChunkMessage;
-import message.restore.GetChunkMessage;
+import message.MessageInfoChunk;
+import message.MessageInfoGetChunk;
+import message.MessageInfoPutChunk;
+import message.MessageInfoStored;
 import sender.*;
 
 public class ThreadManager {
@@ -76,7 +76,7 @@ public class ThreadManager {
 		worker_pool.startAllWorkerThreads();
 	}
 	
-	public static void initBackUp(BackUpMessage message) {
+	public static void initBackUp(MessageInfoPutChunk message) {
 		update();
 		
 		if( findSenderThread("" + message) != null ) {
@@ -98,7 +98,7 @@ public class ThreadManager {
 		st.start();
 	}
 	
-	public static void initAnswerBackUp(StoredMessage message) {
+	public static void initAnswerBackUp(MessageInfoStored message) {
 		update();
 		
 		if( findSenderThread("" + message) != null ) {
@@ -120,7 +120,7 @@ public class ThreadManager {
 		st.start();			
 	}
 	
-	public static void initRestore(GetChunkMessage message) {
+	public static void initRestore(MessageInfoGetChunk message) {
 		update();
 
 		if( findSenderThread("" + message) != null ) {
@@ -142,7 +142,7 @@ public class ThreadManager {
 		st.start();			
 	}
 	
-	public static void initAnswerRestore(ChunkMessage message) {
+	public static void initAnswerRestore(MessageInfoChunk message) {
 		update();
 
 		if( findSenderThread("" + message) != null ) {

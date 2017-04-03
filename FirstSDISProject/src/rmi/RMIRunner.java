@@ -1,9 +1,9 @@
 package rmi;
 
-import message.backup.BackUpMessage;
-import message.restore.GetChunkMessage;
 import threads.ThreadManager;
 import information.PeerInfo;
+import message.MessageInfoGetChunk;
+import message.MessageInfoPutChunk;
 
 public class RMIRunner {
 	public static void parseArgs(String[] rmiArgs) {
@@ -39,10 +39,11 @@ public class RMIRunner {
 	public static void backUp(String path, int rep_degree) {
 		System.out.println("Backup");
 		ThreadManager.initBackUp(
-				new BackUpMessage(
+				new MessageInfoPutChunk(
 						PeerInfo.peerInfo.getVersionProtocol(), 
 						PeerInfo.peerInfo.getServerID(),
 						path, 
+						1, 
 						rep_degree, 
 						new byte[0]));
 	}
@@ -50,7 +51,7 @@ public class RMIRunner {
 	public static void restore(String path) {
 		System.out.println("Restore");		
 		ThreadManager.initRestore(
-				new GetChunkMessage(
+				new MessageInfoGetChunk(
 						PeerInfo.peerInfo.getVersionProtocol(), 
 						PeerInfo.peerInfo.getServerID(),
 						path, 

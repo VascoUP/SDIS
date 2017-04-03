@@ -1,6 +1,6 @@
 package service.general;
 
-import message.general.BasicMessage;
+import message.BasicMessage;
 
 public class ChunkReceived extends MessageService {
 	public ChunkReceived(long time, BasicMessage message) {

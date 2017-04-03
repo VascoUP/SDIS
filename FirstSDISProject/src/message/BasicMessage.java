@@ -1,4 +1,4 @@
-package message.general;
+package message;
 
 public class BasicMessage {
 	private String[] head;
