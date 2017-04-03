@@ -3,8 +3,8 @@ package service.general;
 import information.MessagesHashmap;
 import message.BasicMessage;
 
-public class StoreChunkReceived extends MessageService {
-	public StoreChunkReceived(long time, BasicMessage message) {
+public class MessageServiceStore extends MessageService {
+	public MessageServiceStore(long time, BasicMessage message) {
 		super(time, message);
 	}
 	
@@ -19,7 +19,7 @@ public class StoreChunkReceived extends MessageService {
 	}
 	
 	public static void serve(long time, BasicMessage message) {
-		StoreChunkReceived st = new StoreChunkReceived(time, message);
+		MessageServiceStore st = new MessageServiceStore(time, message);
 		st.notifySender();
 	}
 }

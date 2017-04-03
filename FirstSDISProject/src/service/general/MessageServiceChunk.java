@@ -2,8 +2,8 @@ package service.general;
 
 import message.BasicMessage;
 
-public class ChunkReceived extends MessageService {
-	public ChunkReceived(long time, BasicMessage message) {
+public class MessageServiceChunk extends MessageService {
+	public MessageServiceChunk(long time, BasicMessage message) {
 		super(time, message);
 	}
 	

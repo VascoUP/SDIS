@@ -36,7 +36,7 @@ public class MessageToService {
 			 */
 			break;
 		case MessageConst.STORED_MESSAGE_TYPE:
-			StoreChunkReceived.serve(time, message);
+			MessageServiceStore.serve(time, message);
 			break;
 		case MessageConst.RESTORE_MESSAGE_TYPE:
 			/*

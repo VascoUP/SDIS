@@ -2,8 +2,8 @@ package service.general;
 
 import message.BasicMessage;
 
-public class StoreChunk extends WaitMessageService {
-	public StoreChunk(long time, BasicMessage message) {
+public class WaitStoreChunk extends MessageServiceWait {
+	public WaitStoreChunk(long time, BasicMessage message) {
 		super(time, message);
 	}
 	
@@ -20,7 +20,7 @@ public class StoreChunk extends WaitMessageService {
 	}
 	
 	public static void serve(long time, BasicMessage message) {
-		StoreChunk sc = new StoreChunk(time, message);
+		WaitStoreChunk sc = new WaitStoreChunk(time, message);
 		sc.start();
 	}
 }

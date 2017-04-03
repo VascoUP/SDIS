@@ -5,8 +5,8 @@ import java.util.concurrent.TimeUnit;
 
 import message.BasicMessage;
 
-public abstract class WaitMessageService extends MessageService {
-	public WaitMessageService(long time, BasicMessage message) {
+public abstract class MessageServiceWait extends MessageService {
+	public MessageServiceWait(long time, BasicMessage message) {
 		super(time, message);
 	}
 	
