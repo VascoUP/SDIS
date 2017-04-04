@@ -9,11 +9,11 @@ public class BasicMessage {
 		this.body = body;
 	}
 	
-	public String[] getHead() {
-		return head;
-	}
-	
 	public byte[] getBody() {
 		return body;
+	}
+	
+	public String[] getHead() {
+		return head;
 	}
 }

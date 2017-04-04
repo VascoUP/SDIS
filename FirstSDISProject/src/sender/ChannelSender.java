@@ -17,12 +17,12 @@ public abstract class ChannelSender implements Runnable {
 		this.message = message;
 	}
 	
-	public void sendMessage() {
-		System.out.println("Channel Sender: sendMessage");
+	public void closeChannel() {
+		System.out.println("Channel Sender: closeChannel");
 		try {
-			socket.send(MessageInfoToByteArray.infoToByteArray(this.message));
+			socket.leave();
 		} catch (IOException e) {
-			System.err.println("Error send message " + this.message.getMessageType());
+			System.err.println("Error closing sender channel");
 		}
 	}
 	
@@ -35,12 +35,12 @@ public abstract class ChannelSender implements Runnable {
 		execute();
 	}
 	
-	public void closeChannel() {
-		System.out.println("Channel Sender: closeChannel");
+	public void sendMessage() {
+		System.out.println("Channel Sender: sendMessage");
 		try {
-			socket.leave();
+			socket.send(MessageInfoToByteArray.infoToByteArray(this.message));
 		} catch (IOException e) {
-			System.err.println("Error closing sender channel");
+			System.err.println("Error send message " + this.message.getMessageType());
 		}
 	}
 	

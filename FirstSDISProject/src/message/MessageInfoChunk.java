@@ -10,14 +10,14 @@ public class MessageInfoChunk extends MessageInfo {
 		this.chunk = chunk;
 	}
 	
-	public int getChunkID() {
-		return chunkID;
+	@Override
+	public boolean equals(Object o) {
+		MessageInfoChunk info = (MessageInfoChunk)o;
+		return 	super.equals(o) && 
+				info.getChunkID() == chunkID;
 	}
 	
-	public byte[] getChunk() {
-		return chunk;
-	}
-	
+	@Override
 	public byte[][] getAll() {
 		byte[][] arrayOfByteArrays = new byte[6][];
 		byte[][] superResult = super.getAll();
@@ -31,13 +31,15 @@ public class MessageInfoChunk extends MessageInfo {
 		return arrayOfByteArrays;
 	}
 	
-	@Override
-	public boolean equals(Object o) {
-		MessageInfoChunk info = (MessageInfoChunk)o;
-		return 	super.equals(o) && 
-				info.getChunkID() == chunkID;
+	public byte[] getChunk() {
+		return chunk;
+	}
+	
+	public int getChunkID() {
+		return chunkID;
 	}
 
+	@Override
 	public String getName() {
 		return super.getName() + chunkID;
 	}

@@ -16,16 +16,17 @@ public class SendingSocket extends SLMCast {
 		return mcast_socket.isClosed();
 	}
 	
-    public void send(byte[] message) throws IOException {
+    @Override
+	public void leave() throws IOException {
+    	mcast_socket.close();
+    }
+    
+	public void send(byte[] message) throws IOException {
     	DatagramPacket packet = new DatagramPacket(
     			message,
     			message.length,
 				mcast_address,
 				mcast_port);
     	mcast_socket.send(packet);
-    }
-    
-	public void leave() throws IOException {
-    	mcast_socket.close();
     }
 }

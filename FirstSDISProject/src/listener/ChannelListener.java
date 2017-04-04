@@ -15,16 +15,12 @@ public abstract class ChannelListener implements Runnable {
 	}
 	
 
-	private byte[] receiver() {
-		DatagramPacket packet;
-		
+	public void closeChannel() {
 		try {
-			packet = socket.receive();
-		} catch (Exception e) {
-			return null;
+			socket.leave();
+		} catch (IOException e) {
+			System.err.println("Error closing receiving socket");
 		}
-		
-		return packet.getData();
 	}
 	
 	private void queueInMessage(byte[] message) {
@@ -39,18 +35,22 @@ public abstract class ChannelListener implements Runnable {
 	}
 	
 	
+	private byte[] receiver() {
+		DatagramPacket packet;
+		
+		try {
+			packet = socket.receive();
+		} catch (Exception e) {
+			return null;
+		}
+		
+		return packet.getData();
+	}
+	
 	@Override
 	public void run() {
 		while( !Thread.interrupted() )
 			receiveMessage();
-	}
-	
-	public void closeChannel() {
-		try {
-			socket.leave();
-		} catch (IOException e) {
-			System.err.println("Error closing receiving socket");
-		}
 	}
 
 }

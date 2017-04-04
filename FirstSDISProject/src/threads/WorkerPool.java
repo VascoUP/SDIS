@@ -14,18 +14,6 @@ public class WorkerPool {
 		service = Executors.newFixedThreadPool(NUMBER_THREADS);
 	}
 
-	public void startAllWorkerThreads() {
-		for( int i = 0; i < NUMBER_THREADS; i++ ) {
-			nThreads++;
-			startNewWorkerThread();
-		}
-	}
-	
-	public void startNewWorkerThread() {
-		Runnable worker = new WorkerThread(nThreads);
-		service.execute(worker);		
-	}
-	
 	public void shutdown() {
 		try {
 		    System.out.println("Attempt to shutdown executor");
@@ -42,5 +30,17 @@ public class WorkerPool {
 		    service.shutdownNow();
 		}
  
+	}
+	
+	public void startAllWorkerThreads() {
+		for( int i = 0; i < NUMBER_THREADS; i++ ) {
+			nThreads++;
+			startNewWorkerThread();
+		}
+	}
+	
+	public void startNewWorkerThread() {
+		Runnable worker = new WorkerThread(nThreads);
+		service.execute(worker);		
 	}
 }

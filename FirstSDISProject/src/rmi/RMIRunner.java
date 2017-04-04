@@ -1,11 +1,30 @@
 package rmi;
 
-import threads.ThreadManager;
 import information.PeerInfo;
 import message.MessageInfoGetChunk;
 import message.MessageInfoPutChunk;
+import threads.ThreadManager;
 
 public class RMIRunner {
+	public static void backUp(String path, int rep_degree) {
+		System.out.println("Backup");
+		ThreadManager.initBackUp(
+				new MessageInfoPutChunk(
+						PeerInfo.peerInfo.getVersionProtocol(), 
+						PeerInfo.peerInfo.getServerID(),
+						path, 
+						1, 
+						rep_degree, 
+						new byte[0]));
+	}
+	
+	public static void close() {
+		System.out.println("Close");	
+		ThreadManager.closeThreads();
+		System.exit(0);
+		//RMIStorage.getRMI().unbind();
+	}
+	
 	public static void parseArgs(String[] rmiArgs) {
 		if( rmiArgs.length < 1 )
 			return ;
@@ -36,18 +55,6 @@ public class RMIRunner {
 		return ;
 	}
 	
-	public static void backUp(String path, int rep_degree) {
-		System.out.println("Backup");
-		ThreadManager.initBackUp(
-				new MessageInfoPutChunk(
-						PeerInfo.peerInfo.getVersionProtocol(), 
-						PeerInfo.peerInfo.getServerID(),
-						path, 
-						1, 
-						rep_degree, 
-						new byte[0]));
-	}
-	
 	public static void restore(String path) {
 		System.out.println("Restore");		
 		ThreadManager.initRestore(
@@ -56,12 +63,5 @@ public class RMIRunner {
 						PeerInfo.peerInfo.getServerID(),
 						path, 
 						0));
-	}
-	
-	public static void close() {
-		System.out.println("Close");	
-		ThreadManager.closeThreads();
-		System.exit(0);
-		//RMIStorage.getRMI().unbind();
 	}
 }

@@ -12,16 +12,26 @@ public class SenderThread implements ThreadOperations{
 		thread.setName("" + sender);
 	}
 
-	public ChannelSender getSender() {
-		return sender;
+	@Override
+	public void close() throws InterruptedException {
+		join();
+		sender.closeChannel();
 	}
 	
 	@Override
-	public void start() {
-		System.out.println(Thread.currentThread().getName());
-		thread.start();
+	public String getName() {
+		return thread.getName();
 	}
 
+	public ChannelSender getSender() {
+		return sender;
+	}
+
+	@Override
+	public void interrupt() throws InterruptedException {
+		throw new InterruptedException("Sender threads cannot be interrupted");
+	}
+	
 	@Override
 	public boolean isAlive() {
 		return thread.isAlive();
@@ -31,20 +41,10 @@ public class SenderThread implements ThreadOperations{
 	public void join() throws InterruptedException {
 		thread.join();
 	}
-	
-	@Override
-	public void interrupt() throws InterruptedException {
-		throw new InterruptedException("Sender threads cannot be interrupted");
-	}
 
 	@Override
-	public void close() throws InterruptedException {
-		join();
-		sender.closeChannel();
-	}
-
-	@Override
-	public String getName() {
-		return thread.getName();
+	public void start() {
+		System.out.println(Thread.currentThread().getName());
+		thread.start();
 	}
 }

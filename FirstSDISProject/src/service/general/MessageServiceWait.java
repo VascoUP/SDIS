@@ -10,10 +10,8 @@ public abstract class MessageServiceWait extends MessageService {
 		super(time, message);
 	}
 	
-	public void wait(int time) {
-		try { TimeUnit.MILLISECONDS.sleep(time);
-		} catch (InterruptedException e) {
-		}
+	public boolean condition() {
+		return false;
 	}
 	
 	public int randomTime() {
@@ -26,10 +24,6 @@ public abstract class MessageServiceWait extends MessageService {
 		wait(time);
 	}
 	
-	public boolean condition() {
-		return false;
-	}
-	
 	public void service() {
 		System.err.println("WaitMessageService: service wrong class");
 	}
@@ -38,5 +32,11 @@ public abstract class MessageServiceWait extends MessageService {
 		randomWait();
 		if( condition() )
 			service();
+	}
+	
+	public void wait(int time) {
+		try { TimeUnit.MILLISECONDS.sleep(time);
+		} catch (InterruptedException e) {
+		}
 	}
 }

@@ -1,26 +1,6 @@
 package message;
 
 public class MessageInfoToByteArray {
-	public static byte[] infoToByteArray(MessageInfo info) {
-		byte[][] allInfos = info.getAll();
-		byte[] head = infoHeadToByteArray(allInfos);
-		byte[] body = allInfos[allInfos.length - 1];
-		byte[] byteArray = new byte[head.length + body.length + 6];
-		
-		System.arraycopy(MessageConst.MESSAGE_FLAG, 0, 
-				byteArray, 0, 2);
-		System.arraycopy(head, 0, 
-				byteArray, 2, head.length);
-		System.arraycopy(MessageConst.MESSAGE_FLAG, 0, 
-				byteArray, 2 + head.length, 2);
-		System.arraycopy(MessageConst.MESSAGE_FLAG, 0, 
-				byteArray, 4 + head.length, 2);
-		System.arraycopy(body, 0, 
-				byteArray, 6 + head.length, body.length);
-		
-		return null;
-	}
-	
 	private static byte[] infoHeadToByteArray(byte[][] info) {
 		int headLength = 0;
 		int messageIndex = 0;
@@ -43,4 +23,24 @@ public class MessageInfoToByteArray {
 		
 		return head;
 }
+	
+	public static byte[] infoToByteArray(MessageInfo info) {
+		byte[][] allInfos = info.getAll();
+		byte[] head = infoHeadToByteArray(allInfos);
+		byte[] body = allInfos[allInfos.length - 1];
+		byte[] byteArray = new byte[head.length + body.length + 6];
+		
+		System.arraycopy(MessageConst.MESSAGE_FLAG, 0, 
+				byteArray, 0, 2);
+		System.arraycopy(head, 0, 
+				byteArray, 2, head.length);
+		System.arraycopy(MessageConst.MESSAGE_FLAG, 0, 
+				byteArray, 2 + head.length, 2);
+		System.arraycopy(MessageConst.MESSAGE_FLAG, 0, 
+				byteArray, 4 + head.length, 2);
+		System.arraycopy(body, 0, 
+				byteArray, 6 + head.length, body.length);
+		
+		return null;
+	}
 }

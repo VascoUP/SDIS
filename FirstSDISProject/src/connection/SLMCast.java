@@ -21,16 +21,16 @@ public abstract class SLMCast {
 		mcast_address = InetAddress.getByName(addr);
 	}
 	
-	public void setTimeout(int timeOut) throws SocketException {
-		mcast_socket.setSoTimeout(timeOut);
-	}
-	
 	public void join() throws IOException {
 		mcast_socket.joinGroup(mcast_address);
 	}
 	
-    public void leave() throws IOException {
+	public void leave() throws IOException {
     	mcast_socket.leaveGroup(mcast_address);
     	mcast_socket.close();
     }
+	
+    public void setTimeout(int timeOut) throws SocketException {
+		mcast_socket.setSoTimeout(timeOut);
+	}
 }

@@ -30,6 +30,14 @@ public class RMIObject implements Instructable {
         }
 	}
 	
+	@Override
+	public void run(String[] args) throws RemoteException {
+		for( int i = 0; i < args.length; i++ )
+			System.out.print(args[i] + " ");
+		System.out.print("\n");
+		RMIRunner.parseArgs(args);
+	}
+	
 	public void unbind() {
         Registry registry = null;
         try {
@@ -44,13 +52,5 @@ public class RMIObject implements Instructable {
 			e.printStackTrace();
 			return ;
 		}
-	}
-	
-	@Override
-	public void run(String[] args) throws RemoteException {
-		for( int i = 0; i < args.length; i++ )
-			System.out.print(args[i] + " ");
-		System.out.print("\n");
-		RMIRunner.parseArgs(args);
 	}
 }

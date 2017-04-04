@@ -13,22 +13,13 @@ public class MessageInfo {
 		this.fileID = fileID;
 	}
 
-	public String getMessageType() {
-		return messageType;
+	@Override
+	public boolean equals(Object o) {
+		MessageInfo info = (MessageInfo)o;
+		return 	info.getMessageType().equals(messageType) &&
+				info.getFileID().equals(fileID);
 	}
 
-	public String getVersion() {
-		return version;
-	}
-
-	public int getSenderID() {
-		return senderID;
-	}
-
-	public String getFileID() {
-		return fileID;
-	}
-	
 	public byte[][] getAll() {
 		byte[][] arrayOfByteArrays = new byte[5][];
 		arrayOfByteArrays[0] = messageType.getBytes();
@@ -39,15 +30,24 @@ public class MessageInfo {
 		
 		return arrayOfByteArrays;
 	}
-	
-	@Override
-	public boolean equals(Object o) {
-		MessageInfo info = (MessageInfo)o;
-		return 	info.getMessageType().equals(messageType) &&
-				info.getFileID().equals(fileID);
+
+	public String getFileID() {
+		return fileID;
 	}
 
+	public String getMessageType() {
+		return messageType;
+	}
+	
 	public String getName() {
 		return messageType + fileID;
+	}
+	
+	public int getSenderID() {
+		return senderID;
+	}
+
+	public String getVersion() {
+		return version;
 	}
 }

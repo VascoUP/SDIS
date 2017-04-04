@@ -12,8 +12,20 @@ public class ListenerThread implements ThreadOperations {
 	}
 	
 	@Override
-	public void start() {
-		thread.start();
+	public void close() throws InterruptedException {
+		interrupt();
+		listener.closeChannel();
+	}
+
+	@Override
+	public String getName() {
+		return thread.getName();
+	}
+
+	@Override
+	public void interrupt() throws InterruptedException {
+		thread.interrupt();
+		
 	}
 
 	@Override
@@ -27,20 +39,8 @@ public class ListenerThread implements ThreadOperations {
 	}
 
 	@Override
-	public void interrupt() throws InterruptedException {
-		thread.interrupt();
-		
-	}
-
-	@Override
-	public void close() throws InterruptedException {
-		interrupt();
-		listener.closeChannel();
-	}
-
-	@Override
-	public String getName() {
-		return thread.getName();
+	public void start() {
+		thread.start();
 	}
 }
 

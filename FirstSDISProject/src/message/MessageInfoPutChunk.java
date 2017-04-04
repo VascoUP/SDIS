@@ -13,18 +13,14 @@ public class MessageInfoPutChunk extends MessageInfo {
 		this.chunk = chunk;
 	}
 
-	public int getChunkID() {
-		return chunkID;
+	@Override
+	public boolean equals(Object o) {
+		MessageInfoPutChunk info = (MessageInfoPutChunk)o;
+		return 	super.equals(o) && 
+				info.getChunkID() == chunkID;
 	}
 
-	public int getReplication_degree() {
-		return replication_degree;
-	}
-	
-	public byte[] getChunk() {
-		return chunk;
-	}
-	
+	@Override
 	public byte[][] getAll() {
 		byte[][] arrayOfByteArrays = new byte[8][];
 		byte[][] superResult = super.getAll();
@@ -39,14 +35,20 @@ public class MessageInfoPutChunk extends MessageInfo {
 		return arrayOfByteArrays;
 	}
 	
-	@Override
-	public boolean equals(Object o) {
-		MessageInfoPutChunk info = (MessageInfoPutChunk)o;
-		return 	super.equals(o) && 
-				info.getChunkID() == chunkID;
+	public byte[] getChunk() {
+		return chunk;
 	}
-
+	
+	public int getChunkID() {
+		return chunkID;
+	}
+	
+	@Override
 	public String getName() {
 		return super.getName() + chunkID;
+	}
+
+	public int getReplication_degree() {
+		return replication_degree;
 	}
 }

@@ -8,10 +8,6 @@ import rmi.Instructable;
 public class TestApp {	
 	private static TestApp testApp;
 	
-	private Registry registry;
-	private Instructable stub;
-	
-	
 	/*==============
 	 * MAIN METHODS
 	 *==============
@@ -19,8 +15,7 @@ public class TestApp {
     public static void main(String[] args) {
     	parseArgs(args);
     }
-    
-    public static void parseArgs(String[] args) {    	
+	public static void parseArgs(String[] args) {    	
     	String[] rmiArgs = new String[args.length - 1];
     	System.arraycopy(args, 1, rmiArgs, 0, args.length - 1);
     	
@@ -28,6 +23,11 @@ public class TestApp {
     	if (testApp.getRMI(args[0]) )
     		testApp.runRMI(rmiArgs);    	
     }
+	
+	
+	private Registry registry;
+    
+    private Instructable stub;
     
     
     /*====================
@@ -51,15 +51,15 @@ public class TestApp {
         return true;
     }
     
+    public void registerRMI(String peer_name) throws RemoteException, NotBoundException {
+        registry = LocateRegistry.getRegistry();
+        stub = (Instructable) registry.lookup(peer_name);
+    }
+    
     public void runRMI(String[] rmiArgs) {
     	try {
 			stub.run(rmiArgs);
 		} catch (RemoteException e) {
 		}
-    }
-    
-    public void registerRMI(String peer_name) throws RemoteException, NotBoundException {
-        registry = LocateRegistry.getRegistry();
-        stub = (Instructable) registry.lookup(peer_name);
     }
 }

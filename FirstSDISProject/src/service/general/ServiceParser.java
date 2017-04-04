@@ -6,17 +6,6 @@ import message.MessageParser;
 import message.QueueableMessage;
 
 public class ServiceParser {	
-	public static void parseService() {
-		BasicMessage bm;
-		QueueableMessage message = getNextQueuedMessage();
-		
-		if( message == null )
-			return ;
-		
-		bm = parseMessage(message.getData());
-		MessageToService.processMessage(message.getTime(), bm);
-	}
-	
 	public static QueueableMessage getNextQueuedMessage() {
 		try {
 			return MessageQueue.take();
@@ -27,5 +16,16 @@ public class ServiceParser {
 	
 	public static BasicMessage parseMessage(byte[] message) {
 		return MessageParser.parseMessage(message);
+	}
+	
+	public static void parseService() {
+		BasicMessage bm;
+		QueueableMessage message = getNextQueuedMessage();
+		
+		if( message == null )
+			return ;
+		
+		bm = parseMessage(message.getData());
+		MessageToService.processMessage(message.getTime(), bm);
 	}
 }

@@ -10,14 +10,18 @@ public class MessageOperation {
 			arrayList.add(b);		
 	}
 	
-	public static byte[] trim(byte[] mArr) {
-		int i = mArr.length - 1;
-	    while (i >= 0 && mArr[i] == 0)
-	        --i;
-	    
-        return Arrays.copyOf(mArr, i + 1);
+	public static void printByteArray(byte[] arr) {
+	    StringBuilder sb = new StringBuilder();
+	    for (byte b : arr) {
+	        sb.append(String.format("%02X ", b));
+	    }
+	    System.out.println(sb.toString());
 	}
 
+	public static String[] splitMultipleSpaces(String messageHead) {
+		return messageHead.split(" +");		
+	}
+	
 	public static byte[] tobyte(Object[] arrByte) {
 		byte[] arrbyte = new byte[arrByte.length];
 	    
@@ -27,15 +31,11 @@ public class MessageOperation {
 		return arrbyte;
 	}
 	
-	public static String[] splitMultipleSpaces(String messageHead) {
-		return messageHead.split(" +");		
-	}
-	
-	public static void printByteArray(byte[] arr) {
-	    StringBuilder sb = new StringBuilder();
-	    for (byte b : arr) {
-	        sb.append(String.format("%02X ", b));
-	    }
-	    System.out.println(sb.toString());
+	public static byte[] trim(byte[] mArr) {
+		int i = mArr.length - 1;
+	    while (i >= 0 && mArr[i] == 0)
+	        --i;
+	    
+        return Arrays.copyOf(mArr, i + 1);
 	}
 }

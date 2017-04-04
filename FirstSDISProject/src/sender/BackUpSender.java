@@ -12,6 +12,12 @@ public class BackUpSender extends ChannelSender {
 		super( message, ConnectionConstants.MDB_GROUP, ConnectionConstants.MDB_GROUP_PORT);
 	}
 	
+	public boolean condition() {
+		MessageInfoPutChunk m = (MessageInfoPutChunk) message;
+		String name = MessageToString.getName(m);
+		return MessagesHashmap.getValue(name) >= m.getReplication_degree();
+	}
+	
 	private void cooldown(long ms) {
 	    try {
 	       long waitUntilMillis = System.currentTimeMillis() + ms;
@@ -25,12 +31,7 @@ public class BackUpSender extends ChannelSender {
 	    }
 	}
 	
-	public boolean condition() {
-		MessageInfoPutChunk m = (MessageInfoPutChunk) message;
-		String name = MessageToString.getName(m);
-		return MessagesHashmap.getValue(name) >= m.getReplication_degree();
-	}
-	
+	@Override
 	public void execute() {
 		do {
 			sendMessage();

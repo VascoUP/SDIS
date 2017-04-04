@@ -9,11 +9,11 @@ public class QueueableMessage {
 		this.data = data;
 	}
 	
-	public long getTime() {
-		return time;
-	}
-	
 	public byte[] getData() {
 		return data;
+	}
+	
+	public long getTime() {
+		return time;
 	}
 }
