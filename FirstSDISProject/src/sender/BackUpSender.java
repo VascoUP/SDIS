@@ -4,7 +4,9 @@ import java.io.IOException;
 
 import connection.ConnectionConstants;
 import information.MessagesHashmap;
+import information.PeerInfo;
 import message.MessageInfoPutChunk;
+import message.MessageInfoStored;
 import message.MessageToString;
 
 public class BackUpSender extends ChannelSender {	
@@ -13,9 +15,14 @@ public class BackUpSender extends ChannelSender {
 	}
 	
 	public boolean condition() {
-		MessageInfoPutChunk m = (MessageInfoPutChunk) message;
-		String name = MessageToString.getName(m);
-		return MessagesHashmap.getValue(name) >= m.getReplication_degree();
+		MessageInfoPutChunk backupMessage = (MessageInfoPutChunk) message;
+		MessageInfoStored m = new MessageInfoStored(
+									PeerInfo.peerInfo.getVersionProtocol(), 
+									PeerInfo.peerInfo.getServerID(), 
+									backupMessage.getFileID(), 
+									backupMessage.getChunkID());
+		String key = MessageToString.getName(m);
+		return MessagesHashmap.getValue(key) >= backupMessage.getReplication_degree();
 	}
 	
 	private void cooldown(long ms) {
@@ -37,6 +44,7 @@ public class BackUpSender extends ChannelSender {
 			cooldown(1000);
 		} while( !condition() );
 		
+		MessagesHashmap.removeKey(MessageToString.getName(message));
 		System.out.println("BackUpSender: Yey");
 	}
 }

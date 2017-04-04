@@ -1,7 +1,6 @@
 package service.general;
 
 import information.MessagesHashmap;
-import information.PeerInfo;
 import message.BasicMessage;
 import message.MessageToString;
 
