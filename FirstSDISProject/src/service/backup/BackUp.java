@@ -1,48 +1,25 @@
 package service.backup;
 
-public class BackUp {
-/*
-	private String filePath;
+import java.io.IOException;
 
-	public BackUp(String filePath) throws IOException {
+import file.HandleFile;
+import information.Chunk;
+import information.PeerInfo;
+import message.MessageConst;
+import message.MessageInfoPutChunk;
+import threads.ThreadManager;
+
+public class BackUp {
+	private String filePath;
+	private String fileID;
+	private int replicationDegree;
+
+	public BackUp(String filePath, int replicationDegree) {
 		super();
 		
-		protocol = new RequestBackUp();
 		this.filePath = filePath;
-	}
-
-	
-	public Message validateMessage(byte[] message) {
-		StoredMessage stm; 
-		BackUpMessage bum = (BackUpMessage)protocol.getMessage();
-		
-		try {
-			stm = new StoredMessage(message);
-		} catch( Error e ) {
-			return null;
-		}
-		
-		return (stm.isValidMessage() &&
-				stm.getFileId().equals(bum.getFileId()) &&
-				stm.getChunkId() == bum.getChunkId()) ? stm : null;
-	}
-
-
-	public void setMessage(String fileID, int chunkID, byte[] buffer) {
-		RequestBackUp rbu = (RequestBackUp) protocol;
-		rbu.setMessage(fileID, chunkID, buffer);
-	}
-	
-	
-	public void storeChunkInfo(String filePath, String fileID, int chunkID) {
-		Chunk c = new Chunk(filePath, fileID, chunkID);
-		try {
-			c.backUp();
-		} catch (IOException e) {
-			e.printStackTrace();
-			return ;
-		}
-		FileInfo.addBackedUpChunk(c);
+		this.fileID = Chunk.getFileId(filePath);
+		this.replicationDegree = replicationDegree;
 	}
 	
 	public int getPercentage(int offset, int size) {
@@ -61,35 +38,12 @@ public class BackUp {
 		System.arraycopy(buffer, offset, newBuffer, 0, size);
 		return newBuffer;
 	}
-
-
-	public int getAnswer() {
-		int i = 0;
-		long t = System.currentTimeMillis();
-		long end = t + 1000;
-		byte[] rcv;
-		
-		while((t = end - System.currentTimeMillis()) > 0 ){
-			rcv = receive((int)t);
-			
-			if( rcv != null && validateMessage(rcv) != null )
-				i++;
-		}
-		
-		return i;
-	}
-	
-	public void service() {
-		if(!send())
-			return ;
-		getAnswer();
-	}
 	
 	public void run_service() {
 		int offset = 0, chunkID = 1;
-		String fileID = Chunk.getFileId(filePath);
-		
 		byte[] buffer;
+		byte[] chunk;
+		
 		try {
 			buffer = HandleFile.readFile(filePath);
 		} catch (IOException e) {
@@ -100,26 +54,20 @@ public class BackUp {
 		if( buffer == null )
 			return ;
 		
-		byte[] chunk;
-		
 		while (offset <= buffer.length) {
 			chunk = getNextChunk(offset, buffer);
 			
-			setMessage(fileID, chunkID, chunk);
-			service();
-			storeChunkInfo(filePath, fileID, chunkID);
+			ThreadManager.initBackUp(
+					new MessageInfoPutChunk(
+							PeerInfo.peerInfo.getVersionProtocol(), 
+							PeerInfo.peerInfo.getServerID(),
+							fileID, 
+							chunkID,
+							replicationDegree, 
+							chunk));
 			
 			chunkID++;
 			offset += MessageConst.CHUNKSIZE;
 		}
 	}
-
-	
-	@Override
-	public void run() {
-		FileInfo.eliminateBackedUpFile(filePath);
-		run_service();
-		end_service();
-	}
-*/
 }

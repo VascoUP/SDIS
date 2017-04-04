@@ -16,7 +16,6 @@ public class FileInfo {
 		backupChunk(chunk);
 	}
 
-	
 	public static void addStoredChunk(Chunk chunk) {
 		String path = chunk.getStorePath();
 		if( HandleFile.isFile(path) )
@@ -80,7 +79,6 @@ public class FileInfo {
 		return null;
 	}
 	
-	
 	public static Chunk findStoredChunk(Chunk chunk) {
 		Iterator<Chunk> iter = storedChunks.iterator();
 		while(iter.hasNext()) {
@@ -90,19 +88,11 @@ public class FileInfo {
 		}
 		return null;
 	}
-	
-	/*=================
-	 * BACKEDUP CHUNKS
-	 *=================
-	 */
+
 	public static ArrayList<Chunk> getBackedUpChunks() {
 		return backedUpChunks;
 	}
 	
-	/*===============
-	 * STORED CHUNKS
-	 *===============
-	 */
 	public static ArrayList<Chunk> getStoredChunks() {
 		return storedChunks;
 	}

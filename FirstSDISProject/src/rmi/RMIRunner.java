@@ -1,5 +1,6 @@
 package rmi;
 
+import information.Chunk;
 import information.PeerInfo;
 import message.MessageInfoGetChunk;
 import message.MessageInfoPutChunk;
@@ -12,8 +13,8 @@ public class RMIRunner {
 				new MessageInfoPutChunk(
 						PeerInfo.peerInfo.getVersionProtocol(), 
 						PeerInfo.peerInfo.getServerID(),
-						path, 
-						1, 
+						Chunk.getFileId(path), 
+						1,
 						rep_degree, 
 						new byte[0]));
 	}
@@ -61,7 +62,7 @@ public class RMIRunner {
 				new MessageInfoGetChunk(
 						PeerInfo.peerInfo.getVersionProtocol(), 
 						PeerInfo.peerInfo.getServerID(),
-						path, 
+						Chunk.getFileId(path), 
 						0));
 	}
 }

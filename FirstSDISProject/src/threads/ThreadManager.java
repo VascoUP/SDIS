@@ -1,124 +1,37 @@
 package threads;
 
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Iterator;
 
 import listener.MCListenner;
 import listener.MDBListenner;
 import listener.MDRListenner;
-import message.MessageInfoChunk;
 import message.MessageInfoGetChunk;
 import message.MessageInfoPutChunk;
-import message.MessageInfoStored;
-import sender.AnswerBackUpSender;
-import sender.AnswerRestoreSender;
-import sender.BackUpSender;
-import sender.RestoreSender;
 
 public class ThreadManager {
-	private static ArrayList<SenderThread> sender_threads = new ArrayList<SenderThread>();
 	private static WorkerPool worker_pool;
+	private static BackUpPool backupServices;
+	private static RestorePool restoreServices;
 	private static ListenerThread mc_listener;
 	private static ListenerThread mdb_listener;
 	private static ListenerThread mdr_listener;
 	
-	public static void checkTerminatedSendThreads() throws InterruptedException {
-		Iterator<SenderThread> iter = sender_threads.iterator();
-		while( iter.hasNext() ) {
-			SenderThread t = iter.next();
-			System.out.println("checkTerminatedSendThreads: join dead thread");
-			if( !t.isAlive() )
-				t.close();
-		}
-	}
-	
 	public static void closeThreads() {
 		worker_pool.shutdown();
-		
-		try { joinSendThreads();
-		} catch (InterruptedException e) {
-		}
+		if( backupServices != null )
+			backupServices.shutdown();
+		if( restoreServices != null )
+			restoreServices.shutdown();
 
 		try { interruptThreads();
 		} catch (InterruptedException e) {
 		}
 	}
 	
-	public static SenderThread findSenderThread(String name) {
-		Iterator<SenderThread> iter = sender_threads.iterator();
-		while( iter.hasNext() ) {
-			SenderThread next = iter.next();
-			if(next.getName().equals(name) )
-				return next;
-		}
-		return null;
-	}
-	
-	public static void initAnswerBackUp(MessageInfoStored message) {
-		update();
-		
-		if( findSenderThread("" + message) != null ) {
-			System.out.println("Another backup like that one is already being processed");
-			return ;
-		}
-		
-		AnswerBackUpSender aBackup = null;
-		try {
-			aBackup = new AnswerBackUpSender(message);
-		} catch (IOException e) {
-			e.printStackTrace();
-			System.exit(0);
-		}
-		
-		Thread aBackup_thread = new Thread(aBackup);
-		SenderThread st = new SenderThread(aBackup_thread, aBackup);
-		sender_threads.add(st);
-		st.start();			
-	}
-	
-	public static void initAnswerRestore(MessageInfoChunk message) {
-		update();
-
-		if( findSenderThread("" + message) != null ) {
-			System.out.println("Another backup like that one is already being processed");
-			return ;
-		}
-		
-		AnswerRestoreSender aRestore = null;
-		try {
-			aRestore = new AnswerRestoreSender(message);
-		} catch (IOException e) {
-			e.printStackTrace();
-			System.exit(0);
-		}
-		
-		Thread aRestore_thread = new Thread(aRestore);
-		SenderThread st = new SenderThread(aRestore_thread, aRestore);
-		sender_threads.add(st);
-		st.start();				
-	}
-	
 	public static void initBackUp(MessageInfoPutChunk message) {
-		update();
-		
-		if( findSenderThread("" + message) != null ) {
-			System.out.println("Another backup like that one is already being processed");
-			return ;
-		}
-		
-		BackUpSender backup = null;
-		try {
-			backup = new BackUpSender(message);
-		} catch (IOException e) {
-			e.printStackTrace();
-			System.exit(0);
-		}
-		
-		Thread backup_thread = new Thread(backup);
-		SenderThread st = new SenderThread(backup_thread, backup);
-		sender_threads.add(st);
-		st.start();
+		if( backupServices == null )
+			backupServices = new BackUpPool();
+		backupServices.startBackupThread(message);
 	}
 	
 	public static void initListenerThreads() {
@@ -170,25 +83,9 @@ public class ThreadManager {
 	}
 
 	public static void initRestore(MessageInfoGetChunk message) {
-		update();
-
-		if( findSenderThread("" + message) != null ) {
-			System.out.println("Another backup like that one is already being processed");
-			return ;
-		}
-		
-		RestoreSender restore = null;
-		try {
-			restore = new RestoreSender(message);
-		} catch (IOException e) {
-			e.printStackTrace();
-			System.exit(0);
-		}
-		
-		Thread restore_thread = new Thread(restore);
-		SenderThread st = new SenderThread(restore_thread, restore);
-		sender_threads.add(st);
-		st.start();			
+		if( restoreServices == null )
+			restoreServices = new RestorePool();
+		restoreServices.startRestoreThread(message);
 	}
 
 	public static void initThreadManager() {
@@ -205,21 +102,5 @@ public class ThreadManager {
 		mc_listener.close();
 		mdb_listener.close();
 		mdr_listener.close();
-	}
-	
-	public static void joinSendThreads() throws InterruptedException {
-		Iterator<SenderThread> iter = sender_threads.iterator();
-		while( iter.hasNext() ) {
-			SenderThread t = iter.next();
-			System.out.println("joinSendThreads: join dead thread");
-			t.close();
-		}
-	}
-
-	public static void update() {
-		try {
-			checkTerminatedSendThreads();
-		} catch (InterruptedException e1) {
-		}
 	}
 }

@@ -1,19 +1,22 @@
 package threads;
 
+import java.io.IOException;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
 
-public class WorkerPool implements ThreadPool {
-	private static final int NUMBER_THREADS = 10;
+import message.MessageInfoPutChunk;
+import sender.BackUpSender;
+
+public class BackUpPool implements ThreadPool {
+	private static final int NUMBER_THREADS = 5;
 	
 	private ExecutorService service;
-	private int nThreads = 0;
 	
-	public WorkerPool() {
+	public BackUpPool() {
 		service = Executors.newFixedThreadPool(NUMBER_THREADS);
 	}
-
+	
 	@Override
 	public void shutdown() {
 		try {
@@ -31,21 +34,21 @@ public class WorkerPool implements ThreadPool {
 		    service.shutdownNow();
 		}
 	}
-	
+
 	@Override
 	public void startNewThread(Runnable worker) {
-		service.execute(worker);	
+		service.execute(worker);
 	}
-	
-	public void startAllWorkerThreads() {
-		for( int i = 0; i < NUMBER_THREADS; i++ ) {
-			nThreads++;
-			startNewWorkerThread();
+
+	public void startBackupThread(MessageInfoPutChunk message) {
+		BackUpSender backup = null;
+		try {
+			backup = new BackUpSender(message);
+		} catch (IOException e) {
+			e.printStackTrace();
+			System.exit(0);
 		}
-	}
-	
-	public void startNewWorkerThread() {
-		Runnable worker = new WorkerThread(nThreads);
-		startNewThread(worker);	
+		
+		startNewThread(backup);
 	}
 }
