@@ -14,26 +14,15 @@ public class MessageToService {
 		String versionProtocol = head[1];
 		int senderID = Integer.parseInt(head[2]);
 		
-		System.out.println("ProcessMessage: " + messageType);
-		
-		if( senderID == PeerInfo.peerInfo.getServerID() && 
+		if( senderID == PeerInfo.peerInfo.getServerID() ||
 			!versionProtocol.equals(PeerInfo.peerInfo.getVersionProtocol()) ) {
 			System.out.println("ProcessMessage: Same execution message");
 			return ;
 		}
-				
+
 		switch(messageType) {
 		case MessageConst.PUTCHUNK_MESSAGE_TYPE:
-			/*
-			 * Service -> StoreChunk
-			 * 		1st: Wait random time
-			 * 		2nd: Check and see if the replication degree was already reached
-			 * 				If not
-			 * 					Store the chunk
-			 * 					Send, to the MC channel, the stored message
-			 * 				Else
-			 * 					Ignore and return right away
-			 */
+			WaitStoreChunk.serve(time, message);
 			break;
 		case MessageConst.STORED_MESSAGE_TYPE:
 			MessageServiceStore.serve(time, message);

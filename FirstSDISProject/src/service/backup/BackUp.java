@@ -47,7 +47,6 @@ public class BackUp {
 		try {
 			buffer = HandleFile.readFile(filePath);
 		} catch (IOException e) {
-			e.printStackTrace();
 			return ;
 		}
 		

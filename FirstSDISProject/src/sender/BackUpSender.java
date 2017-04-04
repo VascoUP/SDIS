@@ -19,16 +19,15 @@ public class BackUpSender extends ChannelSender {
 	}
 	
 	private void cooldown(long ms) {
-	    try {
-	       long waitUntilMillis = System.currentTimeMillis() + ms;
-	       long waitTimeMillis = ms;
-	       do {
-	          this.wait(waitTimeMillis);
-	          // we need this dance/loop because of spurious wakeups, thanks @loki
-	          waitTimeMillis = waitUntilMillis - System.currentTimeMillis();
-	       } while (waitTimeMillis > 0);
-	    } catch (InterruptedException e) {
-	    }
+		try {
+			long waitUntilMillis = System.currentTimeMillis() + ms;
+			long waitTimeMillis = ms;
+			do {
+				Thread.sleep(waitTimeMillis);
+				waitTimeMillis = waitUntilMillis - System.currentTimeMillis();
+			} while (waitTimeMillis > 0);
+		} catch (InterruptedException e) {
+		}
 	}
 	
 	@Override
@@ -38,6 +37,6 @@ public class BackUpSender extends ChannelSender {
 			cooldown(1000);
 		} while( !condition() );
 		
-		System.out.println("Yey");
+		System.out.println("BackUpSender: Yey");
 	}
 }

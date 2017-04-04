@@ -3,28 +3,10 @@ package rmi;
 import information.Chunk;
 import information.PeerInfo;
 import message.MessageInfoGetChunk;
-import message.MessageInfoPutChunk;
+import service.backup.BackUp;
 import threads.ThreadManager;
 
 public class RMIRunner {
-	public static void backUp(String path, int rep_degree) {
-		System.out.println("Backup");
-		ThreadManager.initBackUp(
-				new MessageInfoPutChunk(
-						PeerInfo.peerInfo.getVersionProtocol(), 
-						PeerInfo.peerInfo.getServerID(),
-						Chunk.getFileId(path), 
-						1,
-						rep_degree, 
-						new byte[0]));
-	}
-	
-	public static void close() {
-		System.out.println("Close");	
-		ThreadManager.closeThreads();
-		System.exit(0);
-		//RMIStorage.getRMI().unbind();
-	}
 	
 	public static void parseArgs(String[] rmiArgs) {
 		if( rmiArgs.length < 1 )
@@ -54,6 +36,19 @@ public class RMIRunner {
 			close();
 		}
 		return ;
+	}
+
+	public static void backUp(String path, int rep_degree) {
+		System.out.println("Backup");
+		BackUp backup = new BackUp(path, rep_degree);
+		backup.run_service();
+	}
+	
+	public static void close() {
+		System.out.println("Close");	
+		ThreadManager.closeThreads();
+		System.exit(0);
+		//RMIStorage.getRMI().unbind();
 	}
 	
 	public static void restore(String path) {

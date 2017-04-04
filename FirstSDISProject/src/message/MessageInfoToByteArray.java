@@ -27,11 +27,7 @@ public class MessageInfoToByteArray {
 	public static byte[] infoToByteArray(MessageInfo info) {
 		byte[][] allInfos = info.getAll();
 		byte[] head = infoHeadToByteArray(allInfos);
-		if( head == null )
-			System.out.println("Head null");
 		byte[] body = allInfos[allInfos.length - 1];
-		if( body == null )
-			System.out.println("Body null");
 		byte[] byteArray = new byte[head.length + body.length + 6];
 		
 		System.arraycopy(MessageConst.MESSAGE_FLAG, 0, 
@@ -45,6 +41,6 @@ public class MessageInfoToByteArray {
 		System.arraycopy(body, 0, 
 				byteArray, 6 + head.length, body.length);
 		
-		return null;
+		return byteArray;
 	}
 }

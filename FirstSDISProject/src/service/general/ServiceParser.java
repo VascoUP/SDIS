@@ -21,9 +21,10 @@ public class ServiceParser {
 	public static void parseService() {
 		BasicMessage bm;
 		QueueableMessage message = getNextQueuedMessage();
-		
-		if( message == null )
+
+		if( message == null ) {
 			return ;
+		}
 		
 		bm = parseMessage(message.getData());
 		MessageToService.processMessage(message.getTime(), bm);

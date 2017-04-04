@@ -10,6 +10,7 @@ public class MessageInfoPutChunk extends MessageInfo {
 		
 		this.chunkID = chunkID;
 		this.replication_degree = replication_degree;
+		System.out.println("MessageInfoPutChunk: " + chunk.length);
 		this.chunk = chunk;
 	}
 
@@ -22,13 +23,11 @@ public class MessageInfoPutChunk extends MessageInfo {
 
 	@Override
 	public byte[][] getAll() {
-		byte[][] arrayOfByteArrays = new byte[8][];
+		byte[][] arrayOfByteArrays = new byte[7][];
 		byte[][] superResult = super.getAll();
 		
-		for( int i = 0; i < superResult.length; i++ ) {
-			System.out.println(new String(superResult[i]));
+		for( int i = 0; i < superResult.length; i++ )
 			arrayOfByteArrays[i] = superResult[i];
-		}
 		
 		arrayOfByteArrays[4] = ("" + chunkID).getBytes();
 		arrayOfByteArrays[5] = ("" + replication_degree).getBytes();

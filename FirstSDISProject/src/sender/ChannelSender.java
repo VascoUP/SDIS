@@ -36,7 +36,6 @@ public abstract class ChannelSender implements Runnable {
 	}
 	
 	public void sendMessage() {
-		System.out.println("Channel Sender: sendMessage");
 		try {
 			socket.send(MessageInfoToByteArray.infoToByteArray(this.message));
 		} catch (IOException e) {
