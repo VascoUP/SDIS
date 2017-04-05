@@ -1,6 +1,7 @@
 package service.restore;
 
 import java.io.IOException;
+import java.util.concurrent.locks.Condition;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
 
@@ -9,9 +10,13 @@ import information.Chunk;
 import information.FileInfo;
 import information.PeerInfo;
 import message.MessageInfoGetChunk;
+import sender.RestoreSender;
 import threads.ThreadManager;
 
 public class Restore {
+	private final Lock lock = new ReentrantLock();
+	private final Condition lastChunk  = lock.newCondition(); 
+	   
 	private Chunk[] backedupChunks;
 	private Chunk[] receivedChunks;
 	
@@ -30,7 +35,6 @@ public class Restore {
 		this.fileID = backedupChunks[0].getFileId();
 	}
 	
-	
 	private void writeReceivedChunks() {
 		for( int i = 0; i < receivedChunks.length; i++ ) {
 			try {
@@ -41,18 +45,24 @@ public class Restore {
 		}
 	}
 	
+	private boolean allChunks() {
+		for( Chunk receivedChunk : receivedChunks )
+			if( receivedChunk == null )
+				return false;
+		return true;
+	}
 	
-	public void addReceivedChunk(Chunk chunk) {
-		Lock lock = new ReentrantLock();
+	private void getReceivedChunks() throws InterruptedException {
 		lock.lock();
 		try {
-			receivedChunks[chunk.getChunkId()] = chunk;
+			while( !allChunks() ) 
+				lastChunk.await();
 		} finally {
 			lock.unlock();
 		}
 	}
 	
-	public void handleReceivedChunks() {
+	private void handleReceivedChunks() {
 		for( int i = 0; i < receivedChunks.length; i++ ) {
 			if( receivedChunks[i] == null ) {
 				System.out.println("Null at " + i);
@@ -63,19 +73,41 @@ public class Restore {
 		
 		writeReceivedChunks();
 	}
+
+	public void addReceivedChunk(Chunk chunk) {
+		lock.lock();
+		try {
+			receivedChunks[chunk.getChunkId()] = chunk;
+			if( allChunks() )
+				lastChunk.signal();
+		} finally {
+			lock.unlock();
+		}
+	}
 	
-	
-	public void run_service() {		
+	public void run_service() {
 		if( fileID == null )
 			return;
 		
 		for( int i = 0; i < backedupChunks.length; i++ ) {
-			ThreadManager.initRestore(
-					new MessageInfoGetChunk(
-							PeerInfo.peerInfo.getVersionProtocol(), 
-							PeerInfo.peerInfo.getServerID(),
-							fileID, 
-							i));
+			try {
+				ThreadManager.initRestore(
+						new RestoreSender(
+							this,
+							new MessageInfoGetChunk(
+									PeerInfo.peerInfo.getVersionProtocol(), 
+									PeerInfo.peerInfo.getServerID(),
+									fileID, 
+									i)));
+			} catch (IOException e) {
+				return ;
+			}
+		}
+		
+		try {
+			getReceivedChunks();
+		} catch (InterruptedException e) {
+			return ;
 		}
 		
 		handleReceivedChunks();

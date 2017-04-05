@@ -1,9 +1,7 @@
 package rmi;
 
-import information.Chunk;
-import information.PeerInfo;
-import message.MessageInfoGetChunk;
 import service.backup.BackUp;
+import service.restore.Restore;
 import threads.ThreadManager;
 
 public class RMIRunner {
@@ -53,11 +51,11 @@ public class RMIRunner {
 	
 	public static void restore(String path) {
 		System.out.println("Restore");		
-		ThreadManager.initRestore(
-				new MessageInfoGetChunk(
-						PeerInfo.peerInfo.getVersionProtocol(), 
-						PeerInfo.peerInfo.getServerID(),
-						Chunk.getFileId(path), 
-						0));
+		try {
+			Restore restore = new Restore(path);
+			restore.run_service();
+		} catch (Exception e) {
+			System.out.println(e.getMessage());
+		}
 	}
 }

@@ -26,6 +26,18 @@ public abstract class ChannelSender implements Runnable {
 		}
 	}
 	
+	protected void cooldown(long ms) {
+		try {
+			long waitUntilMillis = System.currentTimeMillis() + ms;
+			long waitTimeMillis = ms;
+			do {
+				Thread.sleep(waitTimeMillis);
+				waitTimeMillis = waitUntilMillis - System.currentTimeMillis();
+			} while (waitTimeMillis > 0);
+		} catch (InterruptedException e) {
+		}
+	}
+	
 	public void execute() {
 		sendMessage();
 	}

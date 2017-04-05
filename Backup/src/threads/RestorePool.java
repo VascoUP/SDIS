@@ -1,12 +1,10 @@
 package threads;
 
-import java.io.IOException;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
 
-import message.MessageInfoGetChunk;
-import sender.RestoreSender;
+import sender.ChannelSender;
 
 public class RestorePool implements ThreadPool {
 	private static final int NUMBER_THREADS = 5;
@@ -40,15 +38,7 @@ public class RestorePool implements ThreadPool {
 		service.execute(worker);
 	}
 
-	public void startRestoreThread(MessageInfoGetChunk message) {
-		RestoreSender restore = null;
-		try {
-			restore = new RestoreSender(message);
-		} catch (IOException e) {
-			e.printStackTrace();
-			System.exit(0);
-		}
-		
-		startNewThread(restore);
+	public void startRestoreThread(ChannelSender sender) {
+		startNewThread(sender);
 	}
 }

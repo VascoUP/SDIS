@@ -5,7 +5,6 @@ import java.io.IOException;
 import listener.MCListenner;
 import listener.MDBListenner;
 import listener.MDRListenner;
-import message.MessageInfoGetChunk;
 import sender.ChannelSender;
 
 public class ThreadManager {
@@ -82,10 +81,10 @@ public class ThreadManager {
 		mdr_listener.start();
 	}
 
-	public static void initRestore(MessageInfoGetChunk message) {
+	public static void initRestore(ChannelSender sender) {
 		if( restoreServices == null )
 			restoreServices = new RestorePool();
-		restoreServices.startRestoreThread(message);
+		restoreServices.startRestoreThread(sender);
 	}
 
 	public static void initThreadManager() {
