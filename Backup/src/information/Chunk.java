@@ -6,7 +6,7 @@ import java.security.MessageDigest;
 
 import file.HandleFile;
 
-public class Chunk {
+public class Chunk implements Comparable<Chunk> {
 	private String storePath;
 	private String fileId;
 	private int chunkId;
@@ -18,7 +18,6 @@ public class Chunk {
 		this.fileId = fileId;
 		this.chunkId = chunkId;
 		this.chunk = null;
-		
 	}
 	
 	public Chunk(String storePath, String fileId, int chunkId, byte[] chunk) {
@@ -108,4 +107,9 @@ public class Chunk {
 	    }
 	}
 
+	
+	@Override
+    public int compareTo(Chunk chunk) {
+        return chunkId - chunk.getChunkId();
+    }
 }

@@ -6,7 +6,7 @@ import listener.MCListenner;
 import listener.MDBListenner;
 import listener.MDRListenner;
 import message.MessageInfoGetChunk;
-import message.MessageInfoPutChunk;
+import sender.ChannelSender;
 
 public class ThreadManager {
 	private static WorkerPool worker_pool;
@@ -28,10 +28,10 @@ public class ThreadManager {
 		}
 	}
 	
-	public static void initBackUp(MessageInfoPutChunk message) {
+	public static void initBackUp(ChannelSender sender) {
 		if( backupServices == null )
 			backupServices = new BackUpPool();
-		backupServices.startBackupThread(message);
+		backupServices.startBackupThread(sender);
 	}
 	
 	public static void initListenerThreads() {

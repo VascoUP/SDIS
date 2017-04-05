@@ -1,105 +1,83 @@
 package service.restore;
 
-public class Restore {	
-	/*private String filePath;
+import java.io.IOException;
+import java.util.concurrent.locks.Lock;
+import java.util.concurrent.locks.ReentrantLock;
+
+import file.HandleFile;
+import information.Chunk;
+import information.FileInfo;
+import information.PeerInfo;
+import message.MessageInfoGetChunk;
+import threads.ThreadManager;
+
+public class Restore {
+	private Chunk[] backedupChunks;
+	private Chunk[] receivedChunks;
 	
-	public Restore(String filePath) throws IOException {
+	private String filePath;
+	private String fileID;
+
+	public Restore(String filePath) throws Exception {
 		super();
 		
 		this.filePath = filePath;
-		protocol = new GetChunk();
+		this.backedupChunks = FileInfo.findAllBackedUpChunks(filePath);
+		
+		if( backedupChunks.length < 1 )
+			throw new Exception("No backed up chunks with this path were found");
+		
+		this.fileID = backedupChunks[0].getFileId();
 	}
 	
-	public Message validateMessage(byte[] message) {
-		ChunkMessage cm; 
-		GetChunkMessage bum = (GetChunkMessage)protocol.getMessage();
-		
-		
+	
+	private void writeReceivedChunks() {
+		for( int i = 0; i < receivedChunks.length; i++ ) {
+			try {
+				HandleFile.writeFile(receivedChunks[i].getChunk(), filePath);
+			} catch (IOException e) {
+				System.out.println("Error writting to file " + filePath);
+			}
+		}
+	}
+	
+	
+	public void addReceivedChunk(Chunk chunk) {
+		Lock lock = new ReentrantLock();
+		lock.lock();
 		try {
-			cm = new ChunkMessage(message);
-		} catch( Error e ) {
-			return null;
+			receivedChunks[chunk.getChunkId()] = chunk;
+		} finally {
+			lock.unlock();
 		}
-				
-		return (cm.isValidMessage() &&
-				cm.getFileId().equals(bum.getFileId()) &&
-				cm.getChunkId() == bum.getChunkId()) ? cm : null;
-	}
-
-	public byte[] getAnswer() {
-		long t = System.currentTimeMillis();
-		long end = t + 1000;
-		byte[] rcv;
-		Message m;
-		
-		while((t = end - System.currentTimeMillis()) > 0 ){
-			rcv = receive((int)t);
-
-			if( rcv == null )
-				continue;
-			
-			if( (m = validateMessage(rcv)) != null)
-				return m.getBody();
-		}
-		
-		return null;
 	}
 	
-	public void setMessage(String fileID, int chunkID) {
-		GetChunk prot = (GetChunk)protocol;
-		prot.setMessage(fileID, chunkID);
-	}
-	
-	public String getFileID() {
-		Chunk buChunk = FileInfo.findBackedUpChunk(filePath);
-		if( buChunk == null ) {
-			System.out.println("Restore of a non backed up file");
-			return null;
+	public void handleReceivedChunks() {
+		for( int i = 0; i < receivedChunks.length; i++ ) {
+			if( receivedChunks[i] == null ) {
+				System.out.println("Null at " + i);
+				return ;
+			}
+			System.out.println(receivedChunks[i].getFileId() + " - " + receivedChunks[i].getChunkId());
 		}
-		return buChunk.getFileId();
-	}
-	
-	public void writeArrayList(ArrayList<byte[]> chunks) {
-		try {
-			HandleFile.writeFile(chunks, filePath);
-		} catch (IOException e) {
-			System.out.println("Error writting to file " + filePath);
-		}
-	}
-
-	public void run_service() {
-		ArrayList<byte[]> chunks = new ArrayList<byte[]>();
-		String fileID = getFileID();
-		int chunkID = 1, nTries = 0;
 		
+		writeReceivedChunks();
+	}
+	
+	
+	public void run_service() {		
 		if( fileID == null )
 			return;
 		
-		setMessage(fileID, chunkID);
-		
-		while( nTries < ServiceConst.MAXIMUM_TRIES ) {
-			if( !send() )
-				return;
-			
-			byte[] chunk = getAnswer();
-			if( chunk == null ) {
-				nTries++;
-				continue;
-			}
-			
-			System.out.println("ID: " + chunkID + " --> " + chunk.length);
-			
-			chunks.add(chunk);
-			if( chunk.length < 64000 )
-				break;
-
-			setMessage(fileID, ++chunkID);
-			nTries = 0;
+		for( int i = 0; i < backedupChunks.length; i++ ) {
+			ThreadManager.initRestore(
+					new MessageInfoGetChunk(
+							PeerInfo.peerInfo.getVersionProtocol(), 
+							PeerInfo.peerInfo.getServerID(),
+							fileID, 
+							i));
 		}
 		
-		if( nTries >= ServiceConst.MAXIMUM_TRIES )
-			System.out.println("Error restoring the file " + filePath);
-		else
-			writeArrayList(chunks);
-	}*/
+		handleReceivedChunks();
+	}
 }

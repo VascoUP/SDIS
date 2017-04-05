@@ -1,12 +1,10 @@
 package threads;
 
-import java.io.IOException;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
 
-import message.MessageInfoPutChunk;
-import sender.BackUpSender;
+import sender.ChannelSender;
 
 public class BackUpPool implements ThreadPool {
 	private static final int NUMBER_THREADS = 5;
@@ -40,15 +38,7 @@ public class BackUpPool implements ThreadPool {
 		service.execute(worker);
 	}
 
-	public void startBackupThread(MessageInfoPutChunk message) {
-		BackUpSender backup = null;
-		try {
-			backup = new BackUpSender(message);
-		} catch (IOException e) {
-			e.printStackTrace();
-			System.exit(0);
-		}
-		
-		startNewThread(backup);
+	public void startBackupThread(ChannelSender sender) {		
+		startNewThread(sender);
 	}
 }

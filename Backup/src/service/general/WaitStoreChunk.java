@@ -59,7 +59,8 @@ public class WaitStoreChunk extends MessageServiceWait {
 		} catch (IOException e) {
 			return ;
 		}
-		FileInfo.fileAddStoredChunk(chunk);
+		
+		FileInfo.addStoredChunk(chunk);
 	}
 	
 
