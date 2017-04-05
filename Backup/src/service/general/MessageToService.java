@@ -28,22 +28,10 @@ public class MessageToService {
 			MessageServiceStore.serve(time, message);
 			break;
 		case MessageConst.RESTORE_MESSAGE_TYPE:
-			/*
-			 * Service -> GetChunk
-			 * 		1st: Wait random time
-			 * 		2nd: Check and see if there were already answers 
-			 * 				If not
-			 * 					Get requested chunk
-			 * 					Send, to the MDR channel, the chunk message
-			 * 				Else
-			 * 					Ignore and return right away
-			 */
+			WaitGetChunk.serve(time, message);
 			break;
 		case MessageConst.CHUNK_MESSAGE_TYPE:
-			/*
-			 * Service -> Add element to a blocking queue(? probably)
-			 * 		1st: Find a way to wake the waiting thread 
-			 */
+			MessageServiceChunk.serve(time, message);
 			break;
 		}
 	}

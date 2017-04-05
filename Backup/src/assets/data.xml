@@ -1,4 +1,4 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?><!DOCTYPE metadata SYSTEM "metadata.dtd">
 <metadata>
 	<!--This is where we store information about the chunks-->
-<storedChunk chunkID="2"><fileID>29dcdbb41a56acf41f0afed638112a742a8a1c7ae704de1e4a558ae6f5854541</fileID></storedChunk><storedChunk chunkID="1"><fileID>29dcdbb41a56acf41f0afed638112a742a8a1c7ae704de1e4a558ae6f5854541</fileID></storedChunk><storedChunk chunkID="2"><fileID>29dcdbb41a56acf41f0afed638112a742a8a1c7ae704de1e4a558ae6f5854541</fileID></storedChunk><backedupChunk chunkID="2"><fileID>29dcdbb41a56acf41f0afed638112a742a8a1c7ae704de1e4a558ae6f5854541</fileID><filePath>testFiles/Test2.c</filePath></backedupChunk></metadata>
+</metadata>

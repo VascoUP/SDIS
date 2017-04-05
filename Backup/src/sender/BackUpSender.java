@@ -30,18 +30,6 @@ public class BackUpSender extends ChannelSender {
 		return MessagesHashmap.getValue(key) >= backupMessage.getReplication_degree();
 	}
 	
-	private void cooldown(long ms) {
-		try {
-			long waitUntilMillis = System.currentTimeMillis() + ms;
-			long waitTimeMillis = ms;
-			do {
-				Thread.sleep(waitTimeMillis);
-				waitTimeMillis = waitUntilMillis - System.currentTimeMillis();
-			} while (waitTimeMillis > 0);
-		} catch (InterruptedException e) {
-		}
-	}
-	
 	@Override
 	public void execute() {
 		do {
