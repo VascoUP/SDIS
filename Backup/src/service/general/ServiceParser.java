@@ -6,7 +6,7 @@ import message.MessageParser;
 import message.QueueableMessage;
 
 public class ServiceParser {	
-	public static QueueableMessage getNextQueuedMessage() {
+	private static QueueableMessage getNextQueuedMessage() {
 		try {
 			return MessageQueue.take();
 		} catch (InterruptedException e) {
@@ -14,7 +14,7 @@ public class ServiceParser {
 		}
 	}
 	
-	public static BasicMessage parseMessage(byte[] message) {
+	private static BasicMessage parseMessage(byte[] message) {
 		return MessageParser.parseMessage(message);
 	}
 	

@@ -1,8 +1,5 @@
 package sender;
 
-import java.io.IOException;
-
-import connection.ConnectionConstants;
 import information.Chunk;
 import information.FileInfo;
 import information.MessagesHashmap;
@@ -11,15 +8,17 @@ import message.MessageInfoPutChunk;
 import message.MessageInfoStored;
 import message.MessageToString;
 
+import java.io.IOException;
+
 public class BackUpSender extends ChannelSender {
 	private String filePath;
 	
 	public BackUpSender(String filePath, MessageInfoPutChunk message) throws IOException {
-		super( message, ConnectionConstants.MDB_GROUP, ConnectionConstants.MDB_GROUP_PORT);
+		super( message);
 		this.filePath = filePath;
 	}
 	
-	public boolean condition() {
+	private boolean condition() {
 		MessageInfoPutChunk backupMessage = (MessageInfoPutChunk) message;
 		MessageInfoStored m = new MessageInfoStored(
 									PeerInfo.peerInfo.getVersionProtocol(), 
@@ -30,15 +29,15 @@ public class BackUpSender extends ChannelSender {
 		return MessagesHashmap.getValue(key) >= backupMessage.getReplication_degree();
 	}
 	
-	private void cooldown(long ms) {
+	private void cooldown() {
 		try {
-			long waitUntilMillis = System.currentTimeMillis() + ms;
-			long waitTimeMillis = ms;
+			long waitUntilMillis = System.currentTimeMillis() + (long) 1000;
+			long waitTimeMillis = (long) 1000;
 			do {
 				Thread.sleep(waitTimeMillis);
 				waitTimeMillis = waitUntilMillis - System.currentTimeMillis();
 			} while (waitTimeMillis > 0);
-		} catch (InterruptedException e) {
+		} catch (InterruptedException ignored) {
 		}
 	}
 	
@@ -46,7 +45,7 @@ public class BackUpSender extends ChannelSender {
 	public void execute() {
 		do {
 			sendMessage();
-			cooldown(1000);
+			cooldown();
 		} while( !condition() );
 		
 		MessagesHashmap.removeKey(MessageToString.getName(message));

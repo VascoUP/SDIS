@@ -1,7 +1,5 @@
 package service.backup;
 
-import java.io.IOException;
-
 import file.HandleFile;
 import information.Chunk;
 import information.PeerInfo;
@@ -10,10 +8,12 @@ import message.MessageInfoPutChunk;
 import sender.BackUpSender;
 import threads.ThreadManager;
 
+import java.io.IOException;
+
 public class BackUp {
-	private String filePath;
-	private String fileID;
-	private int replicationDegree;
+	private final String filePath;
+	private final String fileID;
+	private final int replicationDegree;
 
 	public BackUp(String filePath, int replicationDegree) {
 		super();

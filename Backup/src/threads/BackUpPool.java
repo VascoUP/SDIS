@@ -1,21 +1,20 @@
 package threads;
 
+import sender.ChannelSender;
+
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
 
-import sender.ChannelSender;
-
-public class BackUpPool implements ThreadPool {
+class BackUpPool implements ThreadPool {
 	private static final int NUMBER_THREADS = 5;
-	
-	private ExecutorService service;
+
+	private final ExecutorService service;
 	
 	public BackUpPool() {
 		service = Executors.newFixedThreadPool(NUMBER_THREADS);
 	}
-	
-	@Override
+
 	public void shutdown() {
 		try {
 		    System.out.println("Attempt to shutdown executor");
@@ -33,8 +32,7 @@ public class BackUpPool implements ThreadPool {
 		}
 	}
 
-	@Override
-	public void startNewThread(Runnable worker) {
+	private void startNewThread(Runnable worker) {
 		service.execute(worker);
 	}
 

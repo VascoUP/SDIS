@@ -1,12 +1,12 @@
 package information;
 
+import message.QueueableMessage;
+
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.LinkedBlockingQueue;
 
-import message.QueueableMessage;
-
 public class MessageQueue {
-	private static BlockingQueue<QueueableMessage> messageQueue = new LinkedBlockingQueue<QueueableMessage>(64);
+	private static final BlockingQueue<QueueableMessage> messageQueue = new LinkedBlockingQueue<>( 64 );
 	
 	public static void put(byte[] message) {
 		long time = System.currentTimeMillis();

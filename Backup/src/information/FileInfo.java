@@ -1,14 +1,13 @@
 package information;
 
-import java.util.ArrayList;
-import java.util.Iterator;
-
 import file.HandleXMLFile;
+
+import java.util.ArrayList;
 
 
 public class FileInfo {
-	private static ArrayList<Chunk> storedChunks;
-	private static ArrayList<Chunk> backedUpChunks;	
+    private static ArrayList<Chunk> storedChunks;
+    private static ArrayList<Chunk> backedUpChunks;
 
 	
 	/*======
@@ -23,16 +22,16 @@ public class FileInfo {
 			HandleXMLFile.readDocument();
 		} catch (Exception e) {
 			e.printStackTrace();
-			System.exit(0);
+			System.exit( 0);
 		}
 	}
 	
 	private static void initBackedUpChunks() {
-		backedUpChunks = new ArrayList<Chunk>();
+		backedUpChunks = new ArrayList<>();
 	}
 	
 	private static void initStoredChunks() {
-		storedChunks = new ArrayList<Chunk>();
+		storedChunks = new ArrayList<>();
 	}
 	
 	/*===========
@@ -40,22 +39,20 @@ public class FileInfo {
 	 *===========
 	 */
 	private static void eliminateSameBackedUpChunk(Chunk chunk) {
-		Iterator<Chunk> iter = backedUpChunks.iterator();
-		while( iter.hasNext() ) {
-			Chunk c = iter.next();
-			if( c.getChunkId() == chunk.getChunkId() && c.getStorePath().equals(chunk.getStorePath()) ) {
-				backedUpChunks.remove(c);
-				return ;
-			}
-		}
+        for ( Chunk backedUpChunk : backedUpChunks ) {
+            if( backedUpChunk.getChunkId() == chunk.getChunkId() &&
+                backedUpChunk.getStorePath().equals(chunk.getStorePath()) ) {
+                backedUpChunks.remove(backedUpChunk);
+                return ;
+            }
+        }
 	}
 	
 	private static void eliminateSameStoredChunk(Chunk chunk) {
-		Iterator<Chunk> iter = storedChunks.iterator();
-		while( iter.hasNext() ) {
-			Chunk c = iter.next();
-			if( c.getChunkId() == chunk.getChunkId() && c.getFileId().equals(chunk.getFileId()) ) {
-				storedChunks.remove(c);
+		for ( Chunk storedChunk : storedChunks) {
+			if( storedChunk.getChunkId() == chunk.getChunkId() &&
+				storedChunk.getFileId().equals(chunk.getFileId()) ) {
+				storedChunks.remove(storedChunk);
 				return ;
 			}
 		}
@@ -66,12 +63,12 @@ public class FileInfo {
 	 * ADD CHUNKS
 	 *============
 	 */
-	public static void backupChunk(Chunk chunk) {
+    public static void backupChunk(Chunk chunk) {
 		eliminateSameBackedUpChunk(chunk);
 		backedUpChunks.add(chunk);
 	}
 
-	public static void storeChunk(Chunk chunk) {
+    public static void storeChunk(Chunk chunk) {
 		eliminateSameStoredChunk(chunk);
 		storedChunks.add(chunk);
 	}
@@ -86,16 +83,6 @@ public class FileInfo {
 			HandleXMLFile.addBackedUpChunk(chunk);
 		} catch (Exception e) {
 			e.printStackTrace();
-			return ;
-		}
-	}
-	
-	private static void fileAddStoredChunk(Chunk chunk) {
-		try {
-			HandleXMLFile.addStoreChunk(chunk);
-		} catch (Exception e) {
-			e.printStackTrace();
-			return ;
 		}
 	}
 	
@@ -116,26 +103,5 @@ public class FileInfo {
 		backupChunk(chunk);
 	}
 
-	public static void addStoredChunk(Chunk chunk) {
-		fileAddStoredChunk(chunk);
-		storeChunk(chunk);
-	}
 
-	
-	/*======
-	 * FIND
-	 *======
-	 */
-	public static Chunk[] findAllBackedUpChunks(String path) {
-		ArrayList<Chunk> chunks = new ArrayList<Chunk>();
-		Iterator<Chunk> iter = backedUpChunks.iterator();
-		
-		while( iter.hasNext() ) {
-			Chunk c = iter.next();
-			if( c.getStorePath().equals(path) )
-				chunks.add(c);
-		}
-		
-		return (Chunk[])chunks.toArray();
-	}
 }

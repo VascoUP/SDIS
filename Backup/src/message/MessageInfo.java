@@ -1,12 +1,12 @@
 package message;
 
 public class MessageInfo {
-	protected final String messageType;
-	protected final String version;
-	protected final int senderID;
-	protected final String fileID;
+	private final String messageType;
+	private final String version;
+	private final int senderID;
+	private final String fileID;
 	
-	public MessageInfo(String messageType, String version, int senderID, String fileID) {
+	MessageInfo(String messageType, String version, int senderID, String fileID) {
 		this.messageType = messageType;
 		this.version = version;
 		this.senderID = senderID;
@@ -16,7 +16,8 @@ public class MessageInfo {
 	@Override
 	public boolean equals(Object o) {
 		MessageInfo info = (MessageInfo)o;
-		return 	info.getMessageType().equals(messageType) &&
+		return 	o.getClass() == MessageInfo.class &&
+				info.getMessageType().equals(messageType) &&
 				info.getFileID().equals(fileID);
 	}
 
@@ -42,12 +43,5 @@ public class MessageInfo {
 	public String getName() {
 		return messageType + fileID;
 	}
-	
-	public int getSenderID() {
-		return senderID;
-	}
 
-	public String getVersion() {
-		return version;
-	}
 }

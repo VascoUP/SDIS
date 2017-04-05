@@ -1,8 +1,8 @@
 package message;
 
 public class QueueableMessage {
-	private long time;
-	private byte[] data;
+	private final long time;
+	private final byte[] data;
 	
 	public QueueableMessage(long time, byte[] data) {
 		this.time = time;

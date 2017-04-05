@@ -3,8 +3,8 @@ import information.PeerInfo;
 import rmi.RMIStorage;
 import threads.ThreadManager;
 
-public class Peer {	
-	public static void initAll() {
+class Peer {
+	private static void initAll() {
 		FileInfo.init();
 		ThreadManager.initThreadManager();
 		RMIStorage.initRMI();

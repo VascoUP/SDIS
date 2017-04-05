@@ -25,9 +25,8 @@ public class MessageInfoPutChunk extends MessageInfo {
 	public byte[][] getAll() {
 		byte[][] arrayOfByteArrays = new byte[7][];
 		byte[][] superResult = super.getAll();
-		
-		for( int i = 0; i < superResult.length; i++ )
-			arrayOfByteArrays[i] = superResult[i];
+
+        System.arraycopy( superResult, 0, arrayOfByteArrays, 0, superResult.length );
 		
 		arrayOfByteArrays[4] = ("" + chunkID).getBytes();
 		arrayOfByteArrays[5] = ("" + replication_degree).getBytes();
@@ -35,12 +34,8 @@ public class MessageInfoPutChunk extends MessageInfo {
 		
 		return arrayOfByteArrays;
 	}
-	
-	public byte[] getChunk() {
-		return chunk;
-	}
-	
-	public int getChunkID() {
+
+    public int getChunkID() {
 		return chunkID;
 	}
 	

@@ -6,7 +6,7 @@ import message.MessageInfoGetChunk;
 import service.backup.BackUp;
 import threads.ThreadManager;
 
-public class RMIRunner {
+class RMIRunner {
 	
 	public static void parseArgs(String[] rmiArgs) {
 		if( rmiArgs.length < 1 )
@@ -35,23 +35,22 @@ public class RMIRunner {
 				return ;
 			close();
 		}
-		return ;
-	}
+    }
 
-	public static void backUp(String path, int rep_degree) {
+	private static void backUp(String path, int rep_degree) {
 		System.out.println("Backup");
 		BackUp backup = new BackUp(path, rep_degree);
 		backup.run_service();
 	}
 	
-	public static void close() {
+	private static void close() {
 		System.out.println("Close");	
 		ThreadManager.closeThreads();
 		System.exit(0);
 		//RMIStorage.getRMI().unbind();
 	}
 	
-	public static void restore(String path) {
+	private static void restore(String path) {
 		System.out.println("Restore");		
 		ThreadManager.initRestore(
 				new MessageInfoGetChunk(

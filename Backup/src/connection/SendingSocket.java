@@ -6,16 +6,12 @@ import java.net.MulticastSocket;
 
 public class SendingSocket extends SLMCast {
 
-	public SendingSocket(String addr, int port) throws IOException {
-		super(addr, port);
+	public SendingSocket() throws IOException {
+		super( ConnectionConstants.MDB_GROUP, ConnectionConstants.MDB_GROUP_PORT );
 
 		mcast_socket = new MulticastSocket();
 	}
-	
-	public boolean isClosed() {
-		return mcast_socket.isClosed();
-	}
-	
+
     @Override
 	public void leave() throws IOException {
     	mcast_socket.close();

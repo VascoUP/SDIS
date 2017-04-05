@@ -1,8 +1,8 @@
 package listener;
 
-import java.io.IOException;
-
 import connection.ConnectionConstants;
+
+import java.io.IOException;
 
 public class MDBListenner extends ChannelListener {
 	public MDBListenner() throws IOException {

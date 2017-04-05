@@ -3,7 +3,6 @@ package connection;
 import java.io.IOException;
 import java.net.DatagramPacket;
 import java.net.MulticastSocket;
-import java.net.SocketTimeoutException;
 
 public class ReceivingSocekt extends SLMCast {
 
@@ -13,12 +12,8 @@ public class ReceivingSocekt extends SLMCast {
 		mcast_socket = new MulticastSocket(mcast_port);
 		mcast_socket.joinGroup(mcast_address);
 	}
-	
-	public boolean isClosed() {
-		return mcast_socket.isClosed();
-	}
-	
-    public DatagramPacket receive() throws SocketTimeoutException, IOException {
+
+	public DatagramPacket receive() throws IOException {
     	DatagramPacket packet = new DatagramPacket(
     			new byte[ConnectionConstants.PACKET_SIZE_OVERHEAD], 
     			ConnectionConstants.PACKET_SIZE_OVERHEAD);

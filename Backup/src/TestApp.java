@@ -1,12 +1,13 @@
+import rmi.Instructable;
+
 import java.rmi.NotBoundException;
 import java.rmi.RemoteException;
 import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
 
-import rmi.Instructable;
-
-public class TestApp {	
+class TestApp {
 	private static TestApp testApp;
+	private static Instructable stub;
 	
 	/*==============
 	 * MAIN METHODS
@@ -15,7 +16,7 @@ public class TestApp {
     public static void main(String[] args) {
     	parseArgs(args);
     }
-	public static void parseArgs(String[] args) {    	
+	private static void parseArgs(String[] args) {
     	String[] rmiArgs = new String[args.length - 1];
     	System.arraycopy(args, 1, rmiArgs, 0, args.length - 1);
     	
@@ -23,21 +24,17 @@ public class TestApp {
     	if (testApp.getRMI(args[0]) )
     		testApp.runRMI(rmiArgs);    	
     }
-	
-	
-	private Registry registry;
-    
-    private Instructable stub;
-    
+
+
     
     /*====================
      * NON STATIC METHODS
      *====================
      */
-    public TestApp() {
+    private TestApp() {
     }
 
-    public boolean getRMI(String peer_name) {
+    private boolean getRMI(String peer_name) {
         try {
 			testApp.registerRMI(peer_name);
 		} catch (RemoteException e) {
@@ -51,15 +48,15 @@ public class TestApp {
         return true;
     }
     
-    public void registerRMI(String peer_name) throws RemoteException, NotBoundException {
-        registry = LocateRegistry.getRegistry();
+    private void registerRMI(String peer_name) throws RemoteException, NotBoundException {
+		Registry registry = LocateRegistry.getRegistry();
         stub = (Instructable) registry.lookup(peer_name);
     }
     
-    public void runRMI(String[] rmiArgs) {
+    private void runRMI(String[] rmiArgs) {
     	try {
 			stub.run(rmiArgs);
-		} catch (RemoteException e) {
+		} catch (RemoteException ignored) {
 		}
     }
 }

@@ -62,17 +62,12 @@ public class MessageParser {
 		}
 		messageIndex += 2;		
 		
-		if( (body = parseBody(message, messageIndex)) == null ) {
-			System.out.println("Parse body error");
-			return null;
-		}
-		
-		BasicMessage bm = new BasicMessage(head, body);
-		
-		return bm;
+		body = parseBody(message, messageIndex);
+
+        return new BasicMessage(head, body);
 	}
 
-	public static String[] processMessageHead(byte[] messageHead) {
+	private static String[] processMessageHead(byte[] messageHead) {
 		messageHead = MessageOperation.trim(messageHead);
 		return MessageOperation.splitMultipleSpaces(new String(messageHead));
 		

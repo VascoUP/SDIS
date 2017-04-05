@@ -4,17 +4,16 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
 
-public class WorkerPool implements ThreadPool {
+class WorkerPool implements ThreadPool {
 	private static final int NUMBER_THREADS = 10;
 	
-	private ExecutorService service;
+	private final ExecutorService service;
 	private int nThreads = 0;
 	
 	public WorkerPool() {
 		service = Executors.newFixedThreadPool(NUMBER_THREADS);
 	}
 
-	@Override
 	public void shutdown() {
 		try {
 		    System.out.println("Attempt to shutdown executor");
@@ -32,8 +31,7 @@ public class WorkerPool implements ThreadPool {
 		}
 	}
 	
-	@Override
-	public void startNewThread(Runnable worker) {
+	private void startNewThread(Runnable worker) {
 		service.execute(worker);	
 	}
 	
@@ -44,7 +42,7 @@ public class WorkerPool implements ThreadPool {
 		}
 	}
 	
-	public void startNewWorkerThread() {
+	private void startNewWorkerThread() {
 		Runnable worker = new WorkerThread(nThreads);
 		startNewThread(worker);	
 	}

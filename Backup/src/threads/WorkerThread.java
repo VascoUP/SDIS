@@ -2,7 +2,7 @@ package threads;
 
 import service.general.ServiceParser;
 
-public class WorkerThread implements Runnable {
+class WorkerThread implements Runnable {
 	private final int id;
 	
 	public WorkerThread(int id) {

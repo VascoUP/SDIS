@@ -1,12 +1,12 @@
 package threads;
 
-import java.io.IOException;
-
 import listener.MCListenner;
 import listener.MDBListenner;
 import listener.MDRListenner;
 import message.MessageInfoGetChunk;
 import sender.ChannelSender;
+
+import java.io.IOException;
 
 public class ThreadManager {
 	private static WorkerPool worker_pool;
@@ -23,9 +23,7 @@ public class ThreadManager {
 		if( restoreServices != null )
 			restoreServices.shutdown();
 
-		try { interruptThreads();
-		} catch (InterruptedException e) {
-		}
+		interruptThreads();
 	}
 	
 	public static void initBackUp(ChannelSender sender) {
@@ -34,13 +32,13 @@ public class ThreadManager {
 		backupServices.startBackupThread(sender);
 	}
 	
-	public static void initListenerThreads() {
+	private static void initListenerThreads() {
 		initMC();
 		initMDB();
 		initMDR();
 	}
 	
-	public static void initMC() {
+	private static void initMC() {
 		MCListenner mc = null;
 		try {
 			mc = new MCListenner();
@@ -54,7 +52,7 @@ public class ThreadManager {
 		mc_listener.start();
 	}
 	
-	public static void initMDB() {
+	private static void initMDB() {
 		MDBListenner mdb = null;
 		try {
 			mdb = new MDBListenner();
@@ -68,7 +66,7 @@ public class ThreadManager {
 		mdb_listener.start();		
 	}
 	
-	public static void initMDR() {
+	private static void initMDR() {
 		MDRListenner mdr = null;
 		try {
 			mdr = new MDRListenner();
@@ -93,12 +91,12 @@ public class ThreadManager {
 		initListenerThreads();
 	}
 	
-	public static void initWorkerPool() {
+	private static void initWorkerPool() {
 		worker_pool = new WorkerPool();
 		worker_pool.startAllWorkerThreads();
 	}
 	
-	public static void interruptThreads() throws InterruptedException {
+	private static void interruptThreads() {
 		mc_listener.close();
 		mdb_listener.close();
 		mdr_listener.close();

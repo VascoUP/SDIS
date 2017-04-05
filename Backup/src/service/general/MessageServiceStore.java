@@ -4,8 +4,8 @@ import information.MessagesHashmap;
 import message.BasicMessage;
 import message.MessageToString;
 
-public class MessageServiceStore extends MessageService {	
-	public MessageServiceStore(long time, BasicMessage message) {
+class MessageServiceStore extends MessageService {
+	private MessageServiceStore(long time, BasicMessage message) {
 		super(time, message);
 	}
 
@@ -14,7 +14,7 @@ public class MessageServiceStore extends MessageService {
 		st.notifySender();
 	}
 	
-	public void notifySender() {
+	private void notifySender() {
 		MessagesHashmap.addMessage(MessageToString.getName(message));
 	}
 }

@@ -1,8 +1,8 @@
 package listener;
 
-import java.io.IOException;
-
 import connection.ConnectionConstants;
+
+import java.io.IOException;
 
 public class MCListenner extends ChannelListener {
 	public MCListenner() throws IOException {

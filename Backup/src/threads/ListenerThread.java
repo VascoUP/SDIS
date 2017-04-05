@@ -2,43 +2,25 @@ package threads;
 
 import listener.ChannelListener;
 
-public class ListenerThread implements ThreadOperations {
-	private Thread thread;
-	private ChannelListener listener;
+class ListenerThread implements ThreadOperations {
+	private final Thread thread;
+	private final ChannelListener listener;
 	
 	public ListenerThread(Thread thread, ChannelListener listener) {
 		this.thread = thread;
 		this.listener = listener;
 	}
 	
-	@Override
-	public void close() throws InterruptedException {
+	public void close() {
 		interrupt();
 		listener.closeChannel();
 	}
 
-	@Override
-	public String getName() {
-		return thread.getName();
-	}
-
-	@Override
-	public void interrupt() throws InterruptedException {
+	private void interrupt() {
 		thread.interrupt();
 		
 	}
 
-	@Override
-	public boolean isAlive() {
-		return thread.isAlive();
-	}
-
-	@Override
-	public void join() throws InterruptedException {
-		throw new InterruptedException("Listener threads cannot be joined");
-	}
-
-	@Override
 	public void start() {
 		thread.start();
 	}

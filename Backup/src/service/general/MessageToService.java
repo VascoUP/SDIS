@@ -4,7 +4,7 @@ import information.PeerInfo;
 import message.BasicMessage;
 import message.MessageConst;
 
-public class MessageToService {
+class MessageToService {
 	public static void processMessage(long time, BasicMessage message) {
 		String[] head = message.getHead();
 		if( head.length < 3 )

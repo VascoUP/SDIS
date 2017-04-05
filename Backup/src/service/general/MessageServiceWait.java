@@ -1,29 +1,24 @@
 package service.general;
 
+import message.BasicMessage;
+
 import java.util.Random;
 import java.util.concurrent.TimeUnit;
 
-import message.BasicMessage;
-
-public abstract class MessageServiceWait extends MessageService {
-	public static final int MAX_WAIT_TIME = 400;
+abstract class MessageServiceWait extends MessageService {
+	private static final int MAX_WAIT_TIME = 400;
 	
-	public MessageServiceWait(long time, BasicMessage message) {
+	MessageServiceWait(long time, BasicMessage message) {
 		super(time, message);
 	}
-	
-	protected boolean condition() {
-		System.err.println("Execution in the wrong class");
-		return false;
-	}
 
-	protected void wait(int time) {
+    private void wait(int time) {
 		try { TimeUnit.MILLISECONDS.sleep(time);
-		} catch (InterruptedException e) {
+		} catch (InterruptedException ignored) {
 		}
 	}
 	
-	protected int randomTime() {
+	private int randomTime() {
 		long currTime = System.currentTimeMillis();
 		long dTime = currTime - time;
 		int maxWaitTime = MAX_WAIT_TIME - (int)dTime;
@@ -33,19 +28,22 @@ public abstract class MessageServiceWait extends MessageService {
 		return r.nextInt(maxWaitTime);
 	}
 	
-	protected boolean randomWait() {
+	private boolean randomWait() {
 		int time = randomTime();
 		if( time < 0 )
 			return false;
 		wait(time);
 		return true;
 	}
-	
-	protected void service() {
-		System.err.println("WaitMessageService: service wrong class");
+
+	public boolean condition() {
+		return false;
 	}
-	
-	public void start() {
+
+	public void service() {
+    }
+
+    void start() {
 		if( !randomWait() )
 			return ;
 		

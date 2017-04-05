@@ -1,16 +1,16 @@
 package listener;
 
-import java.io.IOException;
-import java.net.DatagramPacket;
-
 import connection.ReceivingSocekt;
 import information.MessageQueue;
+
+import java.io.IOException;
+import java.net.DatagramPacket;
 
 public abstract class ChannelListener implements Runnable {
 
 	private ReceivingSocekt socket;
 	
-	public ChannelListener(String addr, int port) throws IOException {
+	ChannelListener(String addr, int port) throws IOException {
 		socket = new ReceivingSocekt(addr, port);
 	}
 	

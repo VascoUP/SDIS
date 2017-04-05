@@ -1,23 +1,22 @@
 package threads;
 
+import message.MessageInfoGetChunk;
+import sender.RestoreSender;
+
 import java.io.IOException;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
 
-import message.MessageInfoGetChunk;
-import sender.RestoreSender;
-
-public class RestorePool implements ThreadPool {
+class RestorePool implements ThreadPool {
 	private static final int NUMBER_THREADS = 5;
 	
-	private ExecutorService service;
+	private final ExecutorService service;
 	
 	public RestorePool() {
 		service = Executors.newFixedThreadPool(NUMBER_THREADS);
 	}
 	
-	@Override
 	public void shutdown() {
 		try {
 		    System.out.println("Attempt to shutdown executor");
@@ -35,8 +34,7 @@ public class RestorePool implements ThreadPool {
 		}
 	}
 
-	@Override
-	public void startNewThread(Runnable worker) {
+	private void startNewThread(Runnable worker) {
 		service.execute(worker);
 	}
 

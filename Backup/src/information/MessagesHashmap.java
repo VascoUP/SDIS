@@ -3,7 +3,7 @@ package information;
 import java.util.HashMap;
 
 public class MessagesHashmap {
-	private static HashMap<String, Integer> messages = new HashMap<String, Integer>();
+	private static final HashMap<String, Integer> messages = new HashMap<>();
 	
 	public static synchronized void addMessage(String key) {
 		Integer i;
