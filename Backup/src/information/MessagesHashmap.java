@@ -3,6 +3,7 @@ package information;
 import java.util.HashMap;
 
 import message.BasicMessage;
+import message.MessageToString;
 
 public class MessagesHashmap {
 	private static HashMap<BasicMessage, Integer> messages = new HashMap<>();
@@ -25,6 +26,7 @@ public class MessagesHashmap {
 	}
 	
 	public static synchronized BasicMessage searchKey(BasicMessage key) {
+		System.out.println("MessagesHashmap: searKey " + MessageToString.getName(key));
 		for( BasicMessage k : messages.keySet() ) {
 			if( k.equals(key) )
 				return k;

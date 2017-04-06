@@ -10,7 +10,6 @@ public class MessageInfoPutChunk extends MessageInfo {
 		
 		this.chunkID = chunkID;
 		this.replication_degree = replication_degree;
-		System.out.println("MessageInfoPutChunk: " + chunk.length);
 		this.chunk = chunk;
 	}
 

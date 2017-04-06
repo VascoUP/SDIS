@@ -58,6 +58,5 @@ public class BackUpSender extends ChannelSender {
 
 		fileAdd();
 		removeMessages();
-		System.out.println("BackUpSender: Yey");
 	}
 }

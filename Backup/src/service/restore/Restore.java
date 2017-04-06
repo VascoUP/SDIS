@@ -32,6 +32,7 @@ public class Restore {
 		if( backedupChunks.length < 1 )
 			throw new Exception("No backed up chunks with this path were found");
 		
+		this.receivedChunks = new Chunk[backedupChunks.length];
 		this.fileID = backedupChunks[0].getFileId();
 	}
 	
@@ -53,10 +54,13 @@ public class Restore {
 	}
 	
 	private void getReceivedChunks() throws InterruptedException {
+		System.out.println("Restore: getReceivedChunks");
 		lock.lock();
 		try {
-			while( !allChunks() ) 
+			while( !allChunks() ) {
+				System.out.println("Restore: await");
 				lastChunk.await();
+			}
 		} finally {
 			lock.unlock();
 		}
@@ -78,8 +82,10 @@ public class Restore {
 		lock.lock();
 		try {
 			receivedChunks[chunk.getChunkId()] = chunk;
-			if( allChunks() )
+			if( allChunks() ) {
+				System.out.println("Restore: Signal");
 				lastChunk.signal();
+			}
 		} finally {
 			lock.unlock();
 		}
@@ -100,6 +106,7 @@ public class Restore {
 									fileID, 
 									i)));
 			} catch (IOException e) {
+				System.out.println("Restore: IOException error");
 				return ;
 			}
 		}

@@ -18,6 +18,7 @@ public class RestoreSender extends ChannelSender {
 	public RestoreSender(Restore restoreObject, MessageInfoGetChunk message) throws IOException {
 		super( message, ConnectionConstants.MDB_GROUP, ConnectionConstants.MDB_GROUP_PORT);
 		this.restoreObject = restoreObject;
+		System.out.println("RestoreSender: constructor");
 	}
 	
 	private int getMessages() {
@@ -60,7 +61,6 @@ public class RestoreSender extends ChannelSender {
 				restoreMessage.getFileID(), 
 				restoreMessage.getChunkID(), 
 				receivedMessage.getBody());
-		
 		restoreObject.addReceivedChunk(chunk);
 	}
 	
@@ -74,9 +74,9 @@ public class RestoreSender extends ChannelSender {
 			sendMessage();
 			cooldown(1000);
 		} while( !condition() );
-		
-		removeMessages();
+
 		signalRestore();
+		removeMessages();
 		System.out.println("RestoreSender: Yey");
 	}
 }

@@ -136,6 +136,6 @@ public class FileInfo {
 				chunks.add(c);
 		}
 		
-		return (Chunk[])chunks.toArray();
+		return chunks.toArray(new Chunk[chunks.size()]);
 	}
 }

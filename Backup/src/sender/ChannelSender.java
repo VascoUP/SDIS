@@ -18,7 +18,6 @@ public abstract class ChannelSender implements Runnable {
 	}
 	
 	public void closeChannel() {
-		System.out.println("Channel Sender: closeChannel");
 		try {
 			socket.leave();
 		} catch (IOException e) {
