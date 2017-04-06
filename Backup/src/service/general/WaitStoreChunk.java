@@ -8,6 +8,7 @@ import information.FileInfo;
 import information.MessagesHashmap;
 import information.PeerInfo;
 import message.BasicMessage;
+import message.InfoToMessage;
 import message.MessageInfoPutChunk;
 import message.MessageInfoStored;
 import message.MessageToInfo;
@@ -28,8 +29,16 @@ public class WaitStoreChunk extends MessageServiceWait {
 	@Override
 	public boolean condition() {
 		initInfo();
+		
+		MessageInfoPutChunk backupMessage = (MessageInfoPutChunk) info;
+		MessageInfoStored m = new MessageInfoStored(
+									PeerInfo.peerInfo.getVersionProtocol(), 
+									PeerInfo.peerInfo.getServerID(), 
+									backupMessage.getFileID(), 
+									backupMessage.getChunkID());
+		
 		return 	info != null && 
-				MessagesHashmap.getValue(message) < info.getReplicationDegree();
+				MessagesHashmap.getValue(InfoToMessage.toMessage(m)) < info.getReplicationDegree();
 	}
 	
 	@Override

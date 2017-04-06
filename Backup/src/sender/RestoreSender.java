@@ -72,6 +72,7 @@ public class RestoreSender extends ChannelSender {
 	public void execute() {
 		do {
 			sendMessage();
+			System.out.println("RestoreSender: Sent message");
 			cooldown(1000);
 		} while( !condition() );
 

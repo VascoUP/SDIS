@@ -6,6 +6,7 @@ import file.HandleFile;
 import information.MessagesHashmap;
 import information.PeerInfo;
 import message.BasicMessage;
+import message.InfoToMessage;
 import message.MessageInfoChunk;
 import message.MessageInfoGetChunk;
 import message.MessageToInfo;
@@ -13,11 +14,6 @@ import sender.AnswerRestoreSender;
 
 public class WaitGetChunk extends MessageServiceWait {
 	private MessageInfoGetChunk info;
-	
-	public static void serve(long time, BasicMessage message) {
-		WaitGetChunk gc = new WaitGetChunk(time, message);
-		gc.start();
-	}
 	
 	public WaitGetChunk(long time, BasicMessage message) {
 		super(time, message);
@@ -31,8 +27,17 @@ public class WaitGetChunk extends MessageServiceWait {
 	@Override
 	public boolean condition() {
 		initInfo();
+				
+		MessageInfoGetChunk restoreMessage = (MessageInfoGetChunk) info;
+		MessageInfoChunk m = new MessageInfoChunk(
+								PeerInfo.peerInfo.getVersionProtocol(), 
+								PeerInfo.peerInfo.getServerID(), 
+								restoreMessage.getFileID(), 
+								restoreMessage.getChunkID(),
+								null);
+		
 		return 	info != null && 
-				MessagesHashmap.getValue(message) < 1;
+				MessagesHashmap.getValue(InfoToMessage.toMessage(m)) < 1;
 	}
 	
 	@Override
@@ -46,11 +51,15 @@ public class WaitGetChunk extends MessageServiceWait {
 		fileID = info.getFileID();
 		chunkID = info.getChunkID();
 		fileName = HandleFile.getFileName(fileID, chunkID);
+		System.out.println("WaitGetChunk: " + fileName);
 		
 		try {
+			System.out.println("WaitGetChunk: read data");
 			data = HandleFile.readFile(fileName);
 			if( data == null )
 				return ;
+			
+			System.out.println("WaitGetChunk: send chunk");
 			AnswerRestoreSender abup = new AnswerRestoreSender(
 					new MessageInfoChunk(
 						PeerInfo.peerInfo.getVersionProtocol(),
@@ -61,5 +70,10 @@ public class WaitGetChunk extends MessageServiceWait {
 			abup.execute();
 		} catch (IOException ignore) {
 		}
+	}
+	
+	public static void serve(long time, BasicMessage message) {
+		WaitGetChunk gc = new WaitGetChunk(time, message);
+		gc.start();
 	}
 }

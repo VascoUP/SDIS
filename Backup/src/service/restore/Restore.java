@@ -69,7 +69,7 @@ public class Restore {
 	private void handleReceivedChunks() {
 		for( int i = 0; i < receivedChunks.length; i++ ) {
 			if( receivedChunks[i] == null ) {
-				System.out.println("Null at " + i);
+				System.out.println("Restore: Null at " + i);
 				return ;
 			}
 			System.out.println(receivedChunks[i].getFileId() + " - " + receivedChunks[i].getChunkId());
@@ -81,7 +81,7 @@ public class Restore {
 	public void addReceivedChunk(Chunk chunk) {
 		lock.lock();
 		try {
-			receivedChunks[chunk.getChunkId()] = chunk;
+			receivedChunks[chunk.getChunkId() - 1] = chunk;
 			if( allChunks() ) {
 				System.out.println("Restore: Signal");
 				lastChunk.signal();
@@ -104,7 +104,7 @@ public class Restore {
 									PeerInfo.peerInfo.getVersionProtocol(), 
 									PeerInfo.peerInfo.getServerID(),
 									fileID, 
-									i)));
+									i + 1)));
 			} catch (IOException e) {
 				System.out.println("Restore: IOException error");
 				return ;
