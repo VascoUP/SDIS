@@ -9,7 +9,6 @@ import message.BasicMessage;
 import message.MessageInfoChunk;
 import message.MessageInfoGetChunk;
 import message.MessageToInfo;
-import message.MessageToString;
 import sender.AnswerRestoreSender;
 
 public class WaitGetChunk extends MessageServiceWait {
@@ -32,9 +31,8 @@ public class WaitGetChunk extends MessageServiceWait {
 	@Override
 	public boolean condition() {
 		initInfo();
-		String key = MessageToString.getName(message);
 		return 	info != null && 
-				MessagesHashmap.getValue(key) < 1;
+				MessagesHashmap.getValue(message) < 1;
 	}
 	
 	@Override

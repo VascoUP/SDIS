@@ -3,11 +3,13 @@ package sender;
 import java.io.IOException;
 
 import connection.ConnectionConstants;
+import information.Chunk;
 import information.MessagesHashmap;
 import information.PeerInfo;
+import message.BasicMessage;
+import message.InfoToMessage;
 import message.MessageInfoChunk;
 import message.MessageInfoGetChunk;
-import message.MessageToString;
 import service.restore.Restore;
 
 public class RestoreSender extends ChannelSender {
@@ -18,16 +20,52 @@ public class RestoreSender extends ChannelSender {
 		this.restoreObject = restoreObject;
 	}
 	
-	public boolean condition() {
+	private int getMessages() {
 		MessageInfoGetChunk restoreMessage = (MessageInfoGetChunk) message;
 		MessageInfoChunk m = new MessageInfoChunk(
-									PeerInfo.peerInfo.getVersionProtocol(), 
-									PeerInfo.peerInfo.getServerID(), 
-									restoreMessage.getFileID(), 
-									restoreMessage.getChunkID(),
-									null);
-		String key = MessageToString.getName(m);
-		return MessagesHashmap.getValue(key) >= 1;
+								PeerInfo.peerInfo.getVersionProtocol(), 
+								PeerInfo.peerInfo.getServerID(), 
+								restoreMessage.getFileID(), 
+								restoreMessage.getChunkID(),
+								null);
+		return MessagesHashmap.getValue(InfoToMessage.toMessage(m));
+	}
+	
+	private void removeMessages() {
+		MessageInfoGetChunk restoreMessage = (MessageInfoGetChunk) message;
+		MessageInfoChunk m = new MessageInfoChunk(
+								PeerInfo.peerInfo.getVersionProtocol(), 
+								PeerInfo.peerInfo.getServerID(), 
+								restoreMessage.getFileID(), 
+								restoreMessage.getChunkID(),
+								null);
+		MessagesHashmap.removeKey(InfoToMessage.toMessage(m));;
+	}
+	
+	private void signalRestore() {
+		MessageInfoGetChunk restoreMessage = (MessageInfoGetChunk) message;
+		MessageInfoChunk m = new MessageInfoChunk(
+								PeerInfo.peerInfo.getVersionProtocol(), 
+								PeerInfo.peerInfo.getServerID(), 
+								restoreMessage.getFileID(), 
+								restoreMessage.getChunkID(),
+								null);
+		BasicMessage receivedMessage = MessagesHashmap.searchKey(InfoToMessage.toMessage(m));
+		if( receivedMessage == null ) {
+			System.out.println("null receivedMessage");
+			return ;
+		}
+		
+		Chunk chunk = new Chunk(null, 
+				restoreMessage.getFileID(), 
+				restoreMessage.getChunkID(), 
+				receivedMessage.getBody());
+		
+		restoreObject.addReceivedChunk(chunk);
+	}
+	
+	public boolean condition() {
+		return getMessages() >= 1;
 	}
 	
 	@Override
@@ -37,7 +75,8 @@ public class RestoreSender extends ChannelSender {
 			cooldown(1000);
 		} while( !condition() );
 		
-		MessagesHashmap.removeKey(MessageToString.getName(message));
+		removeMessages();
+		signalRestore();
 		System.out.println("RestoreSender: Yey");
 	}
 }

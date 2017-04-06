@@ -11,7 +11,6 @@ import message.BasicMessage;
 import message.MessageInfoPutChunk;
 import message.MessageInfoStored;
 import message.MessageToInfo;
-import message.MessageToString;
 import sender.AnswerBackUpSender;
 
 public class WaitStoreChunk extends MessageServiceWait {
@@ -29,9 +28,8 @@ public class WaitStoreChunk extends MessageServiceWait {
 	@Override
 	public boolean condition() {
 		initInfo();
-		String key = MessageToString.getName(message);
 		return 	info != null && 
-				MessagesHashmap.getValue(key) < info.getReplication_degree();
+				MessagesHashmap.getValue(message) < info.getReplicationDegree();
 	}
 	
 	@Override

@@ -2,10 +2,12 @@ package information;
 
 import java.util.HashMap;
 
+import message.BasicMessage;
+
 public class MessagesHashmap {
-	private static HashMap<String, Integer> messages = new HashMap<String, Integer>();
+	private static HashMap<BasicMessage, Integer> messages = new HashMap<>();
 	
-	public static synchronized void addMessage(String key) {
+	public static synchronized void addMessage(BasicMessage key) {
 		Integer i;
 		if( (i = messages.get(key)) != null )
 			messages.put(key, ++i);
@@ -13,13 +15,20 @@ public class MessagesHashmap {
 			messages.put(key, 1);
 	}
 	
-	public static synchronized int getValue(String key) {
+	public static synchronized int getValue(BasicMessage key) {
 		Integer i = messages.get(key);
-		System.out.println(i != null ? i : "-1");
 		return i == null ? -1 : i;
 	}
 	
-	public static synchronized void removeKey(String key) {
+	public static synchronized void removeKey(BasicMessage key) {
 		messages.remove(key);
+	}
+	
+	public static synchronized BasicMessage searchKey(BasicMessage key) {
+		for( BasicMessage k : messages.keySet() ) {
+			if( k.equals(key) )
+				return k;
+		}
+		return null;
 	}
 }

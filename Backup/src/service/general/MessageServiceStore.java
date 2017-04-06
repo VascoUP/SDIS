@@ -2,7 +2,6 @@ package service.general;
 
 import information.MessagesHashmap;
 import message.BasicMessage;
-import message.MessageToString;
 
 public class MessageServiceStore extends MessageService {	
 	public MessageServiceStore(long time, BasicMessage message) {
@@ -15,6 +14,6 @@ public class MessageServiceStore extends MessageService {
 	}
 	
 	public void notifySender() {
-		MessagesHashmap.addMessage(MessageToString.getName(message));
+		MessagesHashmap.addMessage(message);
 	}
 }

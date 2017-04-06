@@ -15,10 +15,8 @@ public class MessageToService {
 		int senderID = Integer.parseInt(head[2]);
 		
 		if( senderID == PeerInfo.peerInfo.getServerID() ||
-			!versionProtocol.equals(PeerInfo.peerInfo.getVersionProtocol()) ) {
-			System.out.println("ProcessMessage: Same execution message");
+			!versionProtocol.equals(PeerInfo.peerInfo.getVersionProtocol()) )
 			return ;
-		}
 
 		switch(messageType) {
 		case MessageConst.PUTCHUNK_MESSAGE_TYPE:

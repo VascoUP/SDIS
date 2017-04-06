@@ -16,4 +16,21 @@ public class BasicMessage {
 	public String[] getHead() {
 		return head;
 	}
+	
+	
+	@Override
+	public String toString() {
+		return MessageToString.getName(this);
+	} 
+	
+	@Override
+   public int hashCode() {
+		return MessageToString.getName(this).hashCode();
+   }
+	
+	@Override
+	public boolean equals(Object o) {		
+		return o.getClass() == BasicMessage.class &&
+				MessageToString.getName((BasicMessage)o).equals(MessageToString.getName(this));
+	}
 }

@@ -49,7 +49,7 @@ public class MessageInfoPutChunk extends MessageInfo {
 		return super.getName() + chunkID;
 	}
 
-	public int getReplication_degree() {
+	public int getReplicationDegree() {
 		return replication_degree;
 	}
 }

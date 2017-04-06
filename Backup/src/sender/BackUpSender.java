@@ -7,9 +7,9 @@ import information.Chunk;
 import information.FileInfo;
 import information.MessagesHashmap;
 import information.PeerInfo;
+import message.InfoToMessage;
 import message.MessageInfoPutChunk;
 import message.MessageInfoStored;
-import message.MessageToString;
 
 public class BackUpSender extends ChannelSender {
 	private String filePath;
@@ -19,15 +19,34 @@ public class BackUpSender extends ChannelSender {
 		this.filePath = filePath;
 	}
 	
-	public boolean condition() {
+	private int getMessages() {
 		MessageInfoPutChunk backupMessage = (MessageInfoPutChunk) message;
 		MessageInfoStored m = new MessageInfoStored(
 									PeerInfo.peerInfo.getVersionProtocol(), 
 									PeerInfo.peerInfo.getServerID(), 
 									backupMessage.getFileID(), 
 									backupMessage.getChunkID());
-		String key = MessageToString.getName(m);
-		return MessagesHashmap.getValue(key) >= backupMessage.getReplication_degree();
+		return MessagesHashmap.getValue(InfoToMessage.toMessage(m));
+	}
+	
+	private void removeMessages() {
+		MessageInfoPutChunk backupMessage = (MessageInfoPutChunk) message;
+		MessageInfoStored m = new MessageInfoStored(
+									PeerInfo.peerInfo.getVersionProtocol(), 
+									PeerInfo.peerInfo.getServerID(), 
+									backupMessage.getFileID(), 
+									backupMessage.getChunkID());
+		MessagesHashmap.removeKey(InfoToMessage.toMessage(m));;
+	}
+	
+	private void fileAdd() {
+		MessageInfoPutChunk backupMessage = (MessageInfoPutChunk) message;
+		FileInfo.addBackedUpChunk(new Chunk(filePath, backupMessage.getFileID(), backupMessage.getChunkID()));
+	}
+	
+	public boolean condition() {
+		MessageInfoPutChunk backupMessage = (MessageInfoPutChunk) message;
+		return getMessages() >= backupMessage.getReplicationDegree();
 	}
 	
 	@Override
@@ -36,10 +55,9 @@ public class BackUpSender extends ChannelSender {
 			sendMessage();
 			cooldown(1000);
 		} while( !condition() );
-		
-		MessagesHashmap.removeKey(MessageToString.getName(message));
-		MessageInfoPutChunk backupMessage = (MessageInfoPutChunk) message;
-		FileInfo.addBackedUpChunk(new Chunk(filePath, backupMessage.getFileID(), backupMessage.getChunkID()));
+
+		fileAdd();
+		removeMessages();
 		System.out.println("BackUpSender: Yey");
 	}
 }
