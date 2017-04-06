@@ -1,8 +1,8 @@
 package information;
 
 import java.util.ArrayList;
-import java.util.Iterator;
 
+import file.HandleFile;
 import file.HandleXMLFile;
 
 
@@ -35,29 +35,28 @@ public class FileInfo {
 		storedChunks = new ArrayList<Chunk>();
 	}
 	
+	
 	/*===========
 	 * ELIMINATE
 	 *===========
 	 */
-	private static void eliminateSameBackedUpChunk(Chunk chunk) {
-		Iterator<Chunk> iter = backedUpChunks.iterator();
-		while( iter.hasNext() ) {
-			Chunk c = iter.next();
+	public static void eliminateSameBackedUpChunk(Chunk chunk) {
+		for( Chunk c : backedUpChunks ) {
 			if( c.getChunkId() == chunk.getChunkId() && c.getStorePath().equals(chunk.getStorePath()) ) {
+				fileElimBackedUpChunk(c);
 				backedUpChunks.remove(c);
 				return ;
-			}
+			}			
 		}
 	}
 	
-	private static void eliminateSameStoredChunk(Chunk chunk) {
-		Iterator<Chunk> iter = storedChunks.iterator();
-		while( iter.hasNext() ) {
-			Chunk c = iter.next();
+	public static void eliminateSameStoredChunk(Chunk chunk) {
+		for( Chunk c : storedChunks ) {
 			if( c.getChunkId() == chunk.getChunkId() && c.getFileId().equals(chunk.getFileId()) ) {
+				fileElimStoredChunk(c);
 				storedChunks.remove(c);
 				return ;
-			}
+			}			
 		}
 	}
 	
@@ -99,12 +98,19 @@ public class FileInfo {
 		}
 	}
 	
-	/*private static void fileElimStoredChunk(Chunk chunk) {
+	private static void fileElimBackedUpChunk(Chunk chunk) {
+		try {
+			HandleXMLFile.removeBackedUpFile(HandleFile.getFileName(chunk.getFileId(), chunk.getChunkId()));
+		} catch (Exception e) {
+		}
+	}
+	
+	private static void fileElimStoredChunk(Chunk chunk) {
 		try {
 			HandleXMLFile.removeStoredChunk(chunk.getFileId(), "" + chunk.getChunkId());
 		} catch (Exception e) {
 		}
-	}*/
+	}
 
 	
 	/*==============
@@ -128,12 +134,21 @@ public class FileInfo {
 	 */
 	public static Chunk[] findAllBackedUpChunks(String path) {
 		ArrayList<Chunk> chunks = new ArrayList<Chunk>();
-		Iterator<Chunk> iter = backedUpChunks.iterator();
 		
-		while( iter.hasNext() ) {
-			Chunk c = iter.next();
+		for( Chunk c : backedUpChunks ) {
 			if( c.getStorePath().equals(path) )
-				chunks.add(c);
+				chunks.add(c);			
+		}
+		
+		return chunks.toArray(new Chunk[chunks.size()]);
+	}
+	
+	public static Chunk[] findAllStoredChunks(String fileID) {
+		ArrayList<Chunk> chunks = new ArrayList<Chunk>();
+		
+		for( Chunk c : storedChunks ) {
+			if( c.getFileId().equals(fileID) )
+				chunks.add(c);			
 		}
 		
 		return chunks.toArray(new Chunk[chunks.size()]);

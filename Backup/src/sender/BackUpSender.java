@@ -17,6 +17,7 @@ public class BackUpSender extends ChannelSender {
 	public BackUpSender(String filePath, MessageInfoPutChunk message) throws IOException {
 		super( message, ConnectionConstants.MDB_GROUP, ConnectionConstants.MDB_GROUP_PORT);
 		this.filePath = filePath;
+		System.out.println("BackUpSender");
 	}
 	
 	private int getMessages() {
@@ -53,6 +54,7 @@ public class BackUpSender extends ChannelSender {
 	public void execute() {
 		do {
 			sendMessage();
+			System.out.println("BackUpSender: sent message");
 			cooldown(1000);
 		} while( !condition() );
 

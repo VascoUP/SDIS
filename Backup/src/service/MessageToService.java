@@ -1,4 +1,4 @@
-package service.general;
+package service;
 
 import information.PeerInfo;
 import message.BasicMessage;
@@ -31,6 +31,9 @@ public class MessageToService {
 			break;
 		case MessageConst.CHUNK_MESSAGE_TYPE:
 			MessageServiceChunk.serve(time, message);
+			break;
+		case MessageConst.DELETE_MESSAGE_TYPE:
+			MessageServiceDelete.serve(time, message);
 			break;
 		}
 	}

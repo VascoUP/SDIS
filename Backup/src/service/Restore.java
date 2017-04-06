@@ -1,4 +1,4 @@
-package service.restore;
+package service;
 
 import java.io.IOException;
 import java.util.concurrent.locks.Condition;
@@ -71,10 +71,8 @@ public class Restore {
 	
 	private void handleReceivedChunks() {
 		for( int i = 0; i < receivedChunks.length; i++ ) {
-			if( receivedChunks[i] == null ) {
-				System.out.println("Restore: Null at " + i);
+			if( receivedChunks[i] == null )
 				return ;
-			}
 			System.out.println(receivedChunks[i].getFileId() + " - " + receivedChunks[i].getChunkId());
 		}
 		
@@ -85,10 +83,8 @@ public class Restore {
 		lock.lock();
 		try {
 			receivedChunks[chunk.getChunkId() - 1] = chunk;
-			if( allChunks() ) {
-				System.out.println("Restore: Signal");
+			if( allChunks() )
 				lastChunk.signal();
-			}
 		} finally {
 			lock.unlock();
 		}

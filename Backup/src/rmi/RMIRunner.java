@@ -1,7 +1,8 @@
 package rmi;
 
-import service.backup.BackUp;
-import service.restore.Restore;
+import service.BackUp;
+import service.Delete;
+import service.Restore;
 import threads.ThreadManager;
 
 public class RMIRunner {
@@ -28,6 +29,11 @@ public class RMIRunner {
 			path = rmiArgs[1];
 			restore(path);
 			break;
+		case "DELETE":
+			if( rmiArgs.length != 2 )
+				return ;
+				path = rmiArgs[1];
+			
 		case "CLOSE":
 			if( rmiArgs.length != 1 )
 				return ;
@@ -47,6 +53,12 @@ public class RMIRunner {
 		ThreadManager.closeThreads();
 		System.exit(0);
 		//RMIStorage.getRMI().unbind();
+	}
+	
+	public static void delete(String path) {
+		System.out.println("Delete");
+		Delete delete = new Delete(path);
+		delete.run_service();
 	}
 	
 	public static void restore(String path) {

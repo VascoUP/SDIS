@@ -10,7 +10,7 @@ import message.BasicMessage;
 import message.InfoToMessage;
 import message.MessageInfoChunk;
 import message.MessageInfoGetChunk;
-import service.restore.Restore;
+import service.Restore;
 
 public class RestoreSender extends ChannelSender {
 	private Restore restoreObject;

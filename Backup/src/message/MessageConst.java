@@ -9,6 +9,8 @@ public class MessageConst {
 	public static final int RESTORE_MESSAGE_LENGTH = 5;
 	public static final String CHUNK_MESSAGE_TYPE = "CHUNK";
 	public static final int CHUNK_MESSAGE_LENGTH = 6;
+	public static final String DELETE_MESSAGE_TYPE = "DELETE";
+	public static final int DELETE_MESSAGE_LENGTH = 4;
 	
 	public static final byte[] MESSAGE_FLAG = {0xD, 0xA};
 	public static final int CHUNKSIZE = 64000;

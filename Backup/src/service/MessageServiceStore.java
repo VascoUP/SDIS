@@ -1,20 +1,19 @@
-package service.general;
+package service;
 
 import information.MessagesHashmap;
 import message.BasicMessage;
 
-public class MessageServiceChunk extends MessageService {
-	public MessageServiceChunk(long time, BasicMessage message) {
+public class MessageServiceStore extends MessageService {	
+	public MessageServiceStore(long time, BasicMessage message) {
 		super(time, message);
 	}
-	
+
 	public static void serve(long time, BasicMessage message) {
-		MessageServiceChunk st = new MessageServiceChunk(time, message);
+		MessageServiceStore st = new MessageServiceStore(time, message);
 		st.notifySender();
 	}
 	
 	public void notifySender() {
-		System.out.println("Notify");
 		MessagesHashmap.addMessage(message);
 	}
 }

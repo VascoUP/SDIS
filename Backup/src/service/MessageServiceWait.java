@@ -1,4 +1,4 @@
-package service.general;
+package service;
 
 import java.util.Random;
 import java.util.concurrent.TimeUnit;
@@ -51,7 +51,5 @@ public abstract class MessageServiceWait extends MessageService {
 		
 		if( condition() )
 			service();
-		else 
-			System.out.println("didnt pass the condition");
 	}
 }

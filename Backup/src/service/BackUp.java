@@ -1,4 +1,4 @@
-package service.backup;
+package service;
 
 import java.io.IOException;
 
@@ -43,6 +43,7 @@ public class BackUp {
 		try {
 			buffer = HandleFile.readFile(filePath);
 		} catch (IOException e) {
+			System.out.println("Error reading file");
 			return ;
 		}
 		

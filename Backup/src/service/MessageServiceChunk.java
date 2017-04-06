@@ -1,15 +1,15 @@
-package service.general;
+package service;
 
 import information.MessagesHashmap;
 import message.BasicMessage;
 
-public class MessageServiceStore extends MessageService {	
-	public MessageServiceStore(long time, BasicMessage message) {
+public class MessageServiceChunk extends MessageService {
+	public MessageServiceChunk(long time, BasicMessage message) {
 		super(time, message);
 	}
-
+	
 	public static void serve(long time, BasicMessage message) {
-		MessageServiceStore st = new MessageServiceStore(time, message);
+		MessageServiceChunk st = new MessageServiceChunk(time, message);
 		st.notifySender();
 	}
 	
