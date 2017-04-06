@@ -37,12 +37,15 @@ public class Restore {
 	}
 	
 	private void writeReceivedChunks() {
-		for( int i = 0; i < receivedChunks.length; i++ ) {
-			try {
-				HandleFile.writeFile(receivedChunks[i].getChunk(), filePath);
-			} catch (IOException e) {
-				System.out.println("Error writting to file " + filePath);
-			}
+		byte[][] wChunks = new byte[receivedChunks.length][];
+		
+		for( int i = 0; i < receivedChunks.length; i++ )
+			wChunks[i] = receivedChunks[i].getChunk();
+		
+		try {
+			HandleFile.writeFile(wChunks, filePath);
+		} catch (IOException e) {
+			return ;
 		}
 	}
 	
