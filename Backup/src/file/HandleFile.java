@@ -65,7 +65,7 @@ public class HandleFile {
 	}
 	
 	public static String getFileName(String fileId, int chunkId) {
-		return fileId + "_" + chunkId;
+		return "assets/" + fileId + "_" + chunkId;
 	}
 	
 	public static boolean isFile(String path) {

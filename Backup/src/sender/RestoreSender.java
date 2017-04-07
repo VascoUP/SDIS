@@ -10,8 +10,6 @@ import message.BasicMessage;
 import message.InfoToMessage;
 import message.MessageInfoChunk;
 import message.MessageInfoGetChunk;
-import message.MessageInfoPutChunk;
-import message.MessageInfoStored;
 import protocol.Restore;
 
 public class RestoreSender extends ChannelSender {
@@ -21,25 +19,25 @@ public class RestoreSender extends ChannelSender {
 	public RestoreSender(Restore restoreObject, MessageInfoGetChunk message) throws IOException {
 		super( message, ConnectionConstants.MDB_GROUP, ConnectionConstants.MDB_GROUP_PORT);
 		this.restoreObject = restoreObject;
-		System.out.println("RestoreSender: constructor");
 	}
 	
 	private int getValue() {
-		if( this.prepdeg == -1 ) {
-			MessageInfoPutChunk backupMessage = (MessageInfoPutChunk) message;
-			MessageInfoStored m = new MessageInfoStored(
-										PeerInfo.peerInfo.getVersionProtocol(), 
-										PeerInfo.peerInfo.getServerID(), 
-										backupMessage.getFileID(), 
-										backupMessage.getChunkID());
-			prepdeg = MessagesHashmap.getValue(InfoToMessage.toMessage(m));
-		}
-		
+		MessageInfoGetChunk restoreMessage = (MessageInfoGetChunk) message;
+		MessageInfoChunk m = new MessageInfoChunk(
+								PeerInfo.peerInfo.getVersionProtocol(), 
+								PeerInfo.peerInfo.getServerID(), 
+								restoreMessage.getFileID(), 
+								restoreMessage.getChunkID(),
+								null);
+		prepdeg = MessagesHashmap.getValue(InfoToMessage.toMessage(m));
+		System.out.println("RestoreSender " + prepdeg);
 		return prepdeg;
 	}
 	
 	private int getMessages() {
-		return getValue();
+		if( this.prepdeg == -1 )
+			getValue();
+		return this.prepdeg;
 	}
 	
 	private void removeMessages() {
@@ -70,25 +68,23 @@ public class RestoreSender extends ChannelSender {
 		ChunkStored chunk = new ChunkStored (null, 
 				restoreMessage.getFileID(), 
 				restoreMessage.getChunkID(), 
-				getValue(),
+				getMessages(),
 				receivedMessage.getBody());
 		restoreObject.addReceivedChunk(chunk);
 	}
 	
 	public boolean condition() {
-		return getMessages() >= 1;
+		return getValue() >= 1;
 	}
 	
 	@Override
 	public void execute() {
 		do {
 			sendMessage();
-			System.out.println("RestoreSender: Sent message");
 			cooldown(1000);
 		} while( !condition() );
 
 		signalRestore();
 		removeMessages();
-		System.out.println("RestoreSender: Yey");
 	}
 }

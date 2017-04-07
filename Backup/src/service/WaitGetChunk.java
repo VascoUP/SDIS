@@ -51,15 +51,12 @@ public class WaitGetChunk extends MessageServiceWait {
 		fileID = info.getFileID();
 		chunkID = info.getChunkID();
 		fileName = HandleFile.getFileName(fileID, chunkID);
-		System.out.println("WaitGetChunk: " + fileName);
 		
 		try {
-			System.out.println("WaitGetChunk: read data");
 			data = HandleFile.readFile(fileName);
 			if( data == null )
 				return ;
 			
-			System.out.println("WaitGetChunk: send chunk");
 			AnswerRestoreSender abup = new AnswerRestoreSender(
 					new MessageInfoChunk(
 						PeerInfo.peerInfo.getVersionProtocol(),

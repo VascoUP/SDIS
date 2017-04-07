@@ -59,7 +59,7 @@ public class WaitStoreChunk extends MessageServiceWait {
 		chunkID = info.getChunkID();
 		fileName = HandleFile.getFileName(fileID, chunkID);
 		
-		chunk = new ChunkStored(fileName, fileID, chunkID, prepdeg, info.getChunk());
+		chunk = new ChunkStored(fileName, fileID, chunkID, prepdeg + 1, info.getChunk());
 		try {
 			AnswerBackUpSender abup = new AnswerBackUpSender(
 					new MessageInfoStored(

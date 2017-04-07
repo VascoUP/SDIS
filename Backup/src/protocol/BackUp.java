@@ -4,6 +4,7 @@ import java.io.IOException;
 
 import file.HandleFile;
 import information.Chunk;
+import information.FileInfo;
 import information.PeerInfo;
 import message.MessageConst;
 import message.MessageInfoPutChunk;
@@ -42,7 +43,9 @@ public class BackUp implements Protocol {
 		int offset = 0;
 		byte[] buffer;
 		
-		buffer = HandleFile.readFile(filePath);
+		FileInfo.eliminateBackedUpFile(filePath);
+		if( (buffer = HandleFile.readFile(filePath)) == null )
+			return ;
 		
 		while (offset <= buffer.length) {
 			chunk = getNextChunk(offset, buffer);

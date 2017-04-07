@@ -14,6 +14,7 @@ public class MessageServiceChunk extends MessageService {
 	}
 	
 	public void notifySender() {
+		System.out.println("MessageServiceChunk: notify restore");
 		MessagesHashmap.addMessage(message);
 	}
 }

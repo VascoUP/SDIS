@@ -70,7 +70,6 @@ public class BackUpSender extends ChannelSender {
 	public void execute() {
 		do {
 			sendMessage();
-			System.out.println("BackUpSender: sent message");
 			cooldown(1000);
 		} while( !condition() );
 

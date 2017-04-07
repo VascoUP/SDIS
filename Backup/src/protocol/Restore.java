@@ -59,11 +59,9 @@ public class Restore implements Protocol {
 	}
 	
 	private void getReceivedChunks() throws InterruptedException {
-		System.out.println("Restore: getReceivedChunks");
 		lock.lock();
 		try {
 			while( !allChunks() ) {
-				System.out.println("Restore: await");
 				lastChunk.await();
 			}
 		} finally {
@@ -75,7 +73,6 @@ public class Restore implements Protocol {
 		for( int i = 0; i < receivedChunks.length; i++ ) {
 			if( receivedChunks[i] == null )
 				return ;
-			System.out.println(receivedChunks[i].getFileId() + " - " + receivedChunks[i].getChunkId());
 		}
 		
 		writeReceivedChunks();
