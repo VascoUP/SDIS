@@ -178,7 +178,7 @@ public class FileInfo {
 	}
 	
 	public String toString(){
-		String message = null;
+		String message = new String();
 		
 		message += "\nStored Chunks\n";
 		for(int i=0; i<storedChunks.size(); i++)
