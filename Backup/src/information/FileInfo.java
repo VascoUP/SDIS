@@ -212,4 +212,21 @@ public class FileInfo {
 		
 		return chunks.toArray(new Chunk[chunks.size()]);
 	}
+	
+	public String toString(){
+		String message = new String();
+		
+		message += "\nStored Chunks\n";
+		for(int i=0; i<storedChunks.size(); i++)
+			message += "Chunk ID: " + storedChunks.get(i).chunkId + " Size: " + storedChunks.get(i).getSize() 
+						+ " Perceived Replication Degree: " + storedChunks.get(i).getPRepDeg() + "\n";		
+		
+		message += "\nBackuped Chunks\n";
+		for(int j=0; j<backedUpChunks.size(); j++)
+			message += "File pathname: " + backedUpChunks.get(j).getStorePath() + " Backup ID: " + backedUpChunks.get(j).getServiceID()
+						+ " Desired Replication Degree: " + backedUpChunks.get(j).getDRepDeg() + " Chunk ID: " + backedUpChunks.get(j).getChunkId() 
+						+ " Chunk Perceived Replication Degree: " + backedUpChunks.get(j).getPRepDeg() + "\n";
+		
+		return message;
+	}
 }
