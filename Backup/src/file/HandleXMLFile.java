@@ -127,7 +127,7 @@ public class HandleXMLFile {
 		lock.lock();
 		try {
 	        Document doc = initXML();
-
+	        
 	        NodeList nodes = doc.getElementsByTagName(FileConst.BACKED_UP_CHUNK_ELEM);
 	        System.out.println(path);
 	        System.out.println("Nodes length: " + nodes.getLength());
@@ -152,6 +152,7 @@ public class HandleXMLFile {
 			lock.unlock();
 		}
     }
+    
 
 	public static void removeStoredFile(String fileID) throws Exception {
 		lock.lock();
@@ -220,7 +221,7 @@ public class HandleXMLFile {
 	
 	private static Document initXML() throws Exception {
         DocumentBuilderFactory documentBuilderFactory = DocumentBuilderFactory.newInstance();
-        DocumentBuilder documentBuilder = documentBuilderFactory.newDocumentBuilder();
+        DocumentBuilder documentBuilder = documentBuilderFactory.newDocumentBuilder();        
         return documentBuilder.parse(FileConst.XMLPATH);
 	}
 	
