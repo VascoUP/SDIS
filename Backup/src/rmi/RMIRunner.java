@@ -33,8 +33,9 @@ public class RMIRunner {
 		case "DELETE":
 			if( rmiArgs.length != 2 )
 				return ;
-				path = rmiArgs[1];
-			
+			path = rmiArgs[1];
+			delete(path);
+			break;
 		case "CLOSE":
 			if( rmiArgs.length != 1 )
 				return ;
@@ -58,8 +59,12 @@ public class RMIRunner {
 	
 	public static void delete(String path) {
 		System.out.println("Delete");
-		Protocol delete = new Delete(path);
-		delete.run_service();
+		Protocol delete;
+		try {
+			delete = new Delete(path);
+			delete.run_service();
+		} catch (Exception ignore) {
+		}
 	}
 	
 	public static void restore(String path) {
@@ -67,8 +72,7 @@ public class RMIRunner {
 		try {
 			Protocol restore = new Restore(path);
 			restore.run_service();
-		} catch (Exception e) {
-			System.out.println(e.getMessage());
+		} catch (Exception ignore) {
 		}
 	}
 }

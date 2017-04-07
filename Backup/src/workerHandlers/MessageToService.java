@@ -1,4 +1,4 @@
-package service;
+package workerHandlers;
 
 import information.PeerInfo;
 import message.BasicMessage;

@@ -133,11 +133,29 @@ public class HandleXMLFile {
 	            Element chunk = (Element)nodes.item(i);
 	            Element sPathElement = (Element)chunk.getElementsByTagName(FileConst.FILE_PATH_ELEM).item(0);
 	            String sPath = sPathElement.getTextContent();
-	            
-	            if(sPath.equals(path)) {
+	            if(sPath.equals(path))
 	            	chunk.getParentNode().removeChild(chunk);
-	            	break ;
-	            }
+	        }
+	        
+	        finalizeXML(doc);
+		} finally {
+			lock.unlock();
+		}
+    }
+
+	public static void removeRestoreFile(String fileID) throws Exception {
+		lock.lock();
+		try {
+	        Document doc = initXML();
+
+	        NodeList nodes = doc.getElementsByTagName(FileConst.STORED_CHUNK_ELEM);
+	        for (int i = 0; i < nodes.getLength(); i++) {       
+	            Element chunk = (Element)nodes.item(i);
+	            Element sPathElement = (Element)chunk.getElementsByTagName(FileConst.FILE_ID_ELEM).item(0);
+	            String sfileID = sPathElement.getTextContent();
+	            
+	            if(sfileID.equals(fileID))
+	            	chunk.getParentNode().removeChild(chunk);
 	        }
 	        
 	        finalizeXML(doc);

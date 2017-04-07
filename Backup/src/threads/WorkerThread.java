@@ -1,6 +1,6 @@
 package threads;
 
-import service.ServiceParser;
+import workerHandlers.ServiceParser;
 
 public class WorkerThread implements Runnable {
 	private final int id;

@@ -13,13 +13,13 @@ public class Delete implements Protocol {
 	private String filePath;
 	private String fileID;
 
-	public Delete(String filePath) {
+	public Delete(String filePath) throws Exception {
 		super();
 		
 		this.filePath = filePath;
 		Chunk[] chunks = FileInfo.findAllBackedUpChunks(filePath);
-		if( chunks.length < 0 )
-			return ;
+		if( chunks.length < 1 )
+			throw new Exception("No chuncks like this are backedup stored");
 		
 		this.fileID = chunks[0].getFileId();
 	}
@@ -41,6 +41,8 @@ public class Delete implements Protocol {
 		} catch (IOException ignore) {
 		}
 		
+		System.out.println("Deleting: " + filePath);
+		FileInfo.eliminateBackedUpFile(filePath);
 		HandleFile.deleteFile(filePath);
 	}
 }

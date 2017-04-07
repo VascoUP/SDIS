@@ -59,6 +59,7 @@ public class BackUpSender extends ChannelSender {
 						backupMessage.getChunkID(),
 						backupMessage.getReplicationDegree(),
 						getValue()));
+		System.out.println(backupMessage.getFileID() + "\n" + backupMessage.getChunkID());
 	}
 	
 	public boolean condition() {
@@ -75,5 +76,7 @@ public class BackUpSender extends ChannelSender {
 
 		fileAdd();
 		removeMessages();
+		
+		FileInfo.printUsage();
 	}
 }

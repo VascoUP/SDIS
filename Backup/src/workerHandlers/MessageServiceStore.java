@@ -1,4 +1,4 @@
-package service;
+package workerHandlers;
 
 import information.MessagesHashmap;
 import message.BasicMessage;

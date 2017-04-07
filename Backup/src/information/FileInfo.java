@@ -9,7 +9,7 @@ import file.HandleXMLFile;
 
 public class FileInfo {
 	private static ArrayList<ChunkStored> storedChunks;
-	private static ArrayList<ChunkBackedUp> backedUpChunks;	
+	private static ArrayList<ChunkBackedUp> backedUpChunks;
 
 	
 	/*======
@@ -36,43 +36,69 @@ public class FileInfo {
 		storedChunks = new ArrayList<>();
 	}
 	
+	public static void printUsage() {
+		System.out.println("BackedUp chunks");
+		for (Chunk c : backedUpChunks)
+			System.out.println(c.getChunkId() + " - " + c.getStorePath());
+		System.out.println("Stored chunks");
+		for (Chunk c : storedChunks)
+			System.out.println(c.getChunkId() + " - " + c.getStorePath());		
+	}
+	
 	
 	/*===========
 	 * ELIMINATE
 	 *===========
 	 */
 	public static void eliminateBackedUpFile(String path) {
+		printUsage();
 		for (Iterator<ChunkBackedUp> iterator = backedUpChunks.iterator(); iterator.hasNext(); ) {
 		    Chunk c = iterator.next();
-		    System.out.println(c.getStorePath() + " vs " + path);
-		    if (c.getStorePath().equals(path)) {
-			    System.out.println("Remove");
+		    if (c.getStorePath().equals(path))
 		        iterator.remove();
-	        }
 		}
 		
     	fileElimBackedUpFile(path);
 	}
 	
 	public static void eliminateSameBackedUpChunk(Chunk chunk) {
+		//printUsage();
 		for (Iterator<ChunkBackedUp> iterator = backedUpChunks.iterator(); iterator.hasNext(); ) {
 		    Chunk c = iterator.next();
-		    if (c.getChunkId() == chunk.getChunkId() && c.getStorePath().equals(chunk.getStorePath())) {
+		    if (c.getChunkId() == chunk.getChunkId() && 
+		    	c.getStorePath().equals(chunk.getStorePath())) {
+			    System.out.println("eliminateSameBackedUpChunk: Remove");
 		    	fileElimBackedUpChunk(c);
 		        iterator.remove();
 		    }
 		}
 	}
 	
-	public static void eliminateSameStoredChunk(Chunk chunk) {		
+	public static void eliminateStoredFile(String fileID) {
+		//printUsage();
 		for (Iterator<ChunkStored> iterator = storedChunks.iterator(); iterator.hasNext(); ) {
 		    Chunk c = iterator.next();
-		    if (c.getChunkId() == chunk.getChunkId() && c.getStorePath().equals(chunk.getStorePath())) {
+		    if (c.getFileId().equals(fileID)) {
+			    HandleFile.deleteFile(HandleFile.getFileName(c.getFileId(), c.getChunkId()));
+		        iterator.remove();
+	        }
+		}
+		
+		fileElimStoredFile(fileID);
+	}
+	
+	public static void eliminateSameStoredChunk(Chunk chunk) {
+		//printUsage();
+		for (Iterator<ChunkStored> iterator = storedChunks.iterator(); iterator.hasNext(); ) {
+		    Chunk c = iterator.next();
+		    if (c.getChunkId() == chunk.getChunkId() && 
+		    	c.getStorePath().equals(chunk.getStorePath())) {
 				fileElimStoredChunk(c);
 		        iterator.remove();
 		    }
 		}
 	}
+	
 	
 
 	/*============
@@ -89,6 +115,7 @@ public class FileInfo {
 		storedChunks.add(chunk);
 	}
 
+	
 
 	/*=================
 	 * FILES FUNCTIONS
@@ -125,8 +152,9 @@ public class FileInfo {
 		} catch (Exception e) {
 		}
 	}
-	
+
 	private static void fileElimStoredChunk(Chunk chunk) {
+		System.out.println("fileElimStoredChunk");
 		try {
 			HandleXMLFile.removeStoredChunk(chunk.getFileId(), "" + chunk.getChunkId());
 		} catch (Exception e) {
@@ -134,7 +162,14 @@ public class FileInfo {
 		
 		HandleFile.deleteFile(HandleFile.getFileName(chunk.getFileId(), chunk.getChunkId()));
 	}
-
+	
+	private static void fileElimStoredFile(String fileID) {
+		try {
+			HandleXMLFile.removeRestoreFile(fileID);
+		} catch (Exception e) {
+		}
+	}
+	
 	
 	/*==============
 	 * FILE AND ADD
@@ -157,8 +192,9 @@ public class FileInfo {
 	 */
 	public static ChunkBackedUp[] findAllBackedUpChunks(String path) {
 		ArrayList<Chunk> chunks = new ArrayList<Chunk>();
-		
+		System.out.println("Path: " + path == null ? "null" : path);
 		for( ChunkBackedUp c : backedUpChunks ) {
+			System.out.println("Chunk: " + c.getStorePath() == null ? "null" : c.getStorePath());
 			if( c.getStorePath().equals(path) )
 				chunks.add(c);			
 		}

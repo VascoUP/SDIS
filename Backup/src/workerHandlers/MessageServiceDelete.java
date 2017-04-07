@@ -1,8 +1,6 @@
-package service;
+package workerHandlers;
 
-import information.Chunk;
 import information.FileInfo;
-import information.MessagesHashmap;
 import message.BasicMessage;
 import message.MessageInfoDelete;
 import message.MessageToInfo;
@@ -19,11 +17,6 @@ public class MessageServiceDelete extends MessageService {
 	
 	private void deleteFiles() {
 		MessageInfoDelete info = (MessageInfoDelete) MessageToInfo.messageToInfo(message);
-		Chunk[] chunks = FileInfo.findAllStoredChunks(info.getFileID());
-		
-		for( Chunk c : chunks )
-			FileInfo.eliminateSameStoredChunk(c);
-		
-		MessagesHashmap.addMessage(message);
+		FileInfo.eliminateStoredFile(info.getFileID());
 	}
 }
