@@ -7,8 +7,8 @@ import file.HandleXMLFile;
 
 
 public class FileInfo {
-	private static ArrayList<Chunk> storedChunks;
-	private static ArrayList<Chunk> backedUpChunks;	
+	private static ArrayList<ChunkStored> storedChunks;
+	private static ArrayList<ChunkBackedUp> backedUpChunks;	
 
 	
 	/*======
@@ -28,11 +28,11 @@ public class FileInfo {
 	}
 	
 	private static void initBackedUpChunks() {
-		backedUpChunks = new ArrayList<Chunk>();
+		backedUpChunks = new ArrayList<>();
 	}
 	
 	private static void initStoredChunks() {
-		storedChunks = new ArrayList<Chunk>();
+		storedChunks = new ArrayList<>();
 	}
 	
 	
@@ -45,6 +45,7 @@ public class FileInfo {
 			if( c.getChunkId() == chunk.getChunkId() && c.getStorePath().equals(chunk.getStorePath()) ) {
 				fileElimBackedUpChunk(c);
 				backedUpChunks.remove(c);
+				HandleFile.deleteFile(HandleFile.getFileName(c.getFileId(), c.getChunkId()));
 				return ;
 			}			
 		}
@@ -65,12 +66,12 @@ public class FileInfo {
 	 * ADD CHUNKS
 	 *============
 	 */
-	public static void backupChunk(Chunk chunk) {
+	public static void backupChunk(ChunkBackedUp chunk) {
 		eliminateSameBackedUpChunk(chunk);
 		backedUpChunks.add(chunk);
 	}
 
-	public static void storeChunk(Chunk chunk) {
+	public static void storeChunk(ChunkStored chunk) {
 		eliminateSameStoredChunk(chunk);
 		storedChunks.add(chunk);
 	}
@@ -80,7 +81,7 @@ public class FileInfo {
 	 * FILES FUNCTIONS
 	 *=================
 	 */
-	private static void fileAddBackedUpChunk(Chunk chunk) {		
+	private static void fileAddBackedUpChunk(ChunkBackedUp chunk) {		
 		try {
 			HandleXMLFile.addBackedUpChunk(chunk);
 		} catch (Exception e) {
@@ -89,7 +90,7 @@ public class FileInfo {
 		}
 	}
 	
-	private static void fileAddStoredChunk(Chunk chunk) {
+	private static void fileAddStoredChunk(ChunkStored chunk) {
 		try {
 			HandleXMLFile.addStoreChunk(chunk);
 		} catch (Exception e) {
@@ -117,12 +118,12 @@ public class FileInfo {
 	 * FILE AND ADD
 	 *==============
 	 */
-	public static void addBackedUpChunk(Chunk chunk) {
+	public static void addBackedUpChunk(ChunkBackedUp chunk) {
 		fileAddBackedUpChunk(chunk);
 		backupChunk(chunk);
 	}
 
-	public static void addStoredChunk(Chunk chunk) {
+	public static void addStoredChunk(ChunkStored chunk) {
 		fileAddStoredChunk(chunk);
 		storeChunk(chunk);
 	}
@@ -132,15 +133,15 @@ public class FileInfo {
 	 * FIND
 	 *======
 	 */
-	public static Chunk[] findAllBackedUpChunks(String path) {
+	public static ChunkBackedUp[] findAllBackedUpChunks(String path) {
 		ArrayList<Chunk> chunks = new ArrayList<Chunk>();
 		
-		for( Chunk c : backedUpChunks ) {
+		for( ChunkBackedUp c : backedUpChunks ) {
 			if( c.getStorePath().equals(path) )
 				chunks.add(c);			
 		}
 		
-		return chunks.toArray(new Chunk[chunks.size()]);
+		return chunks.toArray(new ChunkBackedUp[chunks.size()]);
 	}
 	
 	public static Chunk[] findAllStoredChunks(String fileID) {

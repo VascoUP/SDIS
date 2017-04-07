@@ -18,7 +18,7 @@ public class MessagesHashmap {
 	
 	public static synchronized int getValue(BasicMessage key) {
 		Integer i = messages.get(key);
-		return i == null ? -1 : i;
+		return i == null ? 0 : i;
 	}
 	
 	public static synchronized void removeKey(BasicMessage key) {

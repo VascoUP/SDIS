@@ -1,17 +1,14 @@
 package information;
 
 import java.io.File;
-import java.io.IOException;
 import java.security.MessageDigest;
 
-import file.HandleFile;
 
-public class Chunk implements Comparable<Chunk> {
-	private String storePath;
-	private String fileId;
-	private int chunkId;
-	
-	private byte[] chunk;
+public abstract class Chunk implements Comparable<Chunk> {
+	protected String storePath;
+	protected String fileId;
+	protected int chunkId;
+	protected byte[] chunk;
 	
 	public Chunk(String storePath, String fileId, int chunkId) {
 		this.storePath = storePath;
@@ -19,7 +16,7 @@ public class Chunk implements Comparable<Chunk> {
 		this.chunkId = chunkId;
 		this.chunk = null;
 	}
-	
+
 	public Chunk(String storePath, String fileId, int chunkId, byte[] chunk) {
 		this.storePath = storePath;
 		this.fileId = fileId;
@@ -27,21 +24,7 @@ public class Chunk implements Comparable<Chunk> {
 		this.chunk = chunk;
 	}
 
-	public void backUp() throws IOException {
-		backUpAppInfo();
-	}
-
-	public void backUpAppInfo() {
-		FileInfo.backupChunk(this);		
-	}
-
-	@Override
-	public boolean equals(Object o) {
-		Chunk c = (Chunk) o;
-		return 	c.getFileId().equals(fileId) &&
-				c.getChunkId() == chunkId;
-	}
-
+		
 	public byte[] getChunk() {
 		return chunk;
 	}
@@ -49,7 +32,7 @@ public class Chunk implements Comparable<Chunk> {
 	public int getChunkId() {
 		return chunkId;
 	}
-
+	
 	public String getFileId() {
 		return fileId;
 	}
@@ -57,35 +40,7 @@ public class Chunk implements Comparable<Chunk> {
 	public String getStorePath() {
 		return storePath;
 	}
-	
-	
-	public void setChunk(byte[] chunk) {
-		this.chunk = chunk;
-	}
-	
-	public void setChunkId(int chunkId) {
-		this.chunkId = chunkId;
-	}
-	
-	public void setFileId(String fileId) {
-		this.fileId = fileId;
-	}
-	
 
-	public void setStorePath(String storePath) {
-		this.storePath = storePath;
-	}
-	
-	public void store() throws IOException {
-		HandleFile.writeFile(chunk, storePath);
-		storeAppInfo();
-	}
-	
-	public void storeAppInfo() {
-		FileInfo.storeChunk(this);		
-	}
-
-	
 	public static String getFileId(String path) {
 		File file = new File(path);
 		String base = path + file.lastModified() + file.length();		
@@ -107,6 +62,30 @@ public class Chunk implements Comparable<Chunk> {
 	    }
 	}
 
+	
+	public void setChunk(byte[] chunk) {
+		this.chunk = chunk;
+	}
+	
+	public void setChunkId(int chunkId) {
+		this.chunkId = chunkId;
+	}
+	
+	public void setFileId(String fileId) {
+		this.fileId = fileId;
+	}
+	
+	public void setStorePath(String storePath) {
+		this.storePath = storePath;
+	}
+	
+
+	@Override
+	public boolean equals(Object o) {
+		Chunk c = (Chunk) o;
+		return 	c.getFileId().equals(fileId) &&
+				c.getChunkId() == chunkId;
+	}
 	
 	@Override
     public int compareTo(Chunk chunk) {

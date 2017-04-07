@@ -3,17 +3,20 @@ package sender;
 import java.io.IOException;
 
 import connection.ConnectionConstants;
-import information.Chunk;
+import information.ChunkStored;
 import information.MessagesHashmap;
 import information.PeerInfo;
 import message.BasicMessage;
 import message.InfoToMessage;
 import message.MessageInfoChunk;
 import message.MessageInfoGetChunk;
-import service.Restore;
+import message.MessageInfoPutChunk;
+import message.MessageInfoStored;
+import protocol.Restore;
 
 public class RestoreSender extends ChannelSender {
 	private Restore restoreObject;
+	private int prepdeg;
 	
 	public RestoreSender(Restore restoreObject, MessageInfoGetChunk message) throws IOException {
 		super( message, ConnectionConstants.MDB_GROUP, ConnectionConstants.MDB_GROUP_PORT);
@@ -21,15 +24,22 @@ public class RestoreSender extends ChannelSender {
 		System.out.println("RestoreSender: constructor");
 	}
 	
+	private int getValue() {
+		if( this.prepdeg == -1 ) {
+			MessageInfoPutChunk backupMessage = (MessageInfoPutChunk) message;
+			MessageInfoStored m = new MessageInfoStored(
+										PeerInfo.peerInfo.getVersionProtocol(), 
+										PeerInfo.peerInfo.getServerID(), 
+										backupMessage.getFileID(), 
+										backupMessage.getChunkID());
+			prepdeg = MessagesHashmap.getValue(InfoToMessage.toMessage(m));
+		}
+		
+		return prepdeg;
+	}
+	
 	private int getMessages() {
-		MessageInfoGetChunk restoreMessage = (MessageInfoGetChunk) message;
-		MessageInfoChunk m = new MessageInfoChunk(
-								PeerInfo.peerInfo.getVersionProtocol(), 
-								PeerInfo.peerInfo.getServerID(), 
-								restoreMessage.getFileID(), 
-								restoreMessage.getChunkID(),
-								null);
-		return MessagesHashmap.getValue(InfoToMessage.toMessage(m));
+		return getValue();
 	}
 	
 	private void removeMessages() {
@@ -57,9 +67,10 @@ public class RestoreSender extends ChannelSender {
 			return ;
 		}
 		
-		Chunk chunk = new Chunk(null, 
+		ChunkStored chunk = new ChunkStored (null, 
 				restoreMessage.getFileID(), 
 				restoreMessage.getChunkID(), 
+				getValue(),
 				receivedMessage.getBody());
 		restoreObject.addReceivedChunk(chunk);
 	}

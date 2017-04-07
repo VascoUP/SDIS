@@ -1,6 +1,5 @@
 package file;
 
-
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
 
@@ -17,12 +16,15 @@ import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
-import information.Chunk;
+import information.ChunkBackedUp;
+import information.ChunkStored;
+import information.FileInfo;
 
 public class HandleXMLFile {
 	private static Lock lock = new ReentrantLock();
 
-	public static void addBackedUpChunk(Chunk chunk) throws Exception {
+	
+	public static void addBackedUpChunk(ChunkBackedUp chunk) throws Exception {
 		lock.lock();
 		try {
 			Document document = initXML();
@@ -31,6 +33,9 @@ public class HandleXMLFile {
 	        // add Chunk
 	        Element newChunk = document.createElement(FileConst.BACKED_UP_CHUNK_ELEM);
 	        newChunk.setAttribute(FileConst.CHUNK_ID_ELEM, "" + chunk.getChunkId());
+	        newChunk.setAttribute(FileConst.SERVICE_ID_ELEM, "" + chunk.getServiceID());
+	        newChunk.setAttribute(FileConst.DREPEG_ELEM, "" + chunk.getDRepDeg());
+	        newChunk.setAttribute(FileConst.PREPEG_ELEM, "" + chunk.getPRepDeg());
 	        
 	        Element fileID = document.createElement(FileConst.FILE_ID_ELEM);
 	        fileID.appendChild(document.createTextNode(chunk.getFileId()));
@@ -48,7 +53,7 @@ public class HandleXMLFile {
 		}
 	}
 	
-	public static void addStoreChunk(Chunk chunk) throws Exception {
+	public static void addStoreChunk(ChunkStored chunk) throws Exception {
 		lock.lock();
 		try {
 			Document document = initXML();
@@ -57,6 +62,8 @@ public class HandleXMLFile {
 	        // add Chunk
 	        Element newChunk = document.createElement(FileConst.STORED_CHUNK_ELEM);
 	        newChunk.setAttribute(FileConst.CHUNK_ID_ELEM, "" + chunk.getChunkId());
+	        newChunk.setAttribute(FileConst.PREPEG_ELEM, "" + chunk.getPRepDeg());
+	        newChunk.setAttribute(FileConst.SIZE_ELEM, "" + chunk.getSize());
 	        
 	        Element fileID = document.createElement(FileConst.FILE_ID_ELEM);
 	        fileID.appendChild(document.createTextNode(chunk.getFileId()));
@@ -170,6 +177,8 @@ public class HandleXMLFile {
         TransformerFactory transformerFactory = TransformerFactory.newInstance();
         Transformer transformer = transformerFactory.newTransformer();
         transformer.setOutputProperty(OutputKeys.DOCTYPE_SYSTEM, FileConst.XMLGRAMMAR);
+		transformer.setOutputProperty(OutputKeys.ENCODING, "UTF-8");
+		transformer.setOutputProperty(OutputKeys.INDENT, "yes");
         StreamResult result = new StreamResult(FileConst.XMLPATH);
         transformer.transform(source, result);
 	}
@@ -180,24 +189,33 @@ public class HandleXMLFile {
         return documentBuilder.parse(FileConst.XMLPATH);
 	}
 	
+	
 	private static void storeElement(Element el) {
         String fileID;
         int chunkID;
+        int prepdeg;
         
         fileID = el.getElementsByTagName(FileConst.FILE_ID_ELEM).item(0).getTextContent();
         chunkID = Integer.parseInt(el.getAttribute(FileConst.CHUNK_ID_ELEM));
+        prepdeg = Integer.parseInt(el.getAttribute(FileConst.PREPEG_ELEM));
         
         if(el.getNodeName().equals(FileConst.STORED_CHUNK_ELEM)) {
-            Chunk c = new Chunk(fileID + "_" + chunkID, fileID, chunkID);
-            c.storeAppInfo();
+        	int size = Integer.parseInt(el.getAttribute(FileConst.SIZE_ELEM));
+        	
+        	ChunkStored c = new ChunkStored(fileID + "_" + chunkID, fileID, chunkID, prepdeg, size);
+            FileInfo.storeChunk(c);
             
         } else if (el.getNodeName().equals(FileConst.BACKED_UP_CHUNK_ELEM)) {
             String filePath;
+            int drepdeg;
+            int serviceID;
             
             filePath = el.getElementsByTagName(FileConst.FILE_PATH_ELEM).item(0).getTextContent();
+            drepdeg = Integer.parseInt(el.getAttribute(FileConst.DREPEG_ELEM));
+            serviceID = Integer.parseInt(el.getAttribute(FileConst.SERVICE_ID_ELEM));
             
-            Chunk c = new Chunk(filePath, fileID, chunkID);
-            c.backUpAppInfo();
+            ChunkBackedUp c = new ChunkBackedUp(serviceID, filePath, fileID, chunkID, prepdeg, drepdeg);
+            FileInfo.backupChunk(c);
         } 
 	}
 }

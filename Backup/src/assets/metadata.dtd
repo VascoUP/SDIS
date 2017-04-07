@@ -1,7 +1,16 @@
 <!ELEMENT metadata ((storedChunk | backedupChunk )*)>
+
 <!ELEMENT storedChunk (fileID)>
 <!ELEMENT backedupChunk (fileID, filePath)>
+
 <!ELEMENT fileID (#PCDATA)>
 <!ELEMENT filePath (#PCDATA)>
+
 <!ATTLIST storedChunk chunkID CDATA #REQUIRED>
+<!ATTLIST storedChunk size CDATA #REQUIRED>
+<!ATTLIST storedChunk prepdeg CDATA #REQUIRED>
+
 <!ATTLIST backedupChunk chunkID CDATA #REQUIRED>
+<!ATTLIST backedupChunk serviceID CDATA #REQUIRED>
+<!ATTLIST backedupChunk drepdeg CDATA #REQUIRED>
+<!ATTLIST backedupChunk prepdeg CDATA #REQUIRED>

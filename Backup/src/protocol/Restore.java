@@ -1,4 +1,4 @@
-package service;
+package protocol;
 
 import java.io.IOException;
 import java.util.concurrent.locks.Condition;
@@ -7,18 +7,20 @@ import java.util.concurrent.locks.ReentrantLock;
 
 import file.HandleFile;
 import information.Chunk;
+import information.ChunkBackedUp;
+import information.ChunkStored;
 import information.FileInfo;
 import information.PeerInfo;
 import message.MessageInfoGetChunk;
 import sender.RestoreSender;
 import threads.ThreadManager;
 
-public class Restore {
+public class Restore implements Protocol {
 	private final Lock lock = new ReentrantLock();
 	private final Condition lastChunk  = lock.newCondition(); 
 	   
-	private Chunk[] backedupChunks;
-	private Chunk[] receivedChunks;
+	private ChunkBackedUp[] backedupChunks;
+	private ChunkStored[] receivedChunks;
 	
 	private String filePath;
 	private String fileID;
@@ -32,7 +34,7 @@ public class Restore {
 		if( backedupChunks.length < 1 )
 			throw new Exception("No backed up chunks with this path were found");
 		
-		this.receivedChunks = new Chunk[backedupChunks.length];
+		this.receivedChunks = new ChunkStored[backedupChunks.length];
 		this.fileID = backedupChunks[0].getFileId();
 	}
 	
@@ -79,7 +81,7 @@ public class Restore {
 		writeReceivedChunks();
 	}
 
-	public void addReceivedChunk(Chunk chunk) {
+	public void addReceivedChunk(ChunkStored chunk) {
 		lock.lock();
 		try {
 			receivedChunks[chunk.getChunkId() - 1] = chunk;
@@ -89,25 +91,30 @@ public class Restore {
 			lock.unlock();
 		}
 	}
+
+
+	@Override
+	public void initialize_sender() throws IOException {
+		for( int i = 0; i < backedupChunks.length; i++ )
+			ThreadManager.initRestore(
+				new RestoreSender(
+					this,
+					new MessageInfoGetChunk(
+							PeerInfo.peerInfo.getVersionProtocol(), 
+							PeerInfo.peerInfo.getServerID(),
+							fileID, 
+							i + 1)));
+	}
 	
+	@Override
 	public void run_service() {
 		if( fileID == null )
 			return;
 		
-		for( int i = 0; i < backedupChunks.length; i++ ) {
-			try {
-				ThreadManager.initRestore(
-						new RestoreSender(
-							this,
-							new MessageInfoGetChunk(
-									PeerInfo.peerInfo.getVersionProtocol(), 
-									PeerInfo.peerInfo.getServerID(),
-									fileID, 
-									i + 1)));
-			} catch (IOException e) {
-				System.out.println("Restore: IOException error");
-				return ;
-			}
+		try {
+			initialize_sender();
+		} catch (IOException e1) {
+			return ;
 		}
 		
 		try {

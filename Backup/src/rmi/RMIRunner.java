@@ -1,8 +1,9 @@
 package rmi;
 
-import service.BackUp;
-import service.Delete;
-import service.Restore;
+import protocol.BackUp;
+import protocol.Delete;
+import protocol.Protocol;
+import protocol.Restore;
 import threads.ThreadManager;
 
 public class RMIRunner {
@@ -44,7 +45,7 @@ public class RMIRunner {
 
 	public static void backUp(String path, int rep_degree) {
 		System.out.println("Backup");
-		BackUp backup = new BackUp(path, rep_degree);
+		Protocol backup = new BackUp(path, rep_degree);
 		backup.run_service();
 	}
 	
@@ -57,14 +58,14 @@ public class RMIRunner {
 	
 	public static void delete(String path) {
 		System.out.println("Delete");
-		Delete delete = new Delete(path);
+		Protocol delete = new Delete(path);
 		delete.run_service();
 	}
 	
 	public static void restore(String path) {
 		System.out.println("Restore");		
 		try {
-			Restore restore = new Restore(path);
+			Protocol restore = new Restore(path);
 			restore.run_service();
 		} catch (Exception e) {
 			System.out.println(e.getMessage());

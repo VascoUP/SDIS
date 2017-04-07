@@ -4,6 +4,7 @@ import java.io.IOException;
 
 import file.HandleFile;
 import information.Chunk;
+import information.ChunkStored;
 import information.FileInfo;
 import information.MessagesHashmap;
 import information.PeerInfo;
@@ -16,18 +17,18 @@ import sender.AnswerBackUpSender;
 
 public class WaitStoreChunk extends MessageServiceWait {
 	private MessageInfoPutChunk info;
+	private int prepdeg;
 	
 	public WaitStoreChunk(long time, BasicMessage message) {
 		super(time, message);
 	}
 	
-	public void initInfo() {
+	private void initInfo() {
 		if( info == null )
 			info = (MessageInfoPutChunk) MessageToInfo.messageToInfo(message);
 	}
 	
-	@Override
-	public boolean condition() {
+	private void getValue() {
 		initInfo();
 		
 		MessageInfoPutChunk backupMessage = (MessageInfoPutChunk) info;
@@ -36,9 +37,14 @@ public class WaitStoreChunk extends MessageServiceWait {
 									PeerInfo.peerInfo.getServerID(), 
 									backupMessage.getFileID(), 
 									backupMessage.getChunkID());
-		
+		prepdeg = MessagesHashmap.getValue(InfoToMessage.toMessage(m));
+	}
+	
+	@Override
+	public boolean condition() {
+		getValue();
 		return 	info != null && 
-				MessagesHashmap.getValue(InfoToMessage.toMessage(m)) < info.getReplicationDegree();
+				prepdeg < info.getReplicationDegree();
 	}
 	
 	@Override
@@ -53,9 +59,8 @@ public class WaitStoreChunk extends MessageServiceWait {
 		chunkID = info.getChunkID();
 		fileName = HandleFile.getFileName(fileID, chunkID);
 		
-		chunk = new Chunk(fileName, fileID, chunkID, info.getChunk());
+		chunk = new ChunkStored(fileName, fileID, chunkID, prepdeg, info.getChunk());
 		try {
-			chunk.store();
 			AnswerBackUpSender abup = new AnswerBackUpSender(
 					new MessageInfoStored(
 						PeerInfo.peerInfo.getVersionProtocol(),
@@ -63,11 +68,10 @@ public class WaitStoreChunk extends MessageServiceWait {
 						fileID, 
 						chunkID));
 			abup.execute();
-		} catch (IOException e) {
-			return ;
+			FileInfo.addStoredChunk((ChunkStored)chunk);
+			HandleFile.writeFile(info.getChunk(), fileName);
+		} catch (IOException ignore) {
 		}
-		
-		FileInfo.addStoredChunk(chunk);
 	}
 	
 
