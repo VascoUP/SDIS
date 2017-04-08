@@ -233,9 +233,9 @@ public class HandleXMLFile {
 	 */
 	private static void storeElement(Element el) { 
         if(el.getNodeName().equals(FileConst.DISKSPACE_ELEM)) {
-        	String strSize = el.getAttribute(FileConst.DREPEG_ELEM);
+        	String strSize = el.getAttribute(FileConst.DISKSPACE_SIZE_ELEL);
         	int size;
-        	
+        	System.out.println(strSize);
         	if( strSize == FileConst.UNLIMITED_DISKSPACE_SIZE_ELEL ) 
         		size = Integer.MAX_VALUE;
         	else

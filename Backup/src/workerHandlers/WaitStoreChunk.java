@@ -58,12 +58,18 @@ public class WaitStoreChunk extends MessageServiceWait {
 	@Override
 	public boolean condition() {
 		getValue();
-		return 	(	info != null && 
+		initInfo();
+		
+		System.out.println("WaitStoreChunk: capacity	 " + PeerInfo.peerInfo.getCapacity());
+		System.out.println("WaitStoreChunk: stored size 	" + FileInfo.getStoredSize());
+		System.out.println("WaitStoreChunk: info size	 " + info.getChunk().length);
+		return 	((	info != null && 
 					prepdeg < info.getReplicationDegree()
 				) ||
 				(	FileInfo.findStoredChunk(info.getFileID(), info.getChunkID()) != null &&
 					equalChunks()
-				);
+				)) &&
+				FileInfo.getStoredSize() + info.getChunk().length <= PeerInfo.peerInfo.getCapacity();
 	}
 	
 	@Override

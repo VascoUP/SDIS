@@ -15,6 +15,9 @@ public class FileInfo {
 	
 	private static Lock lock = new ReentrantLock();
 
+	public static ArrayList<ChunkStored> getStoredChunks() {
+		return storedChunks;
+	}
 	
 	/*======
 	 * INIT
@@ -244,6 +247,13 @@ public class FileInfo {
 		}
 		
 		return chunk;
+	}
+	
+	public static int getStoredSize() {
+		int stored = 0;
+		for( ChunkStored chunk : storedChunks )
+			stored += chunk.getSize();
+		return stored;
 	}
 	
 	public String toString(){
