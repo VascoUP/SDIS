@@ -7,6 +7,7 @@ import java.net.MulticastSocket;
 /**
  * 
  * This class builds the socket which will sent the datagram packet
+ * This class extends the SLMCast class
  *
  */
 public class SendingSocket extends SLMCast {
