@@ -7,6 +7,7 @@ import information.ChunkBackedUp;
 import information.FileInfo;
 import information.MessagesHashmap;
 import information.PeerInfo;
+import message.BasicMessage;
 import message.InfoToMessage;
 import message.MessageInfoPutChunk;
 import message.MessageInfoStored;
@@ -23,23 +24,27 @@ public class BackUpSender extends ChannelSender {
 	
 	private int getMessages() {		
 		MessageInfoPutChunk backupMessage = (MessageInfoPutChunk) message;
-		MessageInfoStored m = new MessageInfoStored(
+		MessageInfoStored m1 = new MessageInfoStored(
 				PeerInfo.peerInfo.getVersionProtocol(), 
 				PeerInfo.peerInfo.getServerID(), 
 				backupMessage.getFileID(), 
 				backupMessage.getChunkID());
-		prepdeg = MessagesHashmap.getSize(InfoToMessage.toMessage(m));
+		BasicMessage m2 = InfoToMessage.toMessage(m1);
+		if( m2 != null )
+			prepdeg = MessagesHashmap.getSize(m2);
 		return prepdeg;
 	}
 	
 	private void removeMessages() {
 		MessageInfoPutChunk backupMessage = (MessageInfoPutChunk) message;
-		MessageInfoStored m = new MessageInfoStored(
+		MessageInfoStored m1 = new MessageInfoStored(
 									PeerInfo.peerInfo.getVersionProtocol(), 
 									PeerInfo.peerInfo.getServerID(), 
 									backupMessage.getFileID(), 
 									backupMessage.getChunkID());
-		MessagesHashmap.removeKey(InfoToMessage.toMessage(m));;
+		BasicMessage m2 = InfoToMessage.toMessage(m1);
+		if( m2 != null )
+			MessagesHashmap.removeKey(m2);
 	}
 	
 	private void fileAdd() {

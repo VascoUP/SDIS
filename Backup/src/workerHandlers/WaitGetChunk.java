@@ -29,15 +29,16 @@ public class WaitGetChunk extends MessageServiceWait {
 		initInfo();
 				
 		MessageInfoGetChunk restoreMessage = (MessageInfoGetChunk) info;
-		MessageInfoChunk m = new MessageInfoChunk(
+		MessageInfoChunk m1 = new MessageInfoChunk(
 								PeerInfo.peerInfo.getVersionProtocol(), 
 								PeerInfo.peerInfo.getServerID(), 
 								restoreMessage.getFileID(), 
 								restoreMessage.getChunkID(),
-								null);
+								new byte[0]);
+		BasicMessage m2 = InfoToMessage.toMessage(m1);
 		
-		return 	info != null && 
-				MessagesHashmap.getSize(InfoToMessage.toMessage(m)) < 1;
+		return 	info != null && m2 != null &&
+				MessagesHashmap.getSize(m2) < 1;
 	}
 	
 	@Override

@@ -14,7 +14,7 @@ public abstract class Chunk implements Comparable<Chunk> {
 		this.storePath = storePath;
 		this.fileId = fileId;
 		this.chunkId = chunkId;
-		this.chunk = null;
+		this.chunk = new byte[0];
 	}
 
 	public Chunk(String storePath, String fileId, int chunkId, byte[] chunk) {

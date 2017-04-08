@@ -24,43 +24,50 @@ public class RestoreSender extends ChannelSender {
 	
 	private int getMessages() {
 		MessageInfoGetChunk restoreMessage = (MessageInfoGetChunk) message;
-		MessageInfoChunk m = new MessageInfoChunk(
+		MessageInfoChunk m1 = new MessageInfoChunk(
 								PeerInfo.peerInfo.getVersionProtocol(), 
 								PeerInfo.peerInfo.getServerID(), 
 								restoreMessage.getFileID(), 
 								restoreMessage.getChunkID(),
-								null);
-		prepdeg = MessagesHashmap.getSize(InfoToMessage.toMessage(m));
-		System.out.println("RestoreSender: prepdeg " + prepdeg);
+								new byte[0]);
+		BasicMessage m2 = InfoToMessage.toMessage(m1);
+		if( m2 != null )
+			prepdeg = MessagesHashmap.getSize(m2);
 		return prepdeg;
 	}
 	
 	private void removeMessages() {
 		MessageInfoGetChunk restoreMessage = (MessageInfoGetChunk) message;
-		MessageInfoChunk m = new MessageInfoChunk(
+		MessageInfoChunk m1 = new MessageInfoChunk(
 								PeerInfo.peerInfo.getVersionProtocol(), 
 								PeerInfo.peerInfo.getServerID(), 
 								restoreMessage.getFileID(), 
 								restoreMessage.getChunkID(),
-								null);
-		MessagesHashmap.removeKey(InfoToMessage.toMessage(m));;
+								new byte[0]);
+		BasicMessage m2 = InfoToMessage.toMessage(m1);
+		if( m2 != null )
+			MessagesHashmap.removeKey(m2);
 	}
 	
 	private void signalRestore() {
 		MessageInfoGetChunk restoreMessage = (MessageInfoGetChunk) message;
-		MessageInfoChunk m = new MessageInfoChunk(
+		MessageInfoChunk m1 = new MessageInfoChunk(
 								PeerInfo.peerInfo.getVersionProtocol(), 
 								PeerInfo.peerInfo.getServerID(), 
 								restoreMessage.getFileID(), 
 								restoreMessage.getChunkID(),
-								null);
-		BasicMessage receivedMessage = MessagesHashmap.searchKey(InfoToMessage.toMessage(m));
+								new byte[0]);
+		BasicMessage m2 = InfoToMessage.toMessage(m1);
+		if( m2 == null )
+			return ;
+		
+		BasicMessage receivedMessage = MessagesHashmap.searchKey(m2);
 		if( receivedMessage == null ) {
 			System.out.println("null receivedMessage");
 			return ;
 		}
 		
-		ChunkStored chunk = new ChunkStored (null, 
+		ChunkStored chunk = new ChunkStored (new String(), 
 				restoreMessage.getFileID(), 
 				restoreMessage.getChunkID(), 
 				getMessages(),

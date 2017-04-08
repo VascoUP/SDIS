@@ -17,7 +17,7 @@ import sender.AnswerBackUpSender;
 
 public class WaitStoreChunk extends MessageServiceWait {
 	private MessageInfoPutChunk info;
-	private int prepdeg;
+	private int prepdeg = -1;
 	
 	public WaitStoreChunk(long time, BasicMessage message) {
 		super(time, message);
@@ -32,12 +32,14 @@ public class WaitStoreChunk extends MessageServiceWait {
 		initInfo();
 		
 		MessageInfoPutChunk backupMessage = (MessageInfoPutChunk) info;
-		MessageInfoStored m = new MessageInfoStored(
+		MessageInfoStored m1 = new MessageInfoStored(
 									PeerInfo.peerInfo.getVersionProtocol(), 
 									PeerInfo.peerInfo.getServerID(), 
 									backupMessage.getFileID(), 
 									backupMessage.getChunkID());
-		prepdeg = MessagesHashmap.getSize(InfoToMessage.toMessage(m));
+		BasicMessage m2 = InfoToMessage.toMessage(m1);
+		if( m2 != null )
+			prepdeg = MessagesHashmap.getSize(m2);
 	}
 	
 	@Override

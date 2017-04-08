@@ -39,16 +39,7 @@ public class FileInfo {
 	private static void initStoredChunks() {
 		storedChunks = new ArrayList<>();
 	}
-	
-	public static void printUsage() {
-		System.out.println("BackedUp chunks");
-		for (Chunk c : backedUpChunks)
-			System.out.println(c.getChunkId() + " - " + c.getStorePath() == null ? "null" : c.getStorePath());
-		System.out.println("Stored chunks");
-		for (Chunk c : storedChunks)
-			System.out.println(c.getChunkId() + " - " + c.getStorePath() == null ? "null" : c.getStorePath());		
-	}
-	
+		
 	
 	/*===========
 	 * ELIMINATE
