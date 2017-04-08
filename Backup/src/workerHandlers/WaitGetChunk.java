@@ -37,7 +37,7 @@ public class WaitGetChunk extends MessageServiceWait {
 								null);
 		
 		return 	info != null && 
-				MessagesHashmap.getValue(InfoToMessage.toMessage(m)) < 1;
+				MessagesHashmap.getSize(InfoToMessage.toMessage(m)) < 1;
 	}
 	
 	@Override

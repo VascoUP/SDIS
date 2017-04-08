@@ -55,13 +55,11 @@ public class FileInfo {
 	 *===========
 	 */
 	public static void eliminateBackedUpFile(String path) {
-		//printUsage();
 		lock.lock();
 		try {
 			for (Iterator<ChunkBackedUp> iterator = backedUpChunks.iterator(); iterator.hasNext(); ) {
 			    Chunk c = iterator.next();
 			    if (c.getStorePath().equals(path)) {
-				    System.out.println("eliminateSameBackedUpChunk: " + c.getChunkId());
 			        iterator.remove();
 			    }
 			}
@@ -73,7 +71,6 @@ public class FileInfo {
 	}
 	
 	/*public static void eliminateSameBackedUpChunk(Chunk chunk) {
-		//printUsage();
 		lock.lock();
 		try {
 			for (Iterator<ChunkBackedUp> iterator = backedUpChunks.iterator(); iterator.hasNext(); ) {
@@ -91,13 +88,11 @@ public class FileInfo {
 	}*/
 	
 	public static void eliminateStoredFile(String fileID) {
-		//printUsage();
 		lock.lock();
 		try {
 			for (Iterator<ChunkStored> iterator = storedChunks.iterator(); iterator.hasNext(); ) {
 			    Chunk c = iterator.next();
 			    if (c.getFileId().equals(fileID)) {
-				    System.out.println("eliminateStoredFile: " + c.getChunkId());
 				    HandleFile.deleteFile(HandleFile.getFileName(c.getFileId(), c.getChunkId()));
 			        iterator.remove();
 		        }
@@ -110,7 +105,6 @@ public class FileInfo {
 	}
 	
 	public static void eliminateSameStoredChunk(Chunk chunk) {
-		//printUsage();
 		lock.lock();
 		try {
 			for (Iterator<ChunkStored> iterator = storedChunks.iterator(); iterator.hasNext(); ) {
@@ -183,7 +177,6 @@ public class FileInfo {
 	}*/
 
 	private static void fileElimStoredChunk(Chunk chunk) {
-		System.out.println("fileElimStoredChunk");
 		try {
 			HandleXMLFile.removeStoredChunk(chunk.getFileId(), "" + chunk.getChunkId());
 		} catch (Exception e) {
@@ -223,12 +216,10 @@ public class FileInfo {
 	 */
 	public static ChunkBackedUp[] findAllBackedUpChunks(String path) {
 		ArrayList<Chunk> chunks = new ArrayList<Chunk>();
-		System.out.println("Path: " + path == null ? "null" : path);
 		
 		lock.lock();
 		try {
 			for( ChunkBackedUp c : backedUpChunks ) {
-				System.out.println("Chunk: " + c.getStorePath() == null ? "null" : c.getStorePath());
 				if( c.getStorePath().equals(path) )
 					chunks.add(c);			
 			}

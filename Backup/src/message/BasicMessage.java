@@ -25,12 +25,23 @@ public class BasicMessage {
 	
 	@Override
    public int hashCode() {
-		return MessageToString.getName(this).hashCode();
+		int hash = 0;
+		for( String str : head )
+			hash += str.hashCode();
+		return hash;
    }
 	
 	@Override
 	public boolean equals(Object o) {		
-		return o.getClass() == BasicMessage.class &&
-				MessageToString.getName((BasicMessage)o).equals(MessageToString.getName(this));
+		if( o.getClass() != BasicMessage.class )
+			return false;
+		BasicMessage message = (BasicMessage)o;
+		String[] messageHead = message.getHead();
+		if( head.length != messageHead.length )
+			return false;
+		for( int i = 0; i < message.getHead().length; i++ )
+			if( !head[i].equals(messageHead[i]) )
+				return false;
+		return true;
 	}
 }

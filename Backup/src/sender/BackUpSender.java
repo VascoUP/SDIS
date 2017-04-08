@@ -12,32 +12,24 @@ import message.MessageInfoPutChunk;
 import message.MessageInfoStored;
 
 public class BackUpSender extends ChannelSender {
-	private String filePath;
-	private int prepdeg;
+	private static final int MAX_NUMBER_TRIES = 3;
+	private final String filePath;
+	private int prepdeg = -1;
 	
 	public BackUpSender(String filePath, MessageInfoPutChunk message) throws IOException {
 		super( message, ConnectionConstants.MDB_GROUP, ConnectionConstants.MDB_GROUP_PORT);
 		this.filePath = filePath;
-		this.prepdeg = -1;
-		System.out.println("BackUpSender");
 	}
 	
-	private int getValue() {
-		if( this.prepdeg == -1 ) {
-			MessageInfoPutChunk backupMessage = (MessageInfoPutChunk) message;
-			MessageInfoStored m = new MessageInfoStored(
-										PeerInfo.peerInfo.getVersionProtocol(), 
-										PeerInfo.peerInfo.getServerID(), 
-										backupMessage.getFileID(), 
-										backupMessage.getChunkID());
-			prepdeg = MessagesHashmap.getValue(InfoToMessage.toMessage(m));
-		}
-		
+	private int getMessages() {		
+		MessageInfoPutChunk backupMessage = (MessageInfoPutChunk) message;
+		MessageInfoStored m = new MessageInfoStored(
+				PeerInfo.peerInfo.getVersionProtocol(), 
+				PeerInfo.peerInfo.getServerID(), 
+				backupMessage.getFileID(), 
+				backupMessage.getChunkID());
+		prepdeg = MessagesHashmap.getSize(InfoToMessage.toMessage(m));
 		return prepdeg;
-	}
-	
-	private int getMessages() {
-		return getValue();
 	}
 	
 	private void removeMessages() {
@@ -58,8 +50,7 @@ public class BackUpSender extends ChannelSender {
 						backupMessage.getFileID(), 
 						backupMessage.getChunkID(),
 						backupMessage.getReplicationDegree(),
-						getValue()));
-		System.out.println(backupMessage.getFileID() + "\n" + backupMessage.getChunkID());
+						prepdeg));
 	}
 	
 	public boolean condition() {
@@ -69,14 +60,19 @@ public class BackUpSender extends ChannelSender {
 	
 	@Override
 	public void execute() {
+		int nTries = 0;
+		
 		do {
 			sendMessage();
-			cooldown(1000);
-		} while( !condition() );
-
+			cooldown(1000);			
+		} while( !condition() && ++nTries < MAX_NUMBER_TRIES );
+		
+		if( nTries >= MAX_NUMBER_TRIES ) {
+			removeMessages();
+			return ;
+		}
+		
 		fileAdd();
 		removeMessages();
-		
-		FileInfo.printUsage();
 	}
 }

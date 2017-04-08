@@ -37,7 +37,7 @@ public class WaitStoreChunk extends MessageServiceWait {
 									PeerInfo.peerInfo.getServerID(), 
 									backupMessage.getFileID(), 
 									backupMessage.getChunkID());
-		prepdeg = MessagesHashmap.getValue(InfoToMessage.toMessage(m));
+		prepdeg = MessagesHashmap.getSize(InfoToMessage.toMessage(m));
 	}
 	
 	@Override

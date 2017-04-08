@@ -1,6 +1,7 @@
 package protocol;
 
 import java.io.IOException;
+import java.util.concurrent.TimeUnit;
 import java.util.concurrent.locks.Condition;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
@@ -62,7 +63,7 @@ public class Restore implements Protocol {
 		lock.lock();
 		try {
 			while( !allChunks() ) {
-				lastChunk.await();
+				lastChunk.await(5, TimeUnit.SECONDS);
 			}
 		} finally {
 			lock.unlock();

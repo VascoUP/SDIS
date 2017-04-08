@@ -13,15 +13,16 @@ import message.MessageInfoGetChunk;
 import protocol.Restore;
 
 public class RestoreSender extends ChannelSender {
-	private Restore restoreObject;
-	private int prepdeg;
+	private static final int MAX_NUMBER_TRIES = 3;
+	private final Restore restoreObject;
+	private int prepdeg = -1;
 	
 	public RestoreSender(Restore restoreObject, MessageInfoGetChunk message) throws IOException {
 		super( message, ConnectionConstants.MDB_GROUP, ConnectionConstants.MDB_GROUP_PORT);
 		this.restoreObject = restoreObject;
 	}
 	
-	private int getValue() {
+	private int getMessages() {
 		MessageInfoGetChunk restoreMessage = (MessageInfoGetChunk) message;
 		MessageInfoChunk m = new MessageInfoChunk(
 								PeerInfo.peerInfo.getVersionProtocol(), 
@@ -29,15 +30,9 @@ public class RestoreSender extends ChannelSender {
 								restoreMessage.getFileID(), 
 								restoreMessage.getChunkID(),
 								null);
-		prepdeg = MessagesHashmap.getValue(InfoToMessage.toMessage(m));
-		System.out.println("RestoreSender " + prepdeg);
+		prepdeg = MessagesHashmap.getSize(InfoToMessage.toMessage(m));
+		System.out.println("RestoreSender: prepdeg " + prepdeg);
 		return prepdeg;
-	}
-	
-	private int getMessages() {
-		if( this.prepdeg == -1 )
-			getValue();
-		return this.prepdeg;
 	}
 	
 	private void removeMessages() {
@@ -74,16 +69,23 @@ public class RestoreSender extends ChannelSender {
 	}
 	
 	public boolean condition() {
-		return getValue() >= 1;
+		return getMessages() >= 1;
 	}
 	
 	@Override
 	public void execute() {
+		int nTries = 0;
+		
 		do {
 			sendMessage();
-			cooldown(1000);
-		} while( !condition() );
+			cooldown(1000);			
+		} while( !condition() && ++nTries < MAX_NUMBER_TRIES );
 
+		if( nTries >= MAX_NUMBER_TRIES ) {
+			removeMessages();
+			return ;
+		}
+		
 		signalRestore();
 		removeMessages();
 	}

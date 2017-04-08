@@ -17,6 +17,8 @@ public class MessageToService {
 		if( senderID == PeerInfo.peerInfo.getServerID() ||
 			!versionProtocol.equals(PeerInfo.peerInfo.getVersionProtocol()) )
 			return ;
+		
+		System.out.println("MessageToService: Received " + messageType + " message");
 
 		switch(messageType) {
 		case MessageConst.PUTCHUNK_MESSAGE_TYPE:

@@ -29,7 +29,7 @@ public class HandleXMLFile {
 		try {
 			Document document = initXML();
 	        Element root = document.getDocumentElement();
-	        System.out.println("Adding info to xml");
+	        
 	        // add Chunk
 	        Element newChunk = document.createElement(FileConst.BACKED_UP_CHUNK_ELEM);
 	        newChunk.setAttribute(FileConst.CHUNK_ID_ELEM, "" + chunk.getChunkId());
@@ -129,22 +129,14 @@ public class HandleXMLFile {
 	        Document doc = initXML();
 	        
 	        NodeList nodes = doc.getElementsByTagName(FileConst.BACKED_UP_CHUNK_ELEM);
-	        System.out.println(path);
-	        System.out.println("Nodes length: " + nodes.getLength());
 	        for (int i = 0; i < nodes.getLength(); i++) {
-	        	System.out.print("Nodes " + i);
 	            Element chunk = (Element)nodes.item(i);
-	        	System.out.print(" 1");
 	            Element sPathElement = (Element)chunk.getElementsByTagName(FileConst.FILE_PATH_ELEM).item(0);
-	        	System.out.print("2");
 	            String sPath = sPathElement.getTextContent();
-		        System.out.println(": " + sPath);
 	            if(sPath.equals(path)) {
 	            	chunk.getParentNode().removeChild(chunk);
+		            i--;
 	            }
-	            
-	            System.out.println("Index " + i + " - length: " + nodes.getLength());
-	            i--;
 	        }
 	        
 	        finalizeXML(doc);
@@ -153,27 +145,20 @@ public class HandleXMLFile {
 		}
     }
     
-
 	public static void removeStoredFile(String fileID) throws Exception {
 		lock.lock();
 		try {
 	        Document doc = initXML();
 
 	        NodeList nodes = doc.getElementsByTagName(FileConst.STORED_CHUNK_ELEM);
-	        System.out.println(fileID);
-	        System.out.println("Nodes length: " + nodes.getLength());
-	        for (int i = 0; i < nodes.getLength(); i++) {  
-	        	System.out.print("Nodes " + i);     
+	        for (int i = 0; i < nodes.getLength(); i++) {   
 	            Element chunk = (Element)nodes.item(i);
-	        	System.out.print(" 1");
 	            Element sPathElement = (Element)chunk.getElementsByTagName(FileConst.FILE_ID_ELEM).item(0);
-	        	System.out.print("2");
 	            String sfileID = sPathElement.getTextContent();
-		        System.out.println(": " + sfileID);
-	            if(sfileID.equals(fileID))
+	            if(sfileID.equals(fileID)) {
 	            	chunk.getParentNode().removeChild(chunk);
-	            System.out.println("Index " + i + " - length: " + nodes.getLength());
-	            i--;
+		            i--;
+	            }
 	        }
 	        
 	        finalizeXML(doc);
