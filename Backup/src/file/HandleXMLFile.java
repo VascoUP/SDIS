@@ -113,33 +113,7 @@ public class HandleXMLFile {
 			lock.unlock(); //Releases the lock
 		}
     }
-	
-	/*public static void removeBackedUpChunk(String fileID, String chunkID, String path) throws Exception {
-		lock.lock();
-		try {
-	        Document doc = initXML();
-
-	        NodeList nodes = doc.getElementsByTagName(FileConst.BACKED_UP_CHUNK_ELEM);
-	        for (int i = 0; i < nodes.getLength(); i++) {       
-	            Element chunk = (Element)nodes.item(i);
-	            Element fIDElement = (Element)chunk.getElementsByTagName(FileConst.FILE_ID_ELEM).item(0);
-	            String fID = fIDElement.getTextContent();
-	            Element sPathElement = (Element)chunk.getElementsByTagName(FileConst.FILE_PATH_ELEM).item(0);
-	            String sPath = sPathElement.getTextContent();
-	            String cID = chunk.getAttribute(FileConst.CHUNK_ID_ELEM);
-	            
-	            if(fID.equals(fileID) && cID.equals(chunkID) && sPath.equals(path)) {
-	            	chunk.getParentNode().removeChild(chunk);
-	            	break ;
-	            }
-	        }
-	        
-	        finalizeXML(doc);
-		} finally {
-			lock.unlock();
-		}
-    }*/
-	
+		
 	/**
 	 * Removes the backed up chunks from the XML file
 	 * @param path Chunk's pathname

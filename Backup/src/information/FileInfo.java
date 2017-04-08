@@ -159,14 +159,6 @@ public class FileInfo {
 		}
 	}
 	
-	/*private static void fileElimBackedUpChunk(Chunk chunk) {
-		try {
-			HandleXMLFile.removeBackedUpChunk(chunk.getFileId(), "" + chunk.getChunkId(), chunk.getStorePath());
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-	}*/
-
 	private static void fileElimStoredChunk(Chunk chunk) {
 		try {
 			HandleXMLFile.removeStoredChunk(chunk.getFileId(), "" + chunk.getChunkId());
@@ -235,6 +227,23 @@ public class FileInfo {
 		}
 		
 		return chunks.toArray(new Chunk[chunks.size()]);
+	}
+	
+	public static Chunk findStoredChunk(String fileID, int chunkID) {
+		Chunk chunk = null;
+		lock.lock();
+		try {
+			for( Chunk c : storedChunks ) {
+				if( c.getFileId().equals(fileID) ) {
+					chunk = c;
+					break;
+				}
+			}
+		} finally {
+			lock.unlock();
+		}
+		
+		return chunk;
 	}
 	
 	public String toString(){

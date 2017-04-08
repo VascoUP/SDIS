@@ -1,6 +1,7 @@
 package workerHandlers;
 
 import java.io.IOException;
+import java.util.Arrays;
 
 import file.HandleFile;
 import information.Chunk;
@@ -42,11 +43,27 @@ public class WaitStoreChunk extends MessageServiceWait {
 			prepdeg = MessagesHashmap.getSize(m2);
 	}
 	
+	private boolean equalChunks() {
+		String pathName = HandleFile.getFileName(info.getFileID(), info.getChunkID());
+		byte[] chunk;
+		try {
+			chunk = HandleFile.readFile(pathName);
+		} catch (IOException e) {
+			return false;
+		}
+		
+		return chunk != null && Arrays.equals(chunk, info.getChunk());		
+	}
+	
 	@Override
 	public boolean condition() {
 		getValue();
-		return 	info != null && 
-				prepdeg < info.getReplicationDegree();
+		return 	(	info != null && 
+					prepdeg < info.getReplicationDegree()
+				) ||
+				(	FileInfo.findStoredChunk(info.getFileID(), info.getChunkID()) != null &&
+					equalChunks()
+				);
 	}
 	
 	@Override
