@@ -20,17 +20,27 @@ import information.ChunkBackedUp;
 import information.ChunkStored;
 import information.FileInfo;
 
+/**
+ * 
+ * This class builds the XML's handler
+ *
+ */
 public class HandleXMLFile {
-	private static Lock lock = new ReentrantLock();
+	private static Lock lock = new ReentrantLock(); //Creates an instance of ReentrantLock
 
-	
+	/**
+	 * Adds the backed up chunks to the XML file
+	 * @param chunk Backed up chunk
+	 * @throws Exception Indicates conditions that a reasonable application might want to catch
+	 */
 	public static void addBackedUpChunk(ChunkBackedUp chunk) throws Exception {
-		lock.lock();
+		lock.lock(); //Acquires the lock
 		try {
-			Document document = initXML();
+			Document document = initXML(); //Initiates the XML
 	        Element root = document.getDocumentElement();
 	        System.out.println("Adding info to xml");
-	        // add Chunk
+	        
+	        //Add backed up chunk and its information
 	        Element newChunk = document.createElement(FileConst.BACKED_UP_CHUNK_ELEM);
 	        newChunk.setAttribute(FileConst.CHUNK_ID_ELEM, "" + chunk.getChunkId());
 	        newChunk.setAttribute(FileConst.SERVICE_ID_ELEM, "" + chunk.getServiceID());
@@ -49,17 +59,22 @@ public class HandleXMLFile {
 	        
 	        finalizeXML(document);
 		} finally {
-			lock.unlock();
+			lock.unlock(); //Releases the lock
 		}
 	}
-	
+
+	/**
+	 * Adds the stored chunks to the XML file
+	 * @param chunk Stored chunk that will be stored
+	 * @throws Exception Indicates conditions that a reasonable application might want to catch
+	 */
 	public static void addStoreChunk(ChunkStored chunk) throws Exception {
-		lock.lock();
+		lock.lock(); //Acquires the lock
 		try {
-			Document document = initXML();
+			Document document = initXML(); //Initiates the XML file
 	        Element root = document.getDocumentElement();
 	        
-	        // add Chunk
+	        //Adds the stored chunk and its information
 	        Element newChunk = document.createElement(FileConst.STORED_CHUNK_ELEM);
 	        newChunk.setAttribute(FileConst.CHUNK_ID_ELEM, "" + chunk.getChunkId());
 	        newChunk.setAttribute(FileConst.PREPEG_ELEM, "" + chunk.getPRepDeg());
@@ -73,12 +88,16 @@ public class HandleXMLFile {
 	        
 	        finalizeXML(document);
 		} finally {
-			lock.unlock();
+			lock.unlock(); //Releases the lock
 		}
 	}
-	
+
+	/**
+	 * Reads the XML document
+	 * @throws Exception Indicates conditions that a reasonable application might want to catch
+	 */
 	public static void readDocument() throws Exception {
-		lock.lock();
+		lock.lock(); //Acquires the lock
 		try {
 		    Element docElem = initXML().getDocumentElement();
 		    NodeList nl = docElem.getChildNodes();
@@ -93,7 +112,7 @@ public class HandleXMLFile {
 		        }
 		    }
 		} finally {
-			lock.unlock();
+			lock.unlock(); //Releases the lock
 		}
     }
 	
@@ -123,10 +142,15 @@ public class HandleXMLFile {
 		}
     }*/
 	
+	/**
+	 * Removes the backed up chunks from the XML file
+	 * @param path Chunk's pathname
+	 * @throws Exception Indicates conditions that a reasonable application might want to catch
+	 */
 	public static void removeBackedUpFile(String path) throws Exception {
-		lock.lock();
+		lock.lock(); //Acquires the lock
 		try {
-	        Document doc = initXML();
+	        Document doc = initXML(); //Initiates the XML file
 	        
 	        NodeList nodes = doc.getElementsByTagName(FileConst.BACKED_UP_CHUNK_ELEM);
 	        System.out.println(path);
@@ -149,15 +173,19 @@ public class HandleXMLFile {
 	        
 	        finalizeXML(doc);
 		} finally {
-			lock.unlock();
+			lock.unlock(); //Releases the lock
 		}
     }
     
-
+	/**
+	 * Removes the stored chunks from the XML file using the fileID
+	 * @param fileID Chunk's file ID
+	 * @throws Exception Indicates conditions that a reasonable application might want to catch
+	 */
 	public static void removeStoredFile(String fileID) throws Exception {
-		lock.lock();
+		lock.lock(); //Acquires the lock 
 		try {
-	        Document doc = initXML();
+	        Document doc = initXML(); //Initiates the XML file
 
 	        NodeList nodes = doc.getElementsByTagName(FileConst.STORED_CHUNK_ELEM);
 	        System.out.println(fileID);
@@ -178,14 +206,20 @@ public class HandleXMLFile {
 	        
 	        finalizeXML(doc);
 		} finally {
-			lock.unlock();
+			lock.unlock(); //Releases the lock
 		}
     }
 
+	/**
+	 * Removes the stored chunks from the XML file using the fileID and chunkID
+	 * @param fileID Chunk's file ID
+	 * @param chunkID Chunk's ID
+	 * @throws Exception Indicates conditions that a reasonable application might want to catch
+	 */
 	public static void removeStoredChunk(String fileID, String chunkID) throws Exception {
-		lock.lock();
+		lock.lock(); //Acquires the lock
 		try {
-	        Document doc = initXML();
+	        Document doc = initXML(); //Initiates the XML file
 
 	        NodeList nodes = doc.getElementsByTagName(FileConst.STORED_CHUNK_ELEM);
 	        for (int i = 0; i < nodes.getLength(); i++) {       
@@ -202,11 +236,15 @@ public class HandleXMLFile {
 	        
 	        finalizeXML(doc);
 		} finally {
-			lock.unlock();
+			lock.unlock(); //Releases the lock
 		}
     }
 
-	
+	/**
+	 * Finalizes the analysis of the XML file
+	 * @param document XML document
+	 * @throws Exception Indicates conditions that a reasonable application might want to catch
+	 */
 	private static void finalizeXML(Document document) throws Exception {
         DOMSource source = new DOMSource(document);
 
@@ -219,13 +257,21 @@ public class HandleXMLFile {
         transformer.transform(source, result);
 	}
 	
+	/**
+	 * Initiates the XML file
+	 * @return The document parsed
+	 * @throws Exception Indicates conditions that a reasonable application might want to catch
+	 */
 	private static Document initXML() throws Exception {
         DocumentBuilderFactory documentBuilderFactory = DocumentBuilderFactory.newInstance();
         DocumentBuilder documentBuilder = documentBuilderFactory.newDocumentBuilder();        
         return documentBuilder.parse(FileConst.XMLPATH);
 	}
 	
-	
+	/**
+	 * Stores a element into the XML file
+	 * @param el Element that will be stored
+	 */
 	private static void storeElement(Element el) {
         String fileID;
         int chunkID;
