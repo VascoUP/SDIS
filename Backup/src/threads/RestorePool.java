@@ -6,15 +6,27 @@ import java.util.concurrent.TimeUnit;
 
 import sender.ChannelSender;
 
+/**
+ * 
+ * This class creates a thread to the restore process
+ * This implements the ThreadPool interface
+ *
+ */
 public class RestorePool implements ThreadPool {
-	private static final int NUMBER_THREADS = 5;
+	private static final int NUMBER_THREADS = 5;	//Maximum number of threads
 	
-	private ExecutorService service;
+	private ExecutorService service;				//Service's executor
 	
+	/**
+	 * RestorePool's constructor
+	 */
 	public RestorePool() {
 		service = Executors.newFixedThreadPool(NUMBER_THREADS);
 	}
 	
+	/**
+	 * Shuts down the restore thread
+	 */
 	@Override
 	public void shutdown() {
 		try {
@@ -33,11 +45,19 @@ public class RestorePool implements ThreadPool {
 		}
 	}
 
+	/**
+	 * Starts a new restore thread
+	 * @param worker This is used by any class whose instances are intended to be executed by a thread
+	 */
 	@Override
 	public void startNewThread(Runnable worker) {
 		service.execute(worker);
 	}
 
+	/**
+	 * Starts the restore's thread
+	 * @param sender Channel to be used when we start a new thread to do the restore
+	 */
 	public void startRestoreThread(ChannelSender sender) {
 		startNewThread(sender);
 	}

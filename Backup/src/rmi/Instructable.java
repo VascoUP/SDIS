@@ -5,7 +5,7 @@ import java.rmi.RemoteException;
 
 /**
  * 
- * This class builds rmi's instructable that extends the Remote class
+ * This interface builds rmi's instructable that extends the Remote class
  *
  */
 public interface Instructable extends Remote {
