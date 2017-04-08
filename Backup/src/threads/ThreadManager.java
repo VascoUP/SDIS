@@ -2,9 +2,9 @@ package threads;
 
 import java.io.IOException;
 
-import listener.MCListenner;
-import listener.MDBListenner;
-import listener.MDRListenner;
+import listener.MCListener;
+import listener.MDBListener;
+import listener.MDRListener;
 import sender.ChannelSender;
 
 public class ThreadManager {
@@ -40,9 +40,9 @@ public class ThreadManager {
 	}
 	
 	public static void initMC() {
-		MCListenner mc = null;
+		MCListener mc = null;
 		try {
-			mc = new MCListenner();
+			mc = new MCListener();
 		} catch (IOException e) {
 			e.printStackTrace();
 			System.exit(0);
@@ -54,9 +54,9 @@ public class ThreadManager {
 	}
 	
 	public static void initMDB() {
-		MDBListenner mdb = null;
+		MDBListener mdb = null;
 		try {
-			mdb = new MDBListenner();
+			mdb = new MDBListener();
 		} catch (IOException e) {
 			e.printStackTrace();
 			System.exit(0);
@@ -68,9 +68,9 @@ public class ThreadManager {
 	}
 	
 	public static void initMDR() {
-		MDRListenner mdr = null;
+		MDRListener mdr = null;
 		try {
-			mdr = new MDRListenner();
+			mdr = new MDRListener();
 		} catch (IOException e) {
 			e.printStackTrace();
 			System.exit(0);
