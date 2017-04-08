@@ -16,6 +16,8 @@ public class MessageToInfo {
 			return messageToChunk(message);
 		case MessageConst.DELETE_MESSAGE_TYPE:
 			return messageToDelete(message);
+		case MessageConst.REMOVED_MESSAGE_TYPE:
+			return messageToRemoved(message);
 		}
 		
 		return null;
@@ -67,5 +69,14 @@ public class MessageToInfo {
 		return new MessageInfoDelete(	head[1], 
 										Integer.parseInt(head[2]), 
 										head[3]);
+	}
+
+	private static MessageInfoRemoved messageToRemoved(BasicMessage message) {
+		String[] head = message.getHead();
+		if( head.length != MessageConst.STORED_MESSAGE_LENGTH )
+			return null;
+		return new MessageInfoRemoved(	head[1], 
+										Integer.parseInt(head[2]), head[3], 
+										Integer.parseInt(head[4]));
 	}
 }

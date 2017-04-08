@@ -14,5 +14,8 @@ public class FileConst {
 	public static final String SIZE_ELEM = "size";							//Size element
 	public static final String FILE_ID_ELEM = "fileID";						//File ID's value
 	public static final String FILE_PATH_ELEM = "filePath";					//File's path
+	public static final String DISKSPACE_ELEM = "diskspace";				//Peer's maximum disk space capacity
+	public static final String DISKSPACE_SIZE_ELEL = "size";				//Disk space capacity
+	public static final String UNLIMITED_DISKSPACE_SIZE_ELEL = "UNLIMITED";	//Disk space capacity
 	
 }

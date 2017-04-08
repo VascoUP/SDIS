@@ -11,6 +11,8 @@ public class MessageConst {
 	public static final int CHUNK_MESSAGE_LENGTH = 6;
 	public static final String DELETE_MESSAGE_TYPE = "DELETE";
 	public static final int DELETE_MESSAGE_LENGTH = 4;
+	public static final String REMOVED_MESSAGE_TYPE = "REMOVED";
+	public static final int REMOVED_MESSAGE_LENGTH = 5;
 	
 	public static final byte[] MESSAGE_FLAG = {0xD, 0xA};
 	public static final int CHUNKSIZE = 64000;

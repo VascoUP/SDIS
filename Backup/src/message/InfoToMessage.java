@@ -14,6 +14,8 @@ public class InfoToMessage {
 			return chunkToMessage((MessageInfoChunk)info);
 		case MessageConst.DELETE_MESSAGE_TYPE:
 			return deleteToMessage((MessageInfoDelete)info);
+		case MessageConst.REMOVED_MESSAGE_TYPE:
+			return removedToMessage((MessageInfoRemoved)info);
 		}
 		return null;
 	}
@@ -65,6 +67,16 @@ public class InfoToMessage {
 		head[1] = info.getVersion();
 		head[2] = "" + info.getSenderID();
 		head[3] = info.getFileID();
+		return new BasicMessage(head, new byte[0]);
+	}
+	
+	private static BasicMessage removedToMessage(MessageInfoRemoved info) {
+		String[] head = new String[5];
+		head[0] = info.getMessageType();
+		head[1] = info.getVersion();
+		head[2] = "" + info.getSenderID();
+		head[3] = info.getFileID();
+		head[4] = "" + info.getChunkID();
 		return new BasicMessage(head, new byte[0]);
 	}
 }

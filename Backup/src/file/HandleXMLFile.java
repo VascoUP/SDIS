@@ -19,6 +19,7 @@ import org.w3c.dom.NodeList;
 import information.ChunkBackedUp;
 import information.ChunkStored;
 import information.FileInfo;
+import information.PeerInfo;
 
 /**
  * 
@@ -230,7 +231,19 @@ public class HandleXMLFile {
 	 * Stores a element into the XML file
 	 * @param el Element that will be stored
 	 */
-	private static void storeElement(Element el) {
+	private static void storeElement(Element el) { 
+        if(el.getNodeName().equals(FileConst.DISKSPACE_ELEM)) {
+        	String strSize = el.getAttribute(FileConst.DREPEG_ELEM);
+        	int size;
+        	
+        	if( strSize == FileConst.UNLIMITED_DISKSPACE_SIZE_ELEL ) 
+        		size = Integer.MAX_VALUE;
+        	else
+        		size = Integer.parseInt(strSize);
+    		PeerInfo.peerInfo.setCapacity(size);
+    		return ;
+        }
+        
         String fileID;
         int chunkID;
         int prepdeg;

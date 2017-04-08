@@ -37,6 +37,8 @@ public class MessageToService {
 		case MessageConst.DELETE_MESSAGE_TYPE:
 			MessageServiceDelete.serve(time, message);
 			break;
+		case MessageConst.REMOVED_MESSAGE_TYPE:
+			break;
 		}
 	}
 }
