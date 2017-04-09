@@ -15,7 +15,16 @@ import information.ChunkStored;
 import information.FileInfo;
 import message.MessageConst;
 
+/**
+ * 
+ * This class processes the different chunks
+ *
+ */
 public class ProcessChunks {
+	/**
+	 * Gets the best removable chunks
+	 * @return A set of chunks that represents the best removable chunks
+	 */
 	public static Set<Chunk> bestRemovableChunks() {
 		HashSet<Chunk> removableChunks = new HashSet<Chunk>();
 		
@@ -28,6 +37,12 @@ public class ProcessChunks {
 		return removableChunks;
 	}
 	
+
+	/**
+	 * Gets the removable chunks
+	 * @param classifications Chunks' classifications
+	 * @return A HashSet with the removable chunks
+	 */
 	private static HashSet<Chunk> removableChunks(TreeMap<Double, ArrayList<ChunkStored>> classifications) {
 		HashSet<Chunk> removableChunks = new HashSet<Chunk>();
 		int currStoredCapacity = FileInfo.getStoredSize();
@@ -45,7 +60,11 @@ public class ProcessChunks {
 		
 		return removableChunks;
 	}
-	
+
+	/**
+	 * Gets the chunks' classification
+	 * @return A TreeMap with the chunk's classification
+	 */
 	private static TreeMap<Double, ArrayList<ChunkStored>> classifyChunks() {
 		ArrayList<ChunkStored> storedChunks = FileInfo.getStoredChunks();
 		TreeMap<Double, ArrayList<ChunkStored>> classifications = new TreeMap<>(Collections.reverseOrder());
@@ -65,6 +84,11 @@ public class ProcessChunks {
 		return classifications;
 	}
 	
+	/**
+	 * Gets the chunk's individual classification
+	 * @param chunk Chunk that we want to know the classification
+	 * @return The chunk's individual classification
+	 */
 	private static double classifyChunk(ChunkStored chunk) {
 		String pathName = HandleFile.getFileName(chunk.getFileId(), chunk.getChunkId());
 		File file = new File(pathName);

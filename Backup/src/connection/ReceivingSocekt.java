@@ -8,6 +8,7 @@ import java.net.SocketTimeoutException;
 /**
  * 
  * Class that builds the socket that will be receiving the datagram packet
+ * This class extends the SLMCast class
  *
  */
 public class ReceivingSocekt extends SLMCast {

@@ -7,11 +7,22 @@ import java.rmi.server.UnicastRemoteObject;
 
 import information.PeerInfo;
 
+/**
+ * 
+ * This class builds a RMI's object that implements the Instructable's interface
+ *
+ */
 public class RMIObject implements Instructable {
+	/**
+	 * RMIObject's constructor
+	 */
 	public RMIObject() {
 		
 	}
 	
+	/**
+	 * Binds the registry
+	 */
 	public void bind() {		
         try {
         	Instructable stub = (Instructable) UnicastRemoteObject.exportObject(this, 0);
@@ -30,6 +41,9 @@ public class RMIObject implements Instructable {
         }
 	}
 	
+	/**
+	 * Unbinds the registry
+	 */
 	public void unbind() {
         Registry registry = null;
         try {
@@ -46,6 +60,10 @@ public class RMIObject implements Instructable {
 		}
 	}
 	
+	/**
+	 * Runs the RMIRunner that parses the arguments
+	 * @param args Arguments that will be parsed
+	 */
 	@Override
 	public String run(String[] args) throws RemoteException {
 		RMIRunner.parseArgs(args);

@@ -1,6 +1,16 @@
 package message;
 
+/**
+ * 
+ * This class converts a message into a byte's array
+ *
+ */
 public class MessageInfoToByteArray {
+	/**
+	 * Gets the message's header converted into a byte's array
+	 * @param info Array of byte's array with the message
+	 * @return A Byte's array with the message's header
+	 */
 	private static byte[] infoHeadToByteArray(byte[][] info) {
 		int headLength = 0;
 		int messageIndex = 0;
@@ -24,11 +34,16 @@ public class MessageInfoToByteArray {
 		return head;
 	}
 	
+	/**
+	 * Gets the message's converted into a byte's array
+	 * @param info Array of byte's array with the message
+	 * @return A Byte's array with the message's
+	 */
 	public static byte[] infoToByteArray(MessageInfo info) {
 		byte[][] allInfos = info.getAll();
-		byte[] head = infoHeadToByteArray(allInfos);
-		byte[] body = allInfos[allInfos.length - 1];
-		byte[] byteArray = new byte[head.length + body.length + 6];
+		byte[] head = infoHeadToByteArray(allInfos);	//Header
+		byte[] body = allInfos[allInfos.length - 1];	//body
+		byte[] byteArray = new byte[head.length + body.length + 6]; //Header + Body + Flags
 		
 		System.arraycopy(MessageConst.MESSAGE_FLAG, 0, 
 				byteArray, 0, 2);
