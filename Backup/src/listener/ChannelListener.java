@@ -13,8 +13,14 @@ import information.MessageQueue;
  */
 public abstract class ChannelListener implements Runnable {
 
-	private ReceivingSocekt socket;
+	private ReceivingSocekt socket;		//Receiving socket
 	
+	/**
+	 * ChannelListener's constructor
+	 * @param addr Socket's address
+	 * @param port Socket's port
+	 * @throws IOException This class is the general class of exceptions produced by failed or interrupted I/O operations
+	 */
 	public ChannelListener(String addr, int port) throws IOException {
 		socket = new ReceivingSocekt(addr, port);
 	}
@@ -71,5 +77,4 @@ public abstract class ChannelListener implements Runnable {
 		while( !Thread.interrupted() )
 			receiveMessage();
 	}
-
 }

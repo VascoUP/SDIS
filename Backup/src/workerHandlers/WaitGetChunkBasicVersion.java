@@ -2,8 +2,19 @@ package workerHandlers;
 
 import message.BasicMessage;
 
+/**
+ * 
+ * This class provides a handler that waits to get a chunk (this is a basic version)
+ * This extends the WaitGetChunk class
+ *
+ */
 public class WaitGetChunkBasicVersion extends WaitGetChunk {
 
+	/**
+	 * WaitGetChunkBasicVersion's constructor
+	 * @param time Service's time
+	 * @param message Basic message
+	 */
 	public WaitGetChunkBasicVersion(long time, BasicMessage message) {
 		super(time, message);
 	}
@@ -16,5 +27,4 @@ public class WaitGetChunkBasicVersion extends WaitGetChunk {
 	public boolean condition() {				
 		return true;
 	}
-
 }

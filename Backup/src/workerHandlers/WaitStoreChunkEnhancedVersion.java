@@ -4,8 +4,19 @@ import information.FileInfo;
 import message.BasicMessage;
 import spacemanaging.SpaceManager;
 
+/**
+ * 
+ * This class provides a handler that waits to store a chunk (this is a enhanced version)
+ * This extends the WaitStoreChunk class
+ *
+ */
 public class WaitStoreChunkEnhancedVersion extends WaitStoreChunk {
 
+	/**
+	 * WaitStoreChunkEnhancedVersion's constructor
+	 * @param time Service's time
+	 * @param message Basic message
+	 */
 	public WaitStoreChunkEnhancedVersion(long time, BasicMessage message) {
 		super(time, message);
 	}

@@ -81,6 +81,7 @@ public class RMIRunner {
 	
 	/**
 	 * Closes the threads and finishes the services
+	 * @return A string indicating the success of the closing operation 
 	 */
 	public static String close() {
 		System.out.println("Close");	
@@ -131,6 +132,10 @@ public class RMIRunner {
 		return "Successfull setcapacity";
 	}
 
+	/**
+	 * Gets the RMI's state
+	 * @return The RMI's state
+	 */
 	public static String state() {
 		return FileInfo.getString();
 	}

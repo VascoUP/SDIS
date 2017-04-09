@@ -16,8 +16,12 @@ import sender.RemovedSender;
  *
  */
 public class Remove implements Protocol {
-	Set<ChunkStored> removeChunks;
+	Set<ChunkStored> removeChunks;	//Set of removed chunks
 	
+	/**
+	 * Remove's protocol
+	 * @param removeChunks Set of removed chunks
+	 */
 	public Remove(Set<ChunkStored> removeChunks) {
 		this.removeChunks = removeChunks;
 	}

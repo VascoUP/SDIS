@@ -84,6 +84,7 @@ public abstract class ChannelSender implements Runnable {
 	
 	/**
 	 * Gets the message converted into a string
+	 * @return The message converted
 	 */
 	@Override
 	public String toString() {
