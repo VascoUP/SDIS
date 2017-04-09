@@ -3,11 +3,4 @@
 <metadata>
 <!--This is where we store information about the chunks-->
 <diskspace size="63999"/>
-<storedChunk chunkID="2" prepdeg="1" size="0">
-<fileID>f1305d2d0a95d638e7569483eddaa6d9a397c5f4458e129b6e98e6bf993aa023</fileID>
-</storedChunk>
-<backedupChunk chunkID="2" drepdeg="1" prepdeg="1" serviceID="1">
-<fileID>f1305d2d0a95d638e7569483eddaa6d9a397c5f4458e129b6e98e6bf993aa023</fileID>
-<filePath>testFiles/Test2.c</filePath>
-</backedupChunk>
 </metadata>

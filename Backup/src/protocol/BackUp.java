@@ -73,6 +73,7 @@ public class BackUp implements Protocol {
 			ThreadManager.initBackUp(
 					new BackUpSender(
 						filePath,
+						true,
 						new MessageInfoPutChunk(
 								PeerInfo.peerInfo.getVersionProtocol(), 
 								PeerInfo.peerInfo.getServerID(),

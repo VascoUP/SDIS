@@ -76,6 +76,7 @@ public class HandleXMLFile {
 	        //Adds the stored chunk and its information
 	        Element newChunk = document.createElement(FileConst.STORED_CHUNK_ELEM);
 	        newChunk.setAttribute(FileConst.CHUNK_ID_ELEM, "" + chunk.getChunkId());
+	        newChunk.setAttribute(FileConst.DREPEG_ELEM, "" + chunk.getDRepDeg());
 	        newChunk.setAttribute(FileConst.PREPEG_ELEM, "" + chunk.getPRepDeg());
 	        newChunk.setAttribute(FileConst.SIZE_ELEM, "" + chunk.getSize());
 	        
@@ -246,24 +247,24 @@ public class HandleXMLFile {
         String fileID;
         int chunkID;
         int prepdeg;
+        int drepdeg;
         
         fileID = el.getElementsByTagName(FileConst.FILE_ID_ELEM).item(0).getTextContent();
         chunkID = Integer.parseInt(el.getAttribute(FileConst.CHUNK_ID_ELEM));
+        drepdeg = Integer.parseInt(el.getAttribute(FileConst.DREPEG_ELEM));
         prepdeg = Integer.parseInt(el.getAttribute(FileConst.PREPEG_ELEM));
         
         if(el.getNodeName().equals(FileConst.STORED_CHUNK_ELEM)) {
         	int size = Integer.parseInt(el.getAttribute(FileConst.SIZE_ELEM));
         	
-        	ChunkStored c = new ChunkStored(fileID + "_" + chunkID, fileID, chunkID, prepdeg, size);
+        	ChunkStored c = new ChunkStored(fileID + "_" + chunkID, fileID, chunkID, drepdeg, prepdeg, size);
             FileInfo.storeChunk(c);
             
         } else if (el.getNodeName().equals(FileConst.BACKED_UP_CHUNK_ELEM)) {
             String filePath;
-            int drepdeg;
             int serviceID;
             
             filePath = el.getElementsByTagName(FileConst.FILE_PATH_ELEM).item(0).getTextContent();
-            drepdeg = Integer.parseInt(el.getAttribute(FileConst.DREPEG_ELEM));
             serviceID = Integer.parseInt(el.getAttribute(FileConst.SERVICE_ID_ELEM));
             
             ChunkBackedUp c = new ChunkBackedUp(serviceID, filePath, fileID, chunkID, prepdeg, drepdeg);

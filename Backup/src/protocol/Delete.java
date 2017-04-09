@@ -59,7 +59,6 @@ public class Delete implements Protocol {
 		} catch (IOException ignore) {
 		}
 		
-		System.out.println("Deleting: " + filePath);
 		FileInfo.eliminateBackedUpFile(filePath);
 		HandleFile.deleteFile(filePath);
 	}

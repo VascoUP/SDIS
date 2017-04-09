@@ -20,6 +20,7 @@ import message.MessageInfoStored;
 public class BackUpSender extends ChannelSender {
 	private static final int MAX_NUMBER_TRIES = 3;		//Maximum number of tries
 	private final String filePath;						//File's pathname
+	private boolean addToFile;							//Info telling the class if this should update the XML file
 	private int prepdeg = -1;							//Perceived replication degree
 	
 	/**
@@ -28,7 +29,7 @@ public class BackUpSender extends ChannelSender {
 	 * @param message PutChunk's message
 	 * @throws IOException This class is the general class of exceptions produced by failed or interrupted I/O operations
 	 */
-	public BackUpSender(String filePath, MessageInfoPutChunk message) throws IOException {
+	public BackUpSender(String filePath, boolean addToFile, MessageInfoPutChunk message) throws IOException {
 		super( message, ConnectionConstants.MDB_GROUP, ConnectionConstants.MDB_GROUP_PORT);
 		this.filePath = filePath;
 	}
@@ -69,14 +70,16 @@ public class BackUpSender extends ChannelSender {
 	 * Adds a backed up file
 	 */
 	private void fileAdd() {
-		MessageInfoPutChunk backupMessage = (MessageInfoPutChunk) message;
-		FileInfo.addBackedUpChunk(
-				new ChunkBackedUp(
-						filePath, 
-						backupMessage.getFileID(), 
-						backupMessage.getChunkID(),
-						backupMessage.getReplicationDegree(),
-						prepdeg));
+		if( addToFile ) {
+			MessageInfoPutChunk backupMessage = (MessageInfoPutChunk) message;
+			FileInfo.addBackedUpChunk(
+					new ChunkBackedUp(
+							filePath, 
+							backupMessage.getFileID(), 
+							backupMessage.getChunkID(),
+							backupMessage.getReplicationDegree(),
+							prepdeg));
+		}
 	}
 	
 	/**

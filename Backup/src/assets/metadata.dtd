@@ -1,4 +1,4 @@
-<!ELEMENT metadata ((storedChunk | backedupChunk )*, diskspace)>
+<!ELEMENT metadata (diskspace, (storedChunk | backedupChunk )*)>
 
 <!ELEMENT storedChunk (fileID)>
 <!ELEMENT backedupChunk (fileID, filePath)>
@@ -9,6 +9,7 @@
 
 <!ATTLIST storedChunk chunkID CDATA #REQUIRED>
 <!ATTLIST storedChunk size CDATA #REQUIRED>
+<!ATTLIST storedChunk drepdeg CDATA #REQUIRED>
 <!ATTLIST storedChunk prepdeg CDATA #REQUIRED>
 
 <!ATTLIST backedupChunk chunkID CDATA #REQUIRED>

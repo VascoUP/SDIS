@@ -34,22 +34,13 @@ public class WaitStoreChunk extends MessageServiceWait {
 	 */
 	public WaitStoreChunk(long time, BasicMessage message) {
 		super(time, message);
-	}
-	
-	/**
-	 * Initiates the MessageInfoPutChunk
-	 */
-	private void initInfo() {
-		if( info == null )
-			info = (MessageInfoPutChunk) MessageToInfo.messageToInfo(message);
+		info = (MessageInfoPutChunk) MessageToInfo.messageToInfo(message);
 	}
 	
 	/**
 	 * Initiates the perceived replication degree
 	 */
-	private void getValue() {
-		initInfo();
-		
+	private void getValue() {		
 		MessageInfoPutChunk backupMessage = (MessageInfoPutChunk) info;
 		MessageInfoStored m1 = new MessageInfoStored(
 									PeerInfo.peerInfo.getVersionProtocol(), 
@@ -84,7 +75,6 @@ public class WaitStoreChunk extends MessageServiceWait {
 	@Override
 	public boolean condition() {
 		getValue();
-		initInfo();
 		
 		System.out.println("WaitStoreChunk: capacity	 " + SpaceManager.instance.getCapacity());
 		System.out.println("WaitStoreChunk: stored size 	" + FileInfo.getStoredSize());
@@ -106,14 +96,12 @@ public class WaitStoreChunk extends MessageServiceWait {
 		Chunk chunk;
 		String fileName, fileID;
 		int chunkID;
-
-		initInfo();
 		
 		fileID = info.getFileID();
 		chunkID = info.getChunkID();
 		fileName = HandleFile.getFileName(fileID, chunkID);
 		
-		chunk = new ChunkStored(fileName, fileID, chunkID, prepdeg + 1, info.getChunk());
+		chunk = new ChunkStored(fileName, fileID, chunkID, info.getReplicationDegree(), prepdeg + 1, info.getChunk());
 		try {
 			AnswerBackUpSender abup = new AnswerBackUpSender(
 					new MessageInfoStored(

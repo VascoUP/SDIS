@@ -7,28 +7,18 @@ import information.MessagesHashmap;
 import information.PeerInfo;
 import message.BasicMessage;
 import message.InfoToMessage;
-import message.MessageInfoChunk;
-import message.MessageInfoGetChunk;
+import message.MessageInfoPutChunk;
+import message.MessageInfoRemoved;
 import message.MessageToInfo;
-import sender.AnswerRestoreSender;
+import sender.BackUpSender;
+import threads.ThreadManager;
 
-/**
- * 
- * This class provides a handler that waits to get a chunk
- * This class extends the MessageServiceWait class
- *
- */
-public class WaitGetChunk extends MessageServiceWait {
-	private MessageInfoGetChunk info;	//This class builds the RESTORE_MESSAGE information
+public class WaitPutChunk extends MessageServiceWait {
+	private MessageInfoRemoved info;	//This class builds the RESTORE_MESSAGE information
 
-	/**
-	 * WaitGetChunk's constructor
-	 * @param time Service's time
-	 * @param message Basic message
-	 */
-	public WaitGetChunk(long time, BasicMessage message) {
+	public WaitPutChunk(long time, BasicMessage message) {
 		super(time, message);
-		info = (MessageInfoGetChunk) MessageToInfo.messageToInfo(message);
+		info = (MessageInfoRemoved) MessageToInfo.messageToInfo(message);
 	}
 	
 	/**
@@ -37,12 +27,13 @@ public class WaitGetChunk extends MessageServiceWait {
 	 */
 	@Override
 	public boolean condition() {				
-		MessageInfoGetChunk restoreMessage = (MessageInfoGetChunk) info;
-		MessageInfoChunk m1 = new MessageInfoChunk(
+		MessageInfoRemoved restoreMessage = (MessageInfoRemoved) info;
+		MessageInfoPutChunk m1 = new MessageInfoPutChunk(
 								PeerInfo.peerInfo.getVersionProtocol(), 
 								PeerInfo.peerInfo.getServerID(), 
 								restoreMessage.getFileID(), 
 								restoreMessage.getChunkID(),
+								0,
 								new byte[0]);
 		BasicMessage m2 = InfoToMessage.toMessage(m1);
 		
@@ -58,7 +49,8 @@ public class WaitGetChunk extends MessageServiceWait {
 		byte[] data;
 		String fileName, fileID;
 		int chunkID;
-						
+		
+				
 		fileID = info.getFileID();
 		chunkID = info.getChunkID();
 		fileName = HandleFile.getFileName(fileID, chunkID);
@@ -68,14 +60,17 @@ public class WaitGetChunk extends MessageServiceWait {
 			if( data == null )
 				return ;
 			
-			AnswerRestoreSender abup = new AnswerRestoreSender(
-					new MessageInfoChunk(
-						PeerInfo.peerInfo.getVersionProtocol(),
-						PeerInfo.peerInfo.getServerID(),
-						fileID, 
-						chunkID,
-						data));
-			abup.execute();
+			ThreadManager.initBackUp(
+					new BackUpSender(
+						new String(),
+						false,
+						new MessageInfoPutChunk(
+								PeerInfo.peerInfo.getVersionProtocol(), 
+								PeerInfo.peerInfo.getServerID(),
+								fileID, 
+								chunkID,
+								1, 
+								data)));
 		} catch (IOException ignore) {
 		}
 	}
@@ -86,7 +81,8 @@ public class WaitGetChunk extends MessageServiceWait {
 	 * @param message Basic message
 	 */
 	public static void serve(long time, BasicMessage message) {
-		WaitGetChunk gc = new WaitGetChunk(time, message);
-		gc.start();
+		WaitPutChunk pc = new WaitPutChunk(time, message);
+		pc.start();
 	}
+
 }

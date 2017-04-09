@@ -91,7 +91,8 @@ public class RestoreSender extends ChannelSender {
 		ChunkStored chunk = new ChunkStored (new String(), 
 				restoreMessage.getFileID(), 
 				restoreMessage.getChunkID(), 
-				getMessages(),
+				1,
+				1,
 				receivedMessage.getBody());
 		restoreObject.addReceivedChunk(chunk);
 	}

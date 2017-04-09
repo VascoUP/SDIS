@@ -8,6 +8,7 @@ package information;
  */
 public class ChunkStored extends Chunk {
 	private int prepdeg;	//Perceived replication degree
+	private int drepdeg;	//Desired replication degree
 	private int size;		//Stored chunk size
 	
 	/**
@@ -18,8 +19,9 @@ public class ChunkStored extends Chunk {
 	 * @param prepdeg Perceived replication degree
 	 * @param chunk Chunk's content
 	 */
-	public ChunkStored(String storePath, String fileId, int chunkId, int prepdeg, byte[] chunk) {
+	public ChunkStored(String storePath, String fileId, int chunkId, int drepdeg, int prepdeg, byte[] chunk) {
 		super(storePath, fileId, chunkId, chunk);
+		this.drepdeg = drepdeg;
 		this.prepdeg = prepdeg;
 		this.size = chunk.length;
 	}
@@ -32,8 +34,9 @@ public class ChunkStored extends Chunk {
 	 * @param prepdeg Perceived replication degree
 	 * @param size Stored chunk's size
 	 */
-	public ChunkStored(String storePath, String fileId, int chunkId, int prepdeg, int size) {
+	public ChunkStored(String storePath, String fileId, int chunkId, int drepdeg, int prepdeg, int size) {
 		super(storePath, fileId, chunkId);
+		this.drepdeg = drepdeg;
 		this.prepdeg = prepdeg;
 		this.size = size;
 	}
@@ -44,6 +47,14 @@ public class ChunkStored extends Chunk {
 	 */
 	public int getPRepDeg() {
 		return prepdeg;
+	}
+	
+	/**
+	 * Gets the desired replication degree
+	 * @return The desired replication degree
+	 */
+	public int getDRepDeg() {
+		return drepdeg;
 	}
 	
 	/**
