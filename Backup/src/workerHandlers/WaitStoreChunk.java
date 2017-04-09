@@ -9,6 +9,7 @@ import information.ChunkStored;
 import information.FileInfo;
 import information.MessagesHashmap;
 import information.PeerInfo;
+import information.Version;
 import message.BasicMessage;
 import message.InfoToMessage;
 import message.MessageInfoPutChunk;
@@ -43,7 +44,7 @@ public class WaitStoreChunk extends MessageServiceWait {
 	private void getValue() {		
 		MessageInfoPutChunk backupMessage = (MessageInfoPutChunk) info;
 		MessageInfoStored m1 = new MessageInfoStored(
-									PeerInfo.peerInfo.getVersionProtocol(), 
+									Version.instance.getVersionProtocol(),
 									PeerInfo.peerInfo.getServerID(), 
 									backupMessage.getFileID(), 
 									backupMessage.getChunkID());
@@ -102,7 +103,7 @@ public class WaitStoreChunk extends MessageServiceWait {
 	private void sendMessage() throws IOException {
 		AnswerBackUpSender abup = new AnswerBackUpSender(
 				new MessageInfoStored(
-					PeerInfo.peerInfo.getVersionProtocol(),
+					Version.instance.getVersionProtocol(),
 					PeerInfo.peerInfo.getServerID(),
 					info.getFileID(), 
 					info.getChunkID()));

@@ -6,6 +6,7 @@ import connection.ConnectionConstants;
 import information.ChunkStored;
 import information.MessagesHashmap;
 import information.PeerInfo;
+import information.Version;
 import message.BasicMessage;
 import message.InfoToMessage;
 import message.MessageInfoChunk;
@@ -40,7 +41,7 @@ public class RestoreSender extends ChannelSender {
 	private int getMessages() {
 		MessageInfoGetChunk restoreMessage = (MessageInfoGetChunk) message;
 		MessageInfoChunk m1 = new MessageInfoChunk(
-								PeerInfo.peerInfo.getVersionProtocol(), 
+								Version.instance.getVersionProtocol(),
 								PeerInfo.peerInfo.getServerID(), 
 								restoreMessage.getFileID(), 
 								restoreMessage.getChunkID(),
@@ -57,7 +58,7 @@ public class RestoreSender extends ChannelSender {
 	private void removeMessages() {
 		MessageInfoGetChunk restoreMessage = (MessageInfoGetChunk) message;
 		MessageInfoChunk m1 = new MessageInfoChunk(
-								PeerInfo.peerInfo.getVersionProtocol(), 
+								Version.instance.getVersionProtocol(),
 								PeerInfo.peerInfo.getServerID(), 
 								restoreMessage.getFileID(), 
 								restoreMessage.getChunkID(),
@@ -73,7 +74,7 @@ public class RestoreSender extends ChannelSender {
 	private void signalRestore() {
 		MessageInfoGetChunk restoreMessage = (MessageInfoGetChunk) message;
 		MessageInfoChunk m1 = new MessageInfoChunk(
-								PeerInfo.peerInfo.getVersionProtocol(), 
+								Version.instance.getVersionProtocol(),
 								PeerInfo.peerInfo.getServerID(), 
 								restoreMessage.getFileID(), 
 								restoreMessage.getChunkID(),

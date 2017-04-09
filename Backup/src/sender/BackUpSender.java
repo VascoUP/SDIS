@@ -8,6 +8,7 @@ import information.ChunkStored;
 import information.FileInfo;
 import information.MessagesHashmap;
 import information.PeerInfo;
+import information.Version;
 import message.BasicMessage;
 import message.InfoToMessage;
 import message.MessageInfoPutChunk;
@@ -42,7 +43,7 @@ public class BackUpSender extends ChannelSender {
 	private int getMessages() {		
 		MessageInfoPutChunk backupMessage = (MessageInfoPutChunk) message;
 		MessageInfoStored m1 = new MessageInfoStored(
-				PeerInfo.peerInfo.getVersionProtocol(), 
+				Version.instance.getVersionProtocol(), 
 				PeerInfo.peerInfo.getServerID(), 
 				backupMessage.getFileID(), 
 				backupMessage.getChunkID());
@@ -58,7 +59,7 @@ public class BackUpSender extends ChannelSender {
 	private void removeMessages() {
 		MessageInfoPutChunk backupMessage = (MessageInfoPutChunk) message;
 		MessageInfoStored m1 = new MessageInfoStored(
-									PeerInfo.peerInfo.getVersionProtocol(), 
+									Version.instance.getVersionProtocol(),
 									PeerInfo.peerInfo.getServerID(), 
 									backupMessage.getFileID(), 
 									backupMessage.getChunkID());

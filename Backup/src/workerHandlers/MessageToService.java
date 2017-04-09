@@ -1,6 +1,7 @@
 package workerHandlers;
 
 import information.PeerInfo;
+import information.Version;
 import message.BasicMessage;
 import message.MessageConst;
 
@@ -25,7 +26,7 @@ public class MessageToService {
 		int senderID = Integer.parseInt(head[2]);
 		
 		if( senderID == PeerInfo.peerInfo.getServerID() ||
-			!versionProtocol.equals(PeerInfo.peerInfo.getVersionProtocol()) )
+			!versionProtocol.equals(Version.instance.getVersionProtocol()) )
 			return ;
 		
 		System.out.println("MessageToService: Received " + messageType + " message");

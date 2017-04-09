@@ -5,6 +5,7 @@ import java.io.IOException;
 import file.HandleFile;
 import information.MessagesHashmap;
 import information.PeerInfo;
+import information.Version;
 import message.BasicMessage;
 import message.InfoToMessage;
 import message.MessageInfoChunk;
@@ -39,7 +40,7 @@ public class WaitGetChunk extends MessageServiceWait {
 	public boolean condition() {				
 		MessageInfoGetChunk restoreMessage = (MessageInfoGetChunk) info;
 		MessageInfoChunk m1 = new MessageInfoChunk(
-								PeerInfo.peerInfo.getVersionProtocol(), 
+								Version.instance.getVersionProtocol(),
 								PeerInfo.peerInfo.getServerID(), 
 								restoreMessage.getFileID(), 
 								restoreMessage.getChunkID(),
@@ -70,7 +71,7 @@ public class WaitGetChunk extends MessageServiceWait {
 			
 			AnswerRestoreSender abup = new AnswerRestoreSender(
 					new MessageInfoChunk(
-						PeerInfo.peerInfo.getVersionProtocol(),
+						Version.instance.getVersionProtocol(),
 						PeerInfo.peerInfo.getServerID(),
 						fileID, 
 						chunkID,

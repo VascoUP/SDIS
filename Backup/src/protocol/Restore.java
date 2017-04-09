@@ -12,6 +12,7 @@ import information.ChunkBackedUp;
 import information.ChunkStored;
 import information.FileInfo;
 import information.PeerInfo;
+import information.Version;
 import message.MessageInfoGetChunk;
 import sender.RestoreSender;
 import threads.ThreadManager;
@@ -130,7 +131,7 @@ public class Restore implements Protocol {
 				new RestoreSender(
 					this,
 					new MessageInfoGetChunk(
-							PeerInfo.peerInfo.getVersionProtocol(), 
+							Version.instance.getVersionProtocol(), 
 							PeerInfo.peerInfo.getServerID(),
 							fileID, 
 							i + 1)));

@@ -5,6 +5,7 @@ import java.util.Set;
 
 import information.ChunkStored;
 import information.PeerInfo;
+import information.Version;
 import message.MessageInfoRemoved;
 import sender.RemovedSender;
 
@@ -32,7 +33,7 @@ public class Remove implements Protocol {
 				System.out.println("Remove: Inform other peers about the removal of this chunk " + c.getFileId() + " - " + c.getChunkId());
 				RemovedSender sender = new RemovedSender(
 						new MessageInfoRemoved(
-								PeerInfo.peerInfo.getVersionProtocol(), 
+								Version.instance.getVersionProtocol(),
 								PeerInfo.peerInfo.getServerID(),
 								c.getFileId(),
 								c.getChunkId()));

@@ -6,6 +6,7 @@ import file.HandleFile;
 import information.Chunk;
 import information.FileInfo;
 import information.PeerInfo;
+import information.Version;
 import message.MessageConst;
 import message.MessageInfoPutChunk;
 import sender.BackUpSender;
@@ -75,7 +76,7 @@ public class BackUp implements Protocol {
 						filePath,
 						true,
 						new MessageInfoPutChunk(
-								PeerInfo.peerInfo.getVersionProtocol(), 
+								Version.instance.getVersionProtocol(),
 								PeerInfo.peerInfo.getServerID(),
 								fileID, 
 								chunkID,

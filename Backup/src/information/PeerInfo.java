@@ -7,7 +7,6 @@ package information;
  */
 public class PeerInfo {
 	public static PeerInfo peerInfo;			//Peer's information
-	private final String version_protocol;		//Protocol's version
 	private final String access_point;			//Access point
 	
 	private final int server_ID;				//Server's ID
@@ -19,7 +18,10 @@ public class PeerInfo {
 	 * @param server_ID Server's ID
 	 */
 	private PeerInfo(String version_protocol, String access_point, int server_ID) {
-		this.version_protocol = version_protocol;
+		try {
+			Version.createVersion(version_protocol);
+		} catch (Exception ignore) {
+		}
 		this.access_point = access_point;
 		this.server_ID = server_ID;
 	}
@@ -50,13 +52,5 @@ public class PeerInfo {
 	 */
 	public int getServerID() {
 		return server_ID;
-	}
-
-	/**
-	 * Gets the protocol's version
-	 * @return The protocol's version
-	 */
-	public String getVersionProtocol() {
-		return version_protocol;
 	}
 }

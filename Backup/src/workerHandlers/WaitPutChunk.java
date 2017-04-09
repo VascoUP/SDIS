@@ -7,6 +7,7 @@ import information.ChunkStored;
 import information.FileInfo;
 import information.MessagesHashmap;
 import information.PeerInfo;
+import information.Version;
 import message.BasicMessage;
 import message.InfoToMessage;
 import message.MessageInfoPutChunk;
@@ -31,7 +32,7 @@ public class WaitPutChunk extends MessageServiceWait {
 	public boolean condition() {				
 		MessageInfoRemoved restoreMessage = (MessageInfoRemoved) info;
 		MessageInfoPutChunk m1 = new MessageInfoPutChunk(
-								PeerInfo.peerInfo.getVersionProtocol(), 
+								Version.instance.getVersionProtocol(),
 								PeerInfo.peerInfo.getServerID(), 
 								restoreMessage.getFileID(), 
 								restoreMessage.getChunkID(),
@@ -68,7 +69,7 @@ public class WaitPutChunk extends MessageServiceWait {
 						fileName,
 						false,
 						new MessageInfoPutChunk(
-								PeerInfo.peerInfo.getVersionProtocol(), 
+								Version.instance.getVersionProtocol(),
 								PeerInfo.peerInfo.getServerID(),
 								fileID, 
 								chunkID,

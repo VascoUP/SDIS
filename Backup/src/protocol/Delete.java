@@ -6,6 +6,7 @@ import file.HandleFile;
 import information.Chunk;
 import information.FileInfo;
 import information.PeerInfo;
+import information.Version;
 import message.MessageInfoDelete;
 import sender.DeleteSender;
 
@@ -43,7 +44,7 @@ public class Delete implements Protocol {
 	public void initialize_sender() throws IOException {
 		DeleteSender sender = new DeleteSender(
 				new MessageInfoDelete(
-						PeerInfo.peerInfo.getVersionProtocol(), 
+						Version.instance.getVersionProtocol(),
 						PeerInfo.peerInfo.getServerID(),
 						fileID));
 		sender.execute();
