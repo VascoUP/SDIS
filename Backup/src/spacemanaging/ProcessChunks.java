@@ -27,7 +27,7 @@ public class ProcessChunks {
 	public static Set<ChunkStored> bestRemovableChunks() {
 		HashSet<ChunkStored> removableChunks = new HashSet<>();
 		
-		if( SpaceManager.instance.getCapacity() <= FileInfo.getStoredSize() ) {
+		if( SpaceManager.instance.getCapacity() >= FileInfo.getStoredSize() ) {
 			System.out.println("ProcessChunks: " + SpaceManager.instance.getCapacity() + " - " + FileInfo.getStoredSize() + " no need to remove chunks");
 			return removableChunks;
 		}

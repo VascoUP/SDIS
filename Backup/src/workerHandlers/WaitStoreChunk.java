@@ -82,6 +82,7 @@ public abstract class WaitStoreChunk extends MessageServiceWait {
 	 */
 	@Override
 	public boolean condition() {
+		System.err.println("Running in the wrong class");
 		return false;
 	}
 
@@ -90,6 +91,7 @@ public abstract class WaitStoreChunk extends MessageServiceWait {
 	 * @throws IOException
 	 */
 	private void sendMessage() throws IOException {
+		System.out.println("WaitStoreChunk: sendMessage");
 		AnswerBackUpSender abup = new AnswerBackUpSender(
 				new MessageInfoStored(
 					Version.instance.getVersionProtocol(),
@@ -104,6 +106,7 @@ public abstract class WaitStoreChunk extends MessageServiceWait {
 	 */
 	@Override
 	protected void service() {
+		System.out.println("WaitStoreChunk: service");
 		Chunk chunk;
 		String fileName, fileID;
 		int chunkID;
@@ -125,10 +128,9 @@ public abstract class WaitStoreChunk extends MessageServiceWait {
 	 * Starts the service
 	 */
 	@Override
-	public void start() {
-		MessagesHashmap.addMessage(message);
-		
+	public void start() {		
 		if( hasStoredChunk() ) {
+			System.out.println("WaitStoreChunk: has stored chunk");
 			if( !randomWait() )
 				return ;
 			try {
@@ -138,6 +140,7 @@ public abstract class WaitStoreChunk extends MessageServiceWait {
 			return ;
 		}
 
+		System.out.println("WaitStoreChunk: does not have stored chunk");
 		if( randomWait() && condition() )
 			service();
 	}

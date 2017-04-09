@@ -294,6 +294,29 @@ public class FileInfo {
 	}
 	
 	/**
+	 * Finds all the backed up chunks
+	 * @param path File's path
+	 * @return A array with all the backed up chunks
+	 */
+	public static ChunkBackedUp findBackedUpChunk(String fileID, int chunkID) {
+		ChunkBackedUp chunk = null;
+		
+		lock.lock(); //Acquires the lock
+		try {
+			for( ChunkBackedUp c : backedUpChunks ) {
+				if( c.getChunkId() == chunkID &&
+					c.getFileId().equals(fileID) ) {
+					chunk = c;
+				}
+			}
+		} finally {
+			lock.unlock(); //Releases the lock
+		}
+		
+		return chunk;
+	}
+	
+	/**
 	 * Finds all the stored chunks using the file's ID
 	 * @param fileID File's ID
 	 * @return A array with all the stored chunks
