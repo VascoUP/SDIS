@@ -89,14 +89,17 @@ public class FileInfo {
 		}
 	}
 	
-	/*public static void eliminateSameBackedUpChunk(Chunk chunk) {
+	/**
+	 * Eliminates the same backed up chunk
+	 * @param chunk Chunk that will be compared
+	 */
+	public static void eliminateSameBackedUpChunk(Chunk chunk) {
 		lock.lock();
 		try {
 			for (Iterator<ChunkBackedUp> iterator = backedUpChunks.iterator(); iterator.hasNext(); ) {
-			    Chunk c = iterator.next();
+				ChunkBackedUp c = iterator.next();
 			    if (c.getChunkId() == chunk.getChunkId() && 
-			    	c.getStorePath().equals(chunk.getStorePath())) {
-				    System.out.println("eliminateSameBackedUpChunk: " + c.getChunkId());
+			    	c.getFileId().equals(chunk.getFileId())) {
 			    	fileElimBackedUpChunk(c);
 			        iterator.remove();
 			    }
@@ -104,7 +107,7 @@ public class FileInfo {
 		} finally {
 			lock.unlock();
 		}
-	}*/
+	}
 	
 	/**
 	 * Eliminates the stored chunks from XML file
@@ -128,14 +131,14 @@ public class FileInfo {
 	}
 	
 	/**
-	 * Eliminates the same stored chunks
+	 * Eliminates the same stored chunk
 	 * @param chunk Chunk that will be compared
 	 */
 	public static void eliminateSameStoredChunk(Chunk chunk) {
 		lock.lock(); //Acquires the lock
 		try {
 			for (Iterator<ChunkStored> iterator = storedChunks.iterator(); iterator.hasNext(); ) {
-			    Chunk c = iterator.next();
+				ChunkStored c = iterator.next();
 			    if (c.getChunkId() == chunk.getChunkId() && 
 			    	c.getFileId().equals(chunk.getFileId())) {
 					fileElimStoredChunk(c);
@@ -159,8 +162,9 @@ public class FileInfo {
 	 * @param chunk Backed up chunk that will be added
 	 */
 	public static void backupChunk(ChunkBackedUp chunk) {
-		//eliminateSameBackedUpChunk(chunk);
+		eliminateSameBackedUpChunk(chunk);
 		backedUpChunks.add(chunk);
+		System.out.println("FileInfo: backup chunk added");
 	}
 
 	/**
@@ -182,7 +186,7 @@ public class FileInfo {
 	 * Adds a backed up chunk to the XML file
 	 * @param chunk Backed up chunk that will be added
 	 */
-	private static void fileAddBackedUpChunk(ChunkBackedUp chunk) {		
+	private static void fileAddBackedUpChunk(ChunkBackedUp chunk) {
 		try {
 			HandleXMLFile.addBackedUpChunk(chunk);
 		} catch (Exception e) {
@@ -202,6 +206,20 @@ public class FileInfo {
 			e.printStackTrace();
 			return ;
 		}
+	}
+
+	/**
+	 * Removes a stored chunk from a file
+	 * @param chunk Chunk to be removed
+	 */
+	private static void fileElimBackedUpChunk(Chunk chunk) {
+		try {
+			HandleXMLFile.removeBackedUpChunk(chunk.getFileId(), "" + chunk.getChunkId());
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+		HandleFile.deleteFile(HandleFile.getFileName(chunk.getFileId(), chunk.getChunkId())); //Deletes the chunk's file
 	}
 	
 	/**
@@ -304,9 +322,12 @@ public class FileInfo {
 		lock.lock(); //Acquires the lock
 		try {
 			for( ChunkBackedUp c : backedUpChunks ) {
+				System.out.println(c.getFileId() + " vs " + fileID);
+				System.out.println(c.getChunkId() + " vs " + chunkID);
 				if( c.getChunkId() == chunkID &&
 					c.getFileId().equals(fileID) ) {
 					chunk = c;
+					break;
 				}
 			}
 		} finally {
@@ -359,6 +380,7 @@ public class FileInfo {
 		
 		return chunk;
 	}
+	
 	
 	/**
 	 * Gets the total stored chunks' size

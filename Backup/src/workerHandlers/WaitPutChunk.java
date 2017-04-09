@@ -81,7 +81,7 @@ public class WaitPutChunk extends MessageServiceWait {
 								PeerInfo.peerInfo.getServerID(),
 								fileID, 
 								chunkID,
-								chunk.getDRepDeg(), 
+								chunk.getDRepDeg() - 1, 
 								data)));
 		} catch (IOException ignore) {
 		}
@@ -93,8 +93,18 @@ public class WaitPutChunk extends MessageServiceWait {
 	public void start() {
 		if( !canInitiateProtocol() )
 			return ;
+
+		MessageInfoRemoved restoreMessage = (MessageInfoRemoved) info;
+		MessageInfoPutChunk m1 = new MessageInfoPutChunk(
+								Version.instance.getVersionProtocol(),
+								PeerInfo.peerInfo.getServerID(), 
+								restoreMessage.getFileID(), 
+								restoreMessage.getChunkID(),
+								0,
+								new byte[0]);
+		BasicMessage m2 = InfoToMessage.toMessage(m1);
+		MessagesHashmap.removeKey(m2);
 		
-		MessagesHashmap.removeKey(message);
 		if( randomWait() && condition() )
 			service();
 		else 

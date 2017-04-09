@@ -53,7 +53,15 @@ public abstract class WaitStoreChunk extends MessageServiceWait {
 	}
 	
 	/**
-	 * Verifies if the chunk request has already been stored by this peer
+	 * Verifies if the chunk request has already been backed up by this peer
+	 * @return true if it has, false otherwise
+	 */
+	protected boolean hasBackedUpChunk() {
+		return FileInfo.findBackedUpChunk(info.getFileID(), info.getChunkID()) != null;
+	}
+	
+	/**
+	 * Verifies if the chunk requested has already been stored by this peer
 	 * @return true if it has, false otherwise
 	 */
 	protected boolean hasStoredChunk() {
@@ -128,7 +136,10 @@ public abstract class WaitStoreChunk extends MessageServiceWait {
 	 * Starts the service
 	 */
 	@Override
-	public void start() {		
+	public void start() {
+		if( hasBackedUpChunk() )
+			return ;
+		
 		if( hasStoredChunk() ) {
 			System.out.println("WaitStoreChunk: has stored chunk");
 			if( !randomWait() )
