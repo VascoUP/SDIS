@@ -1,6 +1,16 @@
 package message;
 
+/**
+ * 
+ * This class builds the message's information
+ *
+ */
 public class MessageToInfo {
+	/**
+	 * Gets the MessageInfo from the message's header
+	 * @param message Basic message that will be analyzed
+	 * @return The MessageInfo that corresponds to the message's header
+	 */
 	public static MessageInfo messageToInfo(BasicMessage message) {
 		if( message.getHead().length < 1 )
 			return null;
@@ -23,7 +33,11 @@ public class MessageToInfo {
 		return null;
 	}
 	
-	
+	/**
+	 * Gets the MessageInfoPutChunk from the basic message's header
+	 * @param message Basic message that will be analyzed
+	 * @return The MessageInfoPutChunk converted from the basic message's header
+	 */
 	private static MessageInfoPutChunk messageToPutChunk(BasicMessage message) {
 		String[] head = message.getHead();
 		if( head.length != MessageConst.PUTCHUNK_MESSAGE_LENGTH )
@@ -34,6 +48,11 @@ public class MessageToInfo {
 										message.getBody());
 	}
 	
+	/**
+	 * Gets the MessageInfoStored from the basic message's header
+	 * @param message Basic message that will be analyzed
+	 * @return The MessageInfoStored converted from the basic message's header
+	 */
 	private static MessageInfoStored messageToStored(BasicMessage message) {
 		String[] head = message.getHead();
 		if( head.length != MessageConst.STORED_MESSAGE_LENGTH )
@@ -43,6 +62,11 @@ public class MessageToInfo {
 										Integer.parseInt(head[4]));
 	}
 
+	/**
+	 * Gets the MessageInfoChunk from the basic message's header
+	 * @param message Basic message that will be analyzed
+	 * @return The MessageInfoChunk converted from the basic message's header
+	 */
 	private static MessageInfoChunk messageToChunk(BasicMessage message) {
 		String[] head = message.getHead();
 		if( head.length != MessageConst.CHUNK_MESSAGE_LENGTH )
@@ -53,6 +77,11 @@ public class MessageToInfo {
 										message.getBody());
 	}
 	
+	/**
+	 * Gets the MessageInfoGetChunk from the basic message's header
+	 * @param message Basic message that will be analyzed
+	 * @return The MessageInfoGetChunk converted from the basic message's header
+	 */
 	private static MessageInfoGetChunk messageToGetChunk(BasicMessage message) {
 		String[] head = message.getHead();
 		if( head.length != MessageConst.RESTORE_MESSAGE_LENGTH )
@@ -62,6 +91,11 @@ public class MessageToInfo {
 										Integer.parseInt(head[4]));
 	}
 
+	/**
+	 * Gets the MessageInfoDelete from the basic message's header
+	 * @param message Basic message that will be analyzed
+	 * @return The MessageInfoDelete converted from the basic message's header
+	 */
 	private static MessageInfoDelete messageToDelete(BasicMessage message) {
 		String[] head = message.getHead();
 		if( head.length != MessageConst.DELETE_MESSAGE_LENGTH )
@@ -71,6 +105,11 @@ public class MessageToInfo {
 										head[3]);
 	}
 
+	/**
+	 * Gets the MessageInfoRemoved from the basic message's header
+	 * @param message Basic message that will be analyzed
+	 * @return The MessageInfoRemoved converted from the basic message's header
+	 */
 	private static MessageInfoRemoved messageToRemoved(BasicMessage message) {
 		String[] head = message.getHead();
 		if( head.length != MessageConst.STORED_MESSAGE_LENGTH )

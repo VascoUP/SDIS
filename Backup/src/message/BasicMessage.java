@@ -2,7 +2,7 @@ package message;
 
 /**
  * 
- * This class builds the basic message
+ * This class builds a basic message
  *
  */
 public class BasicMessage {

@@ -3,6 +3,7 @@ package message;
 /**
  * 
  * This class builds the CHUNK_MESSAGE information
+ * This class extends the MessageInfo class
  *
  */
 public class MessageInfoChunk extends MessageInfo {
@@ -36,7 +37,8 @@ public class MessageInfoChunk extends MessageInfo {
 	}
 	
 	/**
-	 * 
+	 * Gets a array of byte's array with all the message's information
+	 * @return A array of byte's array with all the message's information
 	 */
 	@Override
 	public byte[][] getAll() {
@@ -52,14 +54,26 @@ public class MessageInfoChunk extends MessageInfo {
 		return arrayOfByteArrays;
 	}
 	
+	/**
+	 * Gets the chunk's content
+	 * @return The chunk's content
+	 */
 	public byte[] getChunk() {
 		return chunk;
 	}
 	
+	/**
+	 * Gets the chunk's ID
+	 * @return The chunk's ID
+	 */
 	public int getChunkID() {
 		return chunkID;
 	}
 
+	/**
+	 * Gets the message's type, file's ID and chunk's ID
+	 * @return The message's type, file's ID and chunk's ID
+	 */
 	@Override
 	public String getName() {
 		return super.getName() + chunkID;
