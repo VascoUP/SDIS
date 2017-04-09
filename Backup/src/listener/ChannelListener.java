@@ -77,5 +77,4 @@ public abstract class ChannelListener implements Runnable {
 		while( !Thread.interrupted() )
 			receiveMessage();
 	}
-
 }

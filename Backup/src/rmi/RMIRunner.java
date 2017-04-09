@@ -127,6 +127,10 @@ public class RMIRunner {
 		return "Successfull setcapacity";
 	}
 
+	/**
+	 * Gets the RMI's state
+	 * @return The RMI's state
+	 */
 	public static String state() {
 		return FileInfo.getString();
 	}
