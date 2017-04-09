@@ -4,7 +4,17 @@ import information.PeerInfo;
 import message.BasicMessage;
 import message.MessageConst;
 
+/**
+ * 
+ * This class converts a message to a service
+ *
+ */
 public class MessageToService {
+	/**
+	 * Processes a basic message
+	 * @param time Message's time
+	 * @param message Basic message that will be processed
+	 */
 	public static void processMessage(long time, BasicMessage message) {
 		String[] head = message.getHead();
 		if( head.length < 3 )
