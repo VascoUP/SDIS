@@ -3,11 +3,9 @@ package workerHandlers;
 import java.io.IOException;
 
 import file.HandleFile;
-import information.MessagesHashmap;
 import information.PeerInfo;
 import information.Version;
 import message.BasicMessage;
-import message.InfoToMessage;
 import message.MessageInfoChunk;
 import message.MessageInfoGetChunk;
 import message.MessageToInfo;
@@ -19,8 +17,8 @@ import sender.AnswerRestoreSender;
  * This class extends the MessageServiceWait class
  *
  */
-public class WaitGetChunk extends MessageServiceWait {
-	private MessageInfoGetChunk info;	//This class builds the RESTORE_MESSAGE information
+public abstract class WaitGetChunk extends MessageServiceWait {
+	protected MessageInfoGetChunk info;	//This class builds the RESTORE_MESSAGE information
 
 	/**
 	 * WaitGetChunk's constructor
@@ -38,17 +36,7 @@ public class WaitGetChunk extends MessageServiceWait {
 	 */
 	@Override
 	public boolean condition() {				
-		MessageInfoGetChunk restoreMessage = (MessageInfoGetChunk) info;
-		MessageInfoChunk m1 = new MessageInfoChunk(
-								Version.instance.getVersionProtocol(),
-								PeerInfo.peerInfo.getServerID(), 
-								restoreMessage.getFileID(), 
-								restoreMessage.getChunkID(),
-								new byte[0]);
-		BasicMessage m2 = InfoToMessage.toMessage(m1);
-		
-		return 	info != null && m2 != null &&
-				MessagesHashmap.getSize(m2) < 1;
+		return false;
 	}
 	
 	/**
@@ -87,7 +75,11 @@ public class WaitGetChunk extends MessageServiceWait {
 	 * @param message Basic message
 	 */
 	public static void serve(long time, BasicMessage message) {
-		WaitGetChunk gc = new WaitGetChunk(time, message);
+		WaitGetChunk gc;
+		if( Version.isEnhanced() )
+			gc = new WaitGetChunkEnhancedVersion(time, message);
+		else
+			gc = new WaitGetChunkBasicVersion(time, message);
 		gc.start();
 	}
 }

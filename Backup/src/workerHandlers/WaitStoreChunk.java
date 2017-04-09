@@ -16,7 +16,6 @@ import message.MessageInfoPutChunk;
 import message.MessageInfoStored;
 import message.MessageToInfo;
 import sender.AnswerBackUpSender;
-import spacemanaging.SpaceManager;
 
 /**
  * 
@@ -24,9 +23,9 @@ import spacemanaging.SpaceManager;
  * This class extends the MessageServiceWait class
  *
  */
-public class WaitStoreChunk extends MessageServiceWait {
-	private MessageInfoPutChunk info;	//This class builds the PUTCHUNK_MESSAGE information
-	private int prepdeg = -1;			//Perceived replication degree
+public abstract class WaitStoreChunk extends MessageServiceWait {
+	protected MessageInfoPutChunk info;	//This class builds the PUTCHUNK_MESSAGE information
+	protected int prepdeg = -1;			//Perceived replication degree
 	
 	/**
 	 * WaitStoreChunk's constructor
@@ -41,7 +40,7 @@ public class WaitStoreChunk extends MessageServiceWait {
 	/**
 	 * Initiates the perceived replication degree
 	 */
-	private void getValue() {		
+	protected void getValue() {		
 		MessageInfoPutChunk backupMessage = (MessageInfoPutChunk) info;
 		MessageInfoStored m1 = new MessageInfoStored(
 									Version.instance.getVersionProtocol(),
@@ -57,7 +56,7 @@ public class WaitStoreChunk extends MessageServiceWait {
 	 * Verifies if the chunk request has already been stored by this peer
 	 * @return true if it has, false otherwise
 	 */
-	private boolean hasStoredChunk() {
+	protected boolean hasStoredChunk() {
 		return FileInfo.findStoredChunk(info.getFileID(), info.getChunkID()) != null && equalChunks();
 	}
 	
@@ -83,17 +82,7 @@ public class WaitStoreChunk extends MessageServiceWait {
 	 */
 	@Override
 	public boolean condition() {
-		getValue();
-		
-		System.out.println("WaitStoreChunk: capacity	 " + SpaceManager.instance.getCapacity());
-		System.out.println("WaitStoreChunk: stored size 	" + FileInfo.getStoredSize());
-		System.out.println("WaitStoreChunk: info size	 " + info.getChunk().length);
-		return 	((	info != null && 
-					prepdeg < info.getReplicationDegree()
-				) ||
-				(	hasStoredChunk()
-				)) &&
-				SpaceManager.instance.canStoreChunk(info.getChunk().length);
+		return false;
 	}
 
 	/**
@@ -159,7 +148,11 @@ public class WaitStoreChunk extends MessageServiceWait {
 	 * @param message Basic message
 	 */
 	public static void serve(long time, BasicMessage message) {
-		WaitStoreChunk wsc = new WaitStoreChunk(time, message);
+		WaitStoreChunk wsc;
+		if( Version.isEnhanced() )
+			wsc = new WaitStoreChunkEnhancedVersion(time, message);
+		else
+			wsc = new WaitStoreChunkBasicVersion(time, message);
 		wsc.start();
 	}
 }

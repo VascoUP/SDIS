@@ -3,6 +3,8 @@ package information;
 public class Version {
 	public static Version instance;
 	
+	private static final String BASIC_PROTOCOL = "1.0";
+	
 	private final String version_protocol;		//Protocol's version
 	
 	private Version(String version) {
@@ -21,5 +23,9 @@ public class Version {
 	 */
 	public String getVersionProtocol() {
 		return version_protocol;
+	}
+	
+	public static boolean isEnhanced() {
+		return !Version.instance.getVersionProtocol().equals(BASIC_PROTOCOL);
 	}
 }
