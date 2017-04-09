@@ -11,13 +11,24 @@ import message.MessageInfoPutChunk;
 import sender.BackUpSender;
 import threads.ThreadManager;
 
+/**
+ * 
+ * This class creates the BackUp protocol
+ * This implements the Protocol interface
+ *
+ */
 public class BackUp implements Protocol {
-	private String filePath;
-	private String fileID;
-	private int replicationDegree;
-	private int chunkID;
-	private byte[] chunk;
+	private String filePath;			//File's pathname
+	private String fileID;				//File's ID
+	private int replicationDegree;		//Replication's degree
+	private int chunkID;				//Chunk's ID
+	private byte[] chunk;				//Chunk's content
 
+	/**
+	 * BackUp's constructor
+	 * @param filePath File's pathname
+	 * @param replicationDegree Replication's degree
+	 */
 	public BackUp(String filePath, int replicationDegree) {
 		super();
 		
@@ -27,7 +38,12 @@ public class BackUp implements Protocol {
 		this.chunkID = 1;
 	}
 	
-	
+	/**
+	 * Gets the next chunk
+	 * @param offset Offset to use to obtain the next chunk
+	 * @param buffer Chunk's buffer
+	 * @return The byte's array with the next chunk's content
+	 */
 	private byte[] getNextChunk(int offset, byte[] buffer) {
 		int size = (offset + MessageConst.CHUNKSIZE > buffer.length) ? 
 						buffer.length - offset : 
@@ -38,6 +54,10 @@ public class BackUp implements Protocol {
 		return newBuffer;
 	}
 	
+	/**
+	 * Initializes the backup's sender
+	 * @throws IOException This class is the general class of exceptions produced by failed or interrupted I/O operations
+	 */
 	@Override
 	public void initialize_sender() throws IOException {
 		int offset = 0;
@@ -66,6 +86,9 @@ public class BackUp implements Protocol {
 		}
 	}
 	
+	/**
+	 * Runs the backup's service
+	 */
 	@Override
 	public void run_service() {
 		try {
