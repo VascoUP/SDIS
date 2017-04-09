@@ -100,8 +100,9 @@ public class TestApp {
      */
     public void runRMI(String[] rmiArgs) {
     	try {
-			stub.run(rmiArgs);
-		} catch (RemoteException e) {
+    		String result = stub.run(rmiArgs);
+        	System.out.println(result);
+		} catch (RemoteException ignore) {
 		}
     }
 }

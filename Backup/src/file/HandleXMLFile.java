@@ -19,7 +19,7 @@ import org.w3c.dom.NodeList;
 import information.ChunkBackedUp;
 import information.ChunkStored;
 import information.FileInfo;
-import information.PeerInfo;
+import spacemanaging.SpaceManager;
 
 /**
  * 
@@ -235,12 +235,11 @@ public class HandleXMLFile {
         if(el.getNodeName().equals(FileConst.DISKSPACE_ELEM)) {
         	String strSize = el.getAttribute(FileConst.DISKSPACE_SIZE_ELEL);
         	int size;
-        	System.out.println(strSize);
         	if( strSize == FileConst.UNLIMITED_DISKSPACE_SIZE_ELEL ) 
         		size = Integer.MAX_VALUE;
         	else
         		size = Integer.parseInt(strSize);
-    		PeerInfo.peerInfo.setCapacity(size);
+    		SpaceManager.instance.setCapacity(size);
     		return ;
         }
         

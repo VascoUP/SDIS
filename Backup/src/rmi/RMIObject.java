@@ -47,8 +47,8 @@ public class RMIObject implements Instructable {
 	}
 	
 	@Override
-	public void run(String[] args) throws RemoteException {
-		System.out.print("\n");
+	public String run(String[] args) throws RemoteException {
 		RMIRunner.parseArgs(args);
+		return "Yolo";
 	}
 }

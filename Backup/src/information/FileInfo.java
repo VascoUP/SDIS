@@ -104,7 +104,7 @@ public class FileInfo {
 			for (Iterator<ChunkStored> iterator = storedChunks.iterator(); iterator.hasNext(); ) {
 			    Chunk c = iterator.next();
 			    if (c.getChunkId() == chunk.getChunkId() && 
-			    	c.getStorePath().equals(chunk.getStorePath())) {
+			    	c.getFileId().equals(chunk.getFileId())) {
 					fileElimStoredChunk(c);
 			        iterator.remove();
 			    }

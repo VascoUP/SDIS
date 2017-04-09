@@ -1,6 +1,7 @@
 import information.FileInfo;
 import information.PeerInfo;
 import rmi.RMIStorage;
+import spacemanaging.SpaceManager;
 import threads.ThreadManager;
 
 /**
@@ -27,7 +28,14 @@ public class Peer {
 		if( args.length != 3 )
 			return ;
 		//Creates the peer's information
-		PeerInfo.createPeerInfo(args[0], args[2], Integer.parseInt(args[1]));
+		try {
+			PeerInfo.createPeerInfo(args[0], args[2], Integer.parseInt(args[1]));
+			SpaceManager.initializeManager();
+		} catch (Exception e) {
+			e.printStackTrace();
+			return ;
+		}
+		
 		initAll();		
 	}
 }

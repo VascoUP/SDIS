@@ -15,6 +15,7 @@ import message.MessageInfoPutChunk;
 import message.MessageInfoStored;
 import message.MessageToInfo;
 import sender.AnswerBackUpSender;
+import spacemanaging.SpaceManager;
 
 public class WaitStoreChunk extends MessageServiceWait {
 	private MessageInfoPutChunk info;
@@ -60,7 +61,7 @@ public class WaitStoreChunk extends MessageServiceWait {
 		getValue();
 		initInfo();
 		
-		System.out.println("WaitStoreChunk: capacity	 " + PeerInfo.peerInfo.getCapacity());
+		System.out.println("WaitStoreChunk: capacity	 " + SpaceManager.instance.getCapacity());
 		System.out.println("WaitStoreChunk: stored size 	" + FileInfo.getStoredSize());
 		System.out.println("WaitStoreChunk: info size	 " + info.getChunk().length);
 		return 	((	info != null && 
@@ -69,7 +70,7 @@ public class WaitStoreChunk extends MessageServiceWait {
 				(	FileInfo.findStoredChunk(info.getFileID(), info.getChunkID()) != null &&
 					equalChunks()
 				)) &&
-				FileInfo.getStoredSize() + info.getChunk().length <= PeerInfo.peerInfo.getCapacity();
+				FileInfo.getStoredSize() + info.getChunk().length <= SpaceManager.instance.getCapacity();
 	}
 	
 	@Override
