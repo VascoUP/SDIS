@@ -47,6 +47,7 @@ public class MessageToService {
 			MessageServiceDelete.serve(time, message);
 			break;
 		case MessageConst.REMOVED_MESSAGE_TYPE:
+			WaitPutChunk.serve(time, message);
 			break;
 		}
 	}

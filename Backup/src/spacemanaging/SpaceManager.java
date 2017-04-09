@@ -2,7 +2,9 @@ package spacemanaging;
 
 import java.util.Set;
 
-import information.Chunk;
+import information.ChunkStored;
+import information.FileInfo;
+import protocol.Remove;
 
 public class SpaceManager {
 	public static SpaceManager instance;
@@ -26,9 +28,17 @@ public class SpaceManager {
 	public void setCapacity(int nCapacity) {
 		int currCapacity = diskCapacity;
 		diskCapacity = nCapacity;
-		if( currCapacity <= nCapacity )
+		if( currCapacity <= nCapacity ) {
+			System.out.println("SpaceManager: " + currCapacity + " - " + nCapacity + " no need to remove chunks");
 			return ;
-		Set<Chunk> removableChunks = ProcessChunks.bestRemovableChunks();
+		}
+		Set<ChunkStored> removableChunks = ProcessChunks.bestRemovableChunks();
+		Remove remove = new Remove(removableChunks);
+		remove.run_service();
 		RemoveChunks.delete(removableChunks);
+	}
+
+	public boolean canStoreChunk(int size) {
+		return diskCapacity < size + FileInfo.getStoredSize();			
 	}
 }

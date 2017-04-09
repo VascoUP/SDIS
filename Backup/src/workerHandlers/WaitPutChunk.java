@@ -3,6 +3,8 @@ package workerHandlers;
 import java.io.IOException;
 
 import file.HandleFile;
+import information.ChunkStored;
+import information.FileInfo;
 import information.MessagesHashmap;
 import information.PeerInfo;
 import message.BasicMessage;
@@ -53,6 +55,7 @@ public class WaitPutChunk extends MessageServiceWait {
 				
 		fileID = info.getFileID();
 		chunkID = info.getChunkID();
+		ChunkStored chunk = FileInfo.findStoredChunk(fileID, chunkID);
 		fileName = HandleFile.getFileName(fileID, chunkID);
 		
 		try {
@@ -62,14 +65,14 @@ public class WaitPutChunk extends MessageServiceWait {
 			
 			ThreadManager.initBackUp(
 					new BackUpSender(
-						new String(),
+						fileName,
 						false,
 						new MessageInfoPutChunk(
 								PeerInfo.peerInfo.getVersionProtocol(), 
 								PeerInfo.peerInfo.getServerID(),
 								fileID, 
 								chunkID,
-								1, 
+								chunk.getDRepDeg(), 
 								data)));
 		} catch (IOException ignore) {
 		}

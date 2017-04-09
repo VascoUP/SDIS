@@ -10,7 +10,6 @@ import java.util.Set;
 import java.util.TreeMap;
 
 import file.HandleFile;
-import information.Chunk;
 import information.ChunkStored;
 import information.FileInfo;
 import message.MessageConst;
@@ -25,11 +24,13 @@ public class ProcessChunks {
 	 * Gets the best removable chunks
 	 * @return A set of chunks that represents the best removable chunks
 	 */
-	public static Set<Chunk> bestRemovableChunks() {
-		HashSet<Chunk> removableChunks = new HashSet<Chunk>();
+	public static Set<ChunkStored> bestRemovableChunks() {
+		HashSet<ChunkStored> removableChunks = new HashSet<>();
 		
-		if( SpaceManager.instance.getCapacity() <= FileInfo.getStoredSize() )
+		if( SpaceManager.instance.getCapacity() <= FileInfo.getStoredSize() ) {
+			System.out.println("ProcessChunks: " + SpaceManager.instance.getCapacity() + " - " + FileInfo.getStoredSize() + " no need to remove chunks");
 			return removableChunks;
+		}
 		
 		TreeMap<Double, ArrayList<ChunkStored>> classifications = classifyChunks();
 		removableChunks = removableChunks(classifications);
@@ -42,8 +43,8 @@ public class ProcessChunks {
 	 * @param classifications Chunks' classifications
 	 * @return A HashSet with the removable chunks
 	 */
-	private static HashSet<Chunk> removableChunks(TreeMap<Double, ArrayList<ChunkStored>> classifications) {
-		HashSet<Chunk> removableChunks = new HashSet<Chunk>();
+	private static HashSet<ChunkStored> removableChunks(TreeMap<Double, ArrayList<ChunkStored>> classifications) {
+		HashSet<ChunkStored> removableChunks = new HashSet<>();
 		int currStoredCapacity = FileInfo.getStoredSize();
 		
 		for(Map.Entry<Double,ArrayList<ChunkStored>> entry : classifications.entrySet()) {

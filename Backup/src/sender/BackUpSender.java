@@ -4,6 +4,7 @@ import java.io.IOException;
 
 import connection.ConnectionConstants;
 import information.ChunkBackedUp;
+import information.ChunkStored;
 import information.FileInfo;
 import information.MessagesHashmap;
 import information.PeerInfo;
@@ -70,8 +71,9 @@ public class BackUpSender extends ChannelSender {
 	 * Adds a backed up file
 	 */
 	private void fileAdd() {
-		if( addToFile ) {
-			MessageInfoPutChunk backupMessage = (MessageInfoPutChunk) message;
+		MessageInfoPutChunk backupMessage = (MessageInfoPutChunk) message;
+		
+		if( addToFile )
 			FileInfo.addBackedUpChunk(
 					new ChunkBackedUp(
 							filePath, 
@@ -79,7 +81,15 @@ public class BackUpSender extends ChannelSender {
 							backupMessage.getChunkID(),
 							backupMessage.getReplicationDegree(),
 							prepdeg));
-		}
+		else
+			FileInfo.addStoredChunk(
+					new ChunkStored(
+						filePath, 
+						backupMessage.getFileID(), 
+						backupMessage.getChunkID(),
+						backupMessage.getReplicationDegree(),
+						prepdeg + 1, 
+						new byte[0]));
 	}
 	
 	/**
@@ -103,12 +113,8 @@ public class BackUpSender extends ChannelSender {
 			cooldown(1000);			
 		} while( !condition() && ++nTries < MAX_NUMBER_TRIES );
 		
-		if( nTries >= MAX_NUMBER_TRIES ) {
-			removeMessages();
-			return ;
-		}
-		
-		fileAdd();
+		if( prepdeg > 0 )
+			fileAdd();
 		removeMessages();
 	}
 }

@@ -81,11 +81,7 @@ public abstract class MessageServiceWait extends MessageService {
 	 */
 	public void start() {
 		MessagesHashmap.addMessage(message);
-		
-		if( !randomWait() )
-			return ;
-		
-		if( condition() )
+		if( !randomWait() && condition() )
 			service();
 	}
 }

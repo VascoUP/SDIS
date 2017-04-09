@@ -320,11 +320,11 @@ public class FileInfo {
 	 * @param chunkID Chunk's ID
 	 * @return The stored chunk found
 	 */
-	public static Chunk findStoredChunk(String fileID, int chunkID) {
-		Chunk chunk = null;
+	public static ChunkStored findStoredChunk(String fileID, int chunkID) {
+		ChunkStored chunk = null;
 		lock.lock(); //Acquires the lock
 		try {
-			for( Chunk c : storedChunks ) {
+			for( ChunkStored c : storedChunks ) {
 				if( c.getFileId().equals(fileID) ) {
 					chunk = c;
 					break;

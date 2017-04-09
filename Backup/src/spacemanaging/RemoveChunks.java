@@ -2,12 +2,12 @@ package spacemanaging;
 
 import java.util.Set;
 
-import information.Chunk;
+import information.ChunkStored;
 import information.FileInfo;
 
 public class RemoveChunks {
-	public static void delete(Set<Chunk> removableChunks) {
-		for(Chunk c: removableChunks)
+	public static void delete(Set<ChunkStored> removableChunks) {
+		for(ChunkStored c: removableChunks)
 			FileInfo.eliminateSameStoredChunk(c);
 	}
 }

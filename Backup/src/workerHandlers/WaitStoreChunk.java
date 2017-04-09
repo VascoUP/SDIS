@@ -53,6 +53,14 @@ public class WaitStoreChunk extends MessageServiceWait {
 	}
 	
 	/**
+	 * Verifies if the chunk request has already been stored by this peer
+	 * @return true if it has, false otherwise
+	 */
+	private boolean hasStoredChunk() {
+		return FileInfo.findStoredChunk(info.getFileID(), info.getChunkID()) != null && equalChunks();
+	}
+	
+	/**
 	 * Verifies if the chunks are equal
 	 * @return true if they are equal, false otherwise
 	 */
@@ -82,10 +90,23 @@ public class WaitStoreChunk extends MessageServiceWait {
 		return 	((	info != null && 
 					prepdeg < info.getReplicationDegree()
 				) ||
-				(	FileInfo.findStoredChunk(info.getFileID(), info.getChunkID()) != null &&
-					equalChunks()
+				(	hasStoredChunk()
 				)) &&
-				FileInfo.getStoredSize() + info.getChunk().length <= SpaceManager.instance.getCapacity();
+				SpaceManager.instance.canStoreChunk(info.getChunk().length);
+	}
+
+	/**
+	 * Creates the message and sends it
+	 * @throws IOException
+	 */
+	private void sendMessage() throws IOException {
+		AnswerBackUpSender abup = new AnswerBackUpSender(
+				new MessageInfoStored(
+					PeerInfo.peerInfo.getVersionProtocol(),
+					PeerInfo.peerInfo.getServerID(),
+					info.getFileID(), 
+					info.getChunkID()));
+		abup.execute();
 	}
 	
 	/**
@@ -103,17 +124,32 @@ public class WaitStoreChunk extends MessageServiceWait {
 		
 		chunk = new ChunkStored(fileName, fileID, chunkID, info.getReplicationDegree(), prepdeg + 1, info.getChunk());
 		try {
-			AnswerBackUpSender abup = new AnswerBackUpSender(
-					new MessageInfoStored(
-						PeerInfo.peerInfo.getVersionProtocol(),
-						PeerInfo.peerInfo.getServerID(),
-						fileID, 
-						chunkID));
-			abup.execute();
+			sendMessage();
 			FileInfo.addStoredChunk((ChunkStored)chunk);
 			HandleFile.writeFile(info.getChunk(), fileName);
 		} catch (IOException ignore) {
 		}
+	}
+
+	/**
+	 * Starts the service
+	 */
+	@Override
+	public void start() {
+		MessagesHashmap.addMessage(message);
+		
+		if( hasStoredChunk() ) {
+			if( !randomWait() )
+				return ;
+			try {
+				sendMessage();
+			} catch (IOException ignore) {
+			}
+			return ;
+		}
+
+		if( randomWait() && condition() )
+			service();
 	}
 	
 	/**

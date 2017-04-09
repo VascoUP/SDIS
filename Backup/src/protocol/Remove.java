@@ -3,7 +3,7 @@ package protocol;
 import java.io.IOException;
 import java.util.Set;
 
-import information.Chunk;
+import information.ChunkStored;
 import information.PeerInfo;
 import message.MessageInfoRemoved;
 import sender.RemovedSender;
@@ -15,9 +15,9 @@ import sender.RemovedSender;
  *
  */
 public class Remove implements Protocol {
-	Set<Chunk> removeChunks;
+	Set<ChunkStored> removeChunks;
 	
-	public Remove(Set<Chunk> removeChunks) {
+	public Remove(Set<ChunkStored> removeChunks) {
 		this.removeChunks = removeChunks;
 	}
 
@@ -27,14 +27,17 @@ public class Remove implements Protocol {
 	 */
 	@Override
 	public void initialize_sender() throws IOException {
-		for( Chunk c : removeChunks ) {
-			RemovedSender sender = new RemovedSender(
-					new MessageInfoRemoved(
-							PeerInfo.peerInfo.getVersionProtocol(), 
-							PeerInfo.peerInfo.getServerID(),
-							c.getFileId(),
-							c.getChunkId()));
-			sender.execute();
+		for( ChunkStored c : removeChunks ) {
+			if( c.getPRepDeg() - 1 < c.getDRepDeg() ) {
+				System.out.println("Remove: Inform other peers about the removal of this chunk " + c.getFileId() + " - " + c.getChunkId());
+				RemovedSender sender = new RemovedSender(
+						new MessageInfoRemoved(
+								PeerInfo.peerInfo.getVersionProtocol(), 
+								PeerInfo.peerInfo.getServerID(),
+								c.getFileId(),
+								c.getChunkId()));
+				sender.execute();
+			}
 		}
 	}
 
