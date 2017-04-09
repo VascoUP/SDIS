@@ -53,7 +53,15 @@ public abstract class WaitStoreChunk extends MessageServiceWait {
 	}
 	
 	/**
-	 * Verifies if the chunk request has already been stored by this peer
+	 * Verifies if the chunk request has already been backed up by this peer
+	 * @return true if it has, false otherwise
+	 */
+	protected boolean hasBackedUpChunk() {
+		return FileInfo.findBackedUpChunk(info.getFileID(), info.getChunkID()) != null;
+	}
+	
+	/**
+	 * Verifies if the chunk requested has already been stored by this peer
 	 * @return true if it has, false otherwise
 	 */
 	protected boolean hasStoredChunk() {
@@ -82,6 +90,7 @@ public abstract class WaitStoreChunk extends MessageServiceWait {
 	 */
 	@Override
 	public boolean condition() {
+		System.err.println("Running in the wrong class");
 		return false;
 	}
 
@@ -90,6 +99,7 @@ public abstract class WaitStoreChunk extends MessageServiceWait {
 	 * @throws IOException
 	 */
 	private void sendMessage() throws IOException {
+		System.out.println("WaitStoreChunk: sendMessage");
 		AnswerBackUpSender abup = new AnswerBackUpSender(
 				new MessageInfoStored(
 					Version.instance.getVersionProtocol(),
@@ -104,6 +114,7 @@ public abstract class WaitStoreChunk extends MessageServiceWait {
 	 */
 	@Override
 	protected void service() {
+		System.out.println("WaitStoreChunk: service");
 		Chunk chunk;
 		String fileName, fileID;
 		int chunkID;
@@ -126,9 +137,11 @@ public abstract class WaitStoreChunk extends MessageServiceWait {
 	 */
 	@Override
 	public void start() {
-		MessagesHashmap.addMessage(message);
+		if( hasBackedUpChunk() )
+			return ;
 		
 		if( hasStoredChunk() ) {
+			System.out.println("WaitStoreChunk: has stored chunk");
 			if( !randomWait() )
 				return ;
 			try {
@@ -138,6 +151,7 @@ public abstract class WaitStoreChunk extends MessageServiceWait {
 			return ;
 		}
 
+		System.out.println("WaitStoreChunk: does not have stored chunk");
 		if( randomWait() && condition() )
 			service();
 	}

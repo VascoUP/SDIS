@@ -89,14 +89,17 @@ public class FileInfo {
 		}
 	}
 	
-	/*public static void eliminateSameBackedUpChunk(Chunk chunk) {
+	/**
+	 * Eliminates the same backed up chunk
+	 * @param chunk Chunk that will be compared
+	 */
+	public static void eliminateSameBackedUpChunk(Chunk chunk) {
 		lock.lock();
 		try {
 			for (Iterator<ChunkBackedUp> iterator = backedUpChunks.iterator(); iterator.hasNext(); ) {
-			    Chunk c = iterator.next();
+				ChunkBackedUp c = iterator.next();
 			    if (c.getChunkId() == chunk.getChunkId() && 
-			    	c.getStorePath().equals(chunk.getStorePath())) {
-				    System.out.println("eliminateSameBackedUpChunk: " + c.getChunkId());
+			    	c.getFileId().equals(chunk.getFileId())) {
 			    	fileElimBackedUpChunk(c);
 			        iterator.remove();
 			    }
@@ -104,7 +107,7 @@ public class FileInfo {
 		} finally {
 			lock.unlock();
 		}
-	}*/
+	}
 	
 	/**
 	 * Eliminates the stored chunks from XML file
@@ -128,14 +131,14 @@ public class FileInfo {
 	}
 	
 	/**
-	 * Eliminates the same stored chunks
+	 * Eliminates the same stored chunk
 	 * @param chunk Chunk that will be compared
 	 */
 	public static void eliminateSameStoredChunk(Chunk chunk) {
 		lock.lock(); //Acquires the lock
 		try {
 			for (Iterator<ChunkStored> iterator = storedChunks.iterator(); iterator.hasNext(); ) {
-			    Chunk c = iterator.next();
+				ChunkStored c = iterator.next();
 			    if (c.getChunkId() == chunk.getChunkId() && 
 			    	c.getFileId().equals(chunk.getFileId())) {
 					fileElimStoredChunk(c);
@@ -159,8 +162,9 @@ public class FileInfo {
 	 * @param chunk Backed up chunk that will be added
 	 */
 	public static void backupChunk(ChunkBackedUp chunk) {
-		//eliminateSameBackedUpChunk(chunk);
+		eliminateSameBackedUpChunk(chunk);
 		backedUpChunks.add(chunk);
+		System.out.println("FileInfo: backup chunk added");
 	}
 
 	/**
@@ -182,7 +186,7 @@ public class FileInfo {
 	 * Adds a backed up chunk to the XML file
 	 * @param chunk Backed up chunk that will be added
 	 */
-	private static void fileAddBackedUpChunk(ChunkBackedUp chunk) {		
+	private static void fileAddBackedUpChunk(ChunkBackedUp chunk) {
 		try {
 			HandleXMLFile.addBackedUpChunk(chunk);
 		} catch (Exception e) {
@@ -202,6 +206,20 @@ public class FileInfo {
 			e.printStackTrace();
 			return ;
 		}
+	}
+
+	/**
+	 * Removes a stored chunk from a file
+	 * @param chunk Chunk to be removed
+	 */
+	private static void fileElimBackedUpChunk(Chunk chunk) {
+		try {
+			HandleXMLFile.removeBackedUpChunk(chunk.getFileId(), "" + chunk.getChunkId());
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+		HandleFile.deleteFile(HandleFile.getFileName(chunk.getFileId(), chunk.getChunkId())); //Deletes the chunk's file
 	}
 	
 	/**
@@ -294,6 +312,32 @@ public class FileInfo {
 	}
 	
 	/**
+	 * Finds all the backed up chunks
+	 * @param path File's path
+	 * @return A array with all the backed up chunks
+	 */
+	public static ChunkBackedUp findBackedUpChunk(String fileID, int chunkID) {
+		ChunkBackedUp chunk = null;
+		
+		lock.lock(); //Acquires the lock
+		try {
+			for( ChunkBackedUp c : backedUpChunks ) {
+				System.out.println(c.getFileId() + " vs " + fileID);
+				System.out.println(c.getChunkId() + " vs " + chunkID);
+				if( c.getChunkId() == chunkID &&
+					c.getFileId().equals(fileID) ) {
+					chunk = c;
+					break;
+				}
+			}
+		} finally {
+			lock.unlock(); //Releases the lock
+		}
+		
+		return chunk;
+	}
+	
+	/**
 	 * Finds all the stored chunks using the file's ID
 	 * @param fileID File's ID
 	 * @return A array with all the stored chunks
@@ -337,6 +381,7 @@ public class FileInfo {
 		return chunk;
 	}
 	
+	
 	/**
 	 * Gets the total stored chunks' size
 	 * @return The total stored chunks' size
@@ -352,27 +397,50 @@ public class FileInfo {
 	 * Gets the information saved into the backed up chunks and the stored chunks
 	 * @return The information saved into the backed up chunks and the stored chunks
 	 */
-	public String toString(){
-		String message = new String();
+	public static String getString(){
+		StringBuilder message = new StringBuilder();
 		
 		lock.lock();
 		try {
-		
-		message += "\nStored Chunks\n";
-		for(int i=0; i<storedChunks.size(); i++)
-			message += "Chunk ID: " + storedChunks.get(i).chunkId + " Size: " + storedChunks.get(i).getSize() 
-						+ " Perceived Replication Degree: " + storedChunks.get(i).getPRepDeg() + "\n";		
-		
-		message += "\nBackuped Chunks\n";
-		for(int j=0; j<backedUpChunks.size(); j++)
-			message += "File pathname: " + backedUpChunks.get(j).getStorePath() + " Backup ID: " + backedUpChunks.get(j).getServiceID()
-						+ " Desired Replication Degree: " + backedUpChunks.get(j).getDRepDeg() + " Chunk ID: " + backedUpChunks.get(j).getChunkId() 
-						+ " Chunk Perceived Replication Degree: " + backedUpChunks.get(j).getPRepDeg() + "\n";
-		
+			message.append("Stored size: ");
+			message.append(getStoredSize());
+			message.append("\n");
+			
+			message.append("\nStored Chunks\n");
+			for(int i=0; i<storedChunks.size(); i++) {
+				message.append("Chunk ID: ");
+				message.append(storedChunks.get(i).chunkId);
+				message.append("\n");
+				message.append("- Size: ");
+				message.append(storedChunks.get(i).getSize());
+				message.append("\n");
+				message.append("- Perceived Replication Degree: ");
+				message.append(storedChunks.get(i).getPRepDeg());
+				message.append("\n");
+			}
+			
+			message.append("\nBackuped Chunks\n");
+			for(int j=0; j<backedUpChunks.size(); j++) {
+				message.append("File pathname: ");
+				message.append(backedUpChunks.get(j).getStorePath());
+				message.append("\n");
+				message.append("- Backup ID: ");
+				message.append(backedUpChunks.get(j).getServiceID());
+				message.append("\n");
+				message.append("- Desired Replication Degree: ");
+				message.append(backedUpChunks.get(j).getDRepDeg());
+				message.append("\n");
+				message.append("- Chunk ID: ");
+				message.append(backedUpChunks.get(j).getChunkId());
+				message.append("\n");
+				message.append("- Chunk Perceived Replication Degree: ");
+				message.append(backedUpChunks.get(j).getPRepDeg());
+				message.append("\n");
+			}
 		} finally {
 			lock.unlock();
 		}
 		
-		return message;
+		return new String(message);
 	}
 }

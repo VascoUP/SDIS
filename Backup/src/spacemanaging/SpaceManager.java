@@ -65,6 +65,6 @@ public class SpaceManager {
 	 * @return true if the disk's capacity is less than the size plus the stored's size, false otherwise
 	 */
 	public boolean canStoreChunk(int size) {
-		return diskCapacity < size + FileInfo.getStoredSize();			
+		return diskCapacity >= size + FileInfo.getStoredSize();			
 	}
 }

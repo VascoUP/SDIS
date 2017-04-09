@@ -35,12 +35,19 @@ public class WaitPutChunk extends MessageServiceWait {
 		info = (MessageInfoRemoved) MessageToInfo.messageToInfo(message);
 	}
 	
+	private boolean canInitiateProtocol() {
+				// If the file is backedup
+		return 	FileInfo.findBackedUpChunk(info.getFileID(), info.getChunkID()) == null && 
+				// Or, if the file is not stored
+				FileInfo.findStoredChunk(info.getFileID(), info.getChunkID()) != null;
+	}
+	
 	/**
 	 * Verifies if the MessageInfoGetChunk and the basic message created aren't null and if the hashmap size is less than 1
 	 * @return true if the condition is verified, false otherwise
 	 */
 	@Override
-	public boolean condition() {				
+	public boolean condition() {
 		MessageInfoRemoved restoreMessage = (MessageInfoRemoved) info;
 		MessageInfoPutChunk m1 = new MessageInfoPutChunk(
 								Version.instance.getVersionProtocol(),
@@ -50,6 +57,7 @@ public class WaitPutChunk extends MessageServiceWait {
 								0,
 								new byte[0]);
 		BasicMessage m2 = InfoToMessage.toMessage(m1);
+		System.out.println("WaitPutChunk: condition " + MessagesHashmap.getSize(m2));
 		
 		return 	info != null && m2 != null &&
 				MessagesHashmap.getSize(m2) < 1;
@@ -74,7 +82,7 @@ public class WaitPutChunk extends MessageServiceWait {
 			data = HandleFile.readFile(fileName);
 			if( data == null )
 				return ;
-			
+			System.out.println("Initializing BackUpSender");
 			ThreadManager.initBackUp(
 					new BackUpSender(
 						fileName,
@@ -84,10 +92,34 @@ public class WaitPutChunk extends MessageServiceWait {
 								PeerInfo.peerInfo.getServerID(),
 								fileID, 
 								chunkID,
-								chunk.getDRepDeg(), 
+								chunk.getDRepDeg() - 1, 
 								data)));
 		} catch (IOException ignore) {
 		}
+	}
+	
+	/**
+	 * Starts the service
+	 */
+	public void start() {
+		if( !canInitiateProtocol() )
+			return ;
+
+		MessageInfoRemoved restoreMessage = (MessageInfoRemoved) info;
+		MessageInfoPutChunk m1 = new MessageInfoPutChunk(
+								Version.instance.getVersionProtocol(),
+								PeerInfo.peerInfo.getServerID(), 
+								restoreMessage.getFileID(), 
+								restoreMessage.getChunkID(),
+								0,
+								new byte[0]);
+		BasicMessage m2 = InfoToMessage.toMessage(m1);
+		MessagesHashmap.removeKey(m2);
+		
+		if( randomWait() && condition() )
+			service();
+		else 
+			System.out.println("Didnt passe the condition");
 	}
 	
 	/**

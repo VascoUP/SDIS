@@ -66,7 +66,6 @@ public class RMIObject implements Instructable {
 	 */
 	@Override
 	public String run(String[] args) throws RemoteException {
-		RMIRunner.parseArgs(args);
-		return "Yolo";
+		return RMIRunner.parseArgs(args);
 	}
 }

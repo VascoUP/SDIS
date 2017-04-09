@@ -35,9 +35,6 @@ public class MessageToService {
 		case MessageConst.PUTCHUNK_MESSAGE_TYPE:
 			WaitStoreChunk.serve(time, message);
 			break;
-		case MessageConst.STORED_MESSAGE_TYPE:
-			MessageServiceStore.serve(time, message);
-			break;
 		case MessageConst.RESTORE_MESSAGE_TYPE:
 			WaitGetChunk.serve(time, message);
 			break;

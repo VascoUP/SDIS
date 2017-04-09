@@ -34,6 +34,7 @@ public class BackUpSender extends ChannelSender {
 	public BackUpSender(String filePath, boolean addToFile, MessageInfoPutChunk message) throws IOException {
 		super( message, ConnectionConstants.MDB_GROUP, ConnectionConstants.MDB_GROUP_PORT);
 		this.filePath = filePath;
+		this.addToFile = addToFile;
 	}
 	
 	/**

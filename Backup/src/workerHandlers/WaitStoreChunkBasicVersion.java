@@ -27,8 +27,7 @@ public class WaitStoreChunkBasicVersion extends WaitStoreChunk {
 	 */
 	@Override
 	public boolean condition() {
-		getValue();
-		
+		System.out.println("WaitStoreChunk: basic version");
 		System.out.println("WaitStoreChunk: capacity	 " + SpaceManager.instance.getCapacity());
 		System.out.println("WaitStoreChunk: stored size 	" + FileInfo.getStoredSize());
 		System.out.println("WaitStoreChunk: info size	 " + info.getChunk().length);

@@ -3,7 +3,6 @@ package workerHandlers;
 import java.util.Random;
 import java.util.concurrent.TimeUnit;
 
-import information.MessagesHashmap;
 import message.BasicMessage;
 
 /**
@@ -80,8 +79,9 @@ public abstract class MessageServiceWait extends MessageService {
 	 * Starts the service
 	 */
 	public void start() {
-		MessagesHashmap.addMessage(message);
-		if( !randomWait() && condition() )
+		if( randomWait() && condition() )
 			service();
+		else 
+			System.out.println("Didnt passe the condition");
 	}
 }

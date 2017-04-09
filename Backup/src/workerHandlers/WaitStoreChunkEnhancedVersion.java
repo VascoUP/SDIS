@@ -28,10 +28,12 @@ public class WaitStoreChunkEnhancedVersion extends WaitStoreChunk {
 	@Override
 	public boolean condition() {
 		getValue();
-		
-		System.out.println("WaitStoreChunk: capacity	 " + SpaceManager.instance.getCapacity());
-		System.out.println("WaitStoreChunk: stored size 	" + FileInfo.getStoredSize());
-		System.out.println("WaitStoreChunk: info size	 " + info.getChunk().length);
+
+		System.out.println("WaitStoreChunk: enhanced version");
+		System.out.println("WaitStoreChunk: prepdeg " + prepdeg);
+		System.out.println("WaitStoreChunk: capacity " + SpaceManager.instance.getCapacity());
+		System.out.println("WaitStoreChunk: stored size " + FileInfo.getStoredSize());
+		System.out.println("WaitStoreChunk: info size " + info.getChunk().length);
 		return 	((	info != null && 
 					prepdeg < info.getReplicationDegree()
 				) ||
