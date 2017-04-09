@@ -4,6 +4,7 @@ import protocol.BackUp;
 import protocol.Delete;
 import protocol.Protocol;
 import protocol.Restore;
+import spacemanaging.SpaceManager;
 import threads.ThreadManager;
 
 /**
@@ -42,6 +43,11 @@ public class RMIRunner {
 				return "Wrong arguments for protocol DELETE";
 			path = rmiArgs[1];
 			return delete(path);
+		case "SETCAPACITY":
+			if( rmiArgs.length != 2 )
+				return "Wrong arguments for protocol SETCAPACITY";
+			String capacity = rmiArgs[1];
+			return reclaim(capacity);
 		case "CLOSE":
 			if( rmiArgs.length != 1 )
 				return "Wrong arguments for protocol CLOSE";
@@ -103,5 +109,15 @@ public class RMIRunner {
 			return "Unsuccessful restore";
 		}
 		return "Successful restore";
+	}
+	
+	/**
+	 * Initiates the reclaim's protocol
+	 * @param space New disk space that will be available
+	 */
+	public static String reclaim(String space) {
+		int nCapacity = Integer.parseInt(space);
+		SpaceManager.instance.setCapacity(nCapacity);
+		return "Successfull setcapacity";
 	}
 }

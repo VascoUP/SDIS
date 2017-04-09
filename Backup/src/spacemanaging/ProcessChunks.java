@@ -37,7 +37,6 @@ public class ProcessChunks {
 		return removableChunks;
 	}
 	
-
 	/**
 	 * Gets the removable chunks
 	 * @param classifications Chunks' classifications
