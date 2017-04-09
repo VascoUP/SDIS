@@ -28,33 +28,38 @@ public class RMIRunner {
 		
 		//Different protocols
 		switch(protocol) {
-		case "BACKUP":
-			if( rmiArgs.length != 3 )
+		case RMIConst.BACKUP_ARG:
+			if( rmiArgs.length != RMIConst.BACKUP_ARG_SIZE )
 				return "Wrong arguments for protocol BACKUP";
 			path = rmiArgs[1];
 			rep_degree = Integer.parseInt(rmiArgs[2]);
 			return backUp(path, rep_degree);
-		case "RESTORE":
-			if( rmiArgs.length != 2 )
+			
+		case RMIConst.RESTORE_ARG:
+			if( rmiArgs.length != RMIConst.RESTORE_ARG_SIZE )
 				return "Wrong arguments for protocol RESTORE";
 			path = rmiArgs[1];
 			return restore(path);
-		case "DELETE":
-			if( rmiArgs.length != 2 )
+			
+		case RMIConst.DELETE_ARG:
+			if( rmiArgs.length != RMIConst.DELETE_ARG_SIZE )
 				return "Wrong arguments for protocol DELETE";
 			path = rmiArgs[1];
 			return delete(path);
-		case "SETCAPACITY":
-			if( rmiArgs.length != 2 )
-				return "Wrong arguments for protocol SETCAPACITY";
+			
+		case RMIConst.RECLAIM_ARG:
+			if( rmiArgs.length != RMIConst.RECLAIM_ARG_SIZE )
+				return "Wrong arguments for protocol RECLAIM";
 			String capacity = rmiArgs[1];
 			return reclaim(capacity);
-		case "STATE":
-			if( rmiArgs.length != 1 )
+			
+		case RMIConst.STATE_ARG:
+			if( rmiArgs.length != RMIConst.STATE_ARG_SIZE )
 				return "Wrong arguments for protocol STATE";
 			return state();
-		case "CLOSE":
-			if( rmiArgs.length != 1 )
+			
+		case RMIConst.CLOSE_ARG:
+			if( rmiArgs.length != RMIConst.CLOSE_ARG_SIZE )
 				return "Wrong arguments for protocol CLOSE";
 			return close();
 		}
