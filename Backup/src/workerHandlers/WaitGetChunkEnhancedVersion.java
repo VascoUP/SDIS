@@ -8,8 +8,19 @@ import message.InfoToMessage;
 import message.MessageInfoChunk;
 import message.MessageInfoGetChunk;
 
+/**
+ * 
+ * This class provides a handler that waits to get a chunk (this is a enhanced version)
+ * This extends the WaitGetChunk class
+ *
+ */
 public class WaitGetChunkEnhancedVersion extends WaitGetChunk {
 
+	/**
+	 * WaitGetChunkEnhancedVersion's constructor
+	 * @param time Service's time
+	 * @param message Basic message
+	 */
 	public WaitGetChunkEnhancedVersion(long time, BasicMessage message) {
 		super(time, message);
 	}
@@ -32,5 +43,4 @@ public class WaitGetChunkEnhancedVersion extends WaitGetChunk {
 		return 	info != null && m2 != null &&
 				MessagesHashmap.getSize(m2) < 1;
 	}
-
 }

@@ -16,9 +16,20 @@ import message.MessageToInfo;
 import sender.BackUpSender;
 import threads.ThreadManager;
 
+/**
+ * 
+ * This class provides a handler that waits to put a chunk
+ * This class extends the MessageServiceWait class
+ *
+ */
 public class WaitPutChunk extends MessageServiceWait {
 	private MessageInfoRemoved info;	//This class builds the RESTORE_MESSAGE information
 
+	/**
+	 * WaitPutChunk's constructor
+	 * @param time Service's time
+	 * @param message Basic message
+	 */
 	public WaitPutChunk(long time, BasicMessage message) {
 		super(time, message);
 		info = (MessageInfoRemoved) MessageToInfo.messageToInfo(message);
