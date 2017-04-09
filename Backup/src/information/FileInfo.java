@@ -397,27 +397,50 @@ public class FileInfo {
 	 * Gets the information saved into the backed up chunks and the stored chunks
 	 * @return The information saved into the backed up chunks and the stored chunks
 	 */
-	public String toString(){
-		String message = new String();
+	public static String getString(){
+		StringBuilder message = new StringBuilder();
 		
 		lock.lock();
 		try {
-		
-		message += "\nStored Chunks\n";
-		for(int i=0; i<storedChunks.size(); i++)
-			message += "Chunk ID: " + storedChunks.get(i).chunkId + " Size: " + storedChunks.get(i).getSize() 
-						+ " Perceived Replication Degree: " + storedChunks.get(i).getPRepDeg() + "\n";		
-		
-		message += "\nBackuped Chunks\n";
-		for(int j=0; j<backedUpChunks.size(); j++)
-			message += "File pathname: " + backedUpChunks.get(j).getStorePath() + " Backup ID: " + backedUpChunks.get(j).getServiceID()
-						+ " Desired Replication Degree: " + backedUpChunks.get(j).getDRepDeg() + " Chunk ID: " + backedUpChunks.get(j).getChunkId() 
-						+ " Chunk Perceived Replication Degree: " + backedUpChunks.get(j).getPRepDeg() + "\n";
-		
+			message.append("Stored size: ");
+			message.append(getStoredSize());
+			message.append("\n");
+			
+			message.append("\nStored Chunks\n");
+			for(int i=0; i<storedChunks.size(); i++) {
+				message.append("Chunk ID: ");
+				message.append(storedChunks.get(i).chunkId);
+				message.append("\n");
+				message.append("- Size: ");
+				message.append(storedChunks.get(i).getSize());
+				message.append("\n");
+				message.append("- Perceived Replication Degree: ");
+				message.append(storedChunks.get(i).getPRepDeg());
+				message.append("\n");
+			}
+			
+			message.append("\nBackuped Chunks\n");
+			for(int j=0; j<backedUpChunks.size(); j++) {
+				message.append("File pathname: ");
+				message.append(backedUpChunks.get(j).getStorePath());
+				message.append("\n");
+				message.append("- Backup ID: ");
+				message.append(backedUpChunks.get(j).getServiceID());
+				message.append("\n");
+				message.append("- Desired Replication Degree: ");
+				message.append(backedUpChunks.get(j).getDRepDeg());
+				message.append("\n");
+				message.append("- Chunk ID: ");
+				message.append(backedUpChunks.get(j).getChunkId());
+				message.append("\n");
+				message.append("- Chunk Perceived Replication Degree: ");
+				message.append(backedUpChunks.get(j).getPRepDeg());
+				message.append("\n");
+			}
 		} finally {
 			lock.unlock();
 		}
 		
-		return message;
+		return new String(message);
 	}
 }

@@ -1,5 +1,6 @@
 package rmi;
 
+import information.FileInfo;
 import protocol.BackUp;
 import protocol.Delete;
 import protocol.Protocol;
@@ -48,6 +49,10 @@ public class RMIRunner {
 				return "Wrong arguments for protocol SETCAPACITY";
 			String capacity = rmiArgs[1];
 			return reclaim(capacity);
+		case "STATE":
+			if( rmiArgs.length != 1 )
+				return "Wrong arguments for protocol STATE";
+			return state();
 		case "CLOSE":
 			if( rmiArgs.length != 1 )
 				return "Wrong arguments for protocol CLOSE";
@@ -119,5 +124,9 @@ public class RMIRunner {
 		int nCapacity = Integer.parseInt(space);
 		SpaceManager.instance.setCapacity(nCapacity);
 		return "Successfull setcapacity";
+	}
+
+	public static String state() {
+		return FileInfo.getString();
 	}
 }
