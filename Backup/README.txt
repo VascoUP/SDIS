@@ -2,6 +2,10 @@ Para compilar o programa deve-se compilar todos os packages e ficheiros do mesmo
 	- Para Windows e Linux:
 		javac connection/*.java file/*.java information/*.java listener/*.java message/*.java protocol/*.java rmi/*.java sender/*.java spacemanaging/*.java threads/*.java workerHandlers/*.java *.java
 
+NOTA: Para Windows existe ainda um ficheiro .bat que pode ser executado através da linha de comandos. Para tal basta escrever "script" e o ficheiro é executado e o programa é compilado.
+
+
+
 Para executar a aplicação no lado do cliente, utiliza-se o comando:
 java TestApp <peer_access_point> <subprotocolo> <op1> <op2>
 
@@ -12,6 +16,8 @@ onde:
 
 Exemplo:
 java TestApp 1 BACKUP Twitter.png 3
+
+
 
 Para executar um peer:
 - Primeiro deve-se inicializar o rmi registry através dos comandos:
