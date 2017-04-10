@@ -81,7 +81,5 @@ public abstract class MessageServiceWait extends MessageService {
 	public void start() {
 		if( randomWait() && condition() )
 			service();
-		else 
-			System.out.println("Didnt passe the condition");
 	}
 }

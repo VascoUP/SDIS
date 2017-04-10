@@ -34,7 +34,6 @@ public class Remove implements Protocol {
 	public void initialize_sender() throws IOException {
 		for( ChunkStored c : removeChunks ) {
 			if( c.getPRepDeg() - 1 < c.getDRepDeg() ) {
-				System.out.println("Remove: Inform other peers about the removal of this chunk " + c.getFileId() + " - " + c.getChunkId());
 				RemovedSender sender = new RemovedSender(
 						new MessageInfoRemoved(
 								Version.instance.getVersionProtocol(),

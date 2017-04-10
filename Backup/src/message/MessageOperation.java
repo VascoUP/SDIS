@@ -19,18 +19,6 @@ public class MessageOperation {
 		for( byte b : mArr )
 			arrayList.add(b);		
 	}
-	
-	/**
-	 * Prints the byte's array
-	 * @param arr Byte's array that will be printed
-	 */
-	public static void printByteArray(byte[] arr) {
-	    StringBuilder sb = new StringBuilder();
-	    for (byte b : arr) {
-	        sb.append(String.format("%02X ", b));
-	    }
-	    System.out.println(sb.toString());
-	}
 
 	/**
 	 * Splits the message's header by multiple spaces

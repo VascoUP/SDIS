@@ -164,7 +164,6 @@ public class FileInfo {
 	public static void backupChunk(ChunkBackedUp chunk) {
 		eliminateSameBackedUpChunk(chunk);
 		backedUpChunks.add(chunk);
-		System.out.println("FileInfo: backup chunk added");
 	}
 
 	/**
@@ -176,7 +175,29 @@ public class FileInfo {
 		storedChunks.add(chunk);
 	}
 
-
+	/*===============
+	 * UPDATE CHUNKS
+	 *===============
+	 */
+	/**
+	 * Updates an existing chunk with new values
+	 * @param chunk update chunk with new values
+	 */
+	public static void updateStoredChunk(ChunkStored chunk) {
+		lock.lock(); //Acquires the lock
+		try {
+			for (Iterator<ChunkStored> iterator = storedChunks.iterator(); iterator.hasNext(); ) {
+				ChunkStored c = iterator.next();
+			    if (c.getChunkId() == chunk.getChunkId() && 
+			    	c.getFileId().equals(chunk.getFileId()))
+			        iterator.remove();
+			}
+			storedChunks.add(chunk);
+		} finally {
+			lock.unlock(); //Releases the lock
+		}
+	}
+	
 	/*=================
 	 * FILES FUNCTIONS
 	 *=================
@@ -322,8 +343,6 @@ public class FileInfo {
 		lock.lock(); //Acquires the lock
 		try {
 			for( ChunkBackedUp c : backedUpChunks ) {
-				System.out.println(c.getFileId() + " vs " + fileID);
-				System.out.println(c.getChunkId() + " vs " + chunkID);
 				if( c.getChunkId() == chunkID &&
 					c.getFileId().equals(fileID) ) {
 					chunk = c;

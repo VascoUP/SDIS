@@ -64,36 +64,26 @@ public class MessageParser {
 		String[] head;
 		byte[] body, messageHead;
 		
-		if( !parseFlag(message, messageIndex) ) {
-			System.out.println("First parse Flage error");
+		if( !parseFlag(message, messageIndex) )
 			return null;
-		}
 		messageIndex += 2;
 		
-		if( (messageHead = parseHead(message, messageIndex)) == null ) {
-			System.out.println("Parse head error");
+		if( (messageHead = parseHead(message, messageIndex)) == null )
 			return null;
-		}
 		messageIndex += messageHead.length;
 
 		head = processMessageHead(messageHead);
 		
-		if( !parseFlag(message, messageIndex) ) {
-			System.out.println("Second parse flag error");
+		if( !parseFlag(message, messageIndex) )
 			return null;
-		}
 		messageIndex += 2;
 		
-		if( !parseFlag(message, messageIndex) ) {
-			System.out.println("Third parse flag error");
+		if( !parseFlag(message, messageIndex) ) 
 			return null;
-		}
 		messageIndex += 2;		
 		
-		if( (body = parseBody(message, messageIndex)) == null ) {
-			System.out.println("Parse body error");
+		if( (body = parseBody(message, messageIndex)) == null )
 			return null;
-		}
 		
 		BasicMessage bm = new BasicMessage(head, body);
 		

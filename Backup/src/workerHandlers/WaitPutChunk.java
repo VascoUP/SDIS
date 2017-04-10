@@ -57,7 +57,6 @@ public class WaitPutChunk extends MessageServiceWait {
 								0,
 								new byte[0]);
 		BasicMessage m2 = InfoToMessage.toMessage(m1);
-		System.out.println("WaitPutChunk: condition " + MessagesHashmap.getSize(m2));
 		
 		return 	info != null && m2 != null &&
 				MessagesHashmap.getSize(m2) < 1;
@@ -82,7 +81,6 @@ public class WaitPutChunk extends MessageServiceWait {
 			data = HandleFile.readFile(fileName);
 			if( data == null )
 				return ;
-			System.out.println("Initializing BackUpSender");
 			ThreadManager.initBackUp(
 					new BackUpSender(
 						fileName,
@@ -118,8 +116,6 @@ public class WaitPutChunk extends MessageServiceWait {
 		
 		if( randomWait() && condition() )
 			service();
-		else 
-			System.out.println("Didnt passe the condition");
 	}
 	
 	/**

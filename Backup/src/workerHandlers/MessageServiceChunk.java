@@ -33,7 +33,6 @@ public class MessageServiceChunk extends MessageService {
 	 * Notifies the sender adding a message to the message hashmap
 	 */
 	public void notifySender() {
-		System.out.println("MessageServiceChunk: notify restore");
 		MessagesHashmap.addMessage(message);
 	}
 }

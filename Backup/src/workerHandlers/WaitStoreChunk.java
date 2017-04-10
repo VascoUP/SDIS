@@ -37,6 +37,15 @@ public abstract class WaitStoreChunk extends MessageServiceWait {
 		info = (MessageInfoPutChunk) MessageToInfo.messageToInfo(message);
 	}
 	
+	public void updatePRepDeg(int prepdeg) {
+		MessageInfoPutChunk stored = (MessageInfoPutChunk) MessageToInfo.messageToInfo(message);
+		ChunkStored cStored = FileInfo.findStoredChunk(stored.getFileID(), stored.getChunkID());
+		if( cStored == null )
+			return ;
+		cStored.setPRepDeg(prepdeg);
+		FileInfo.updateStoredChunk(cStored);
+	}
+	
 	/**
 	 * Initiates the perceived replication degree
 	 */
@@ -99,7 +108,6 @@ public abstract class WaitStoreChunk extends MessageServiceWait {
 	 * @throws IOException
 	 */
 	private void sendMessage() throws IOException {
-		System.out.println("WaitStoreChunk: sendMessage");
 		AnswerBackUpSender abup = new AnswerBackUpSender(
 				new MessageInfoStored(
 					Version.instance.getVersionProtocol(),
@@ -114,7 +122,6 @@ public abstract class WaitStoreChunk extends MessageServiceWait {
 	 */
 	@Override
 	protected void service() {
-		System.out.println("WaitStoreChunk: service");
 		Chunk chunk;
 		String fileName, fileID;
 		int chunkID;
@@ -141,8 +148,8 @@ public abstract class WaitStoreChunk extends MessageServiceWait {
 			return ;
 		
 		if( hasStoredChunk() ) {
-			System.out.println("WaitStoreChunk: has stored chunk");
-			if( !randomWait() )
+			updatePRepDeg(1);
+			if( !randomWait() ) 
 				return ;
 			try {
 				sendMessage();
@@ -150,8 +157,7 @@ public abstract class WaitStoreChunk extends MessageServiceWait {
 			}
 			return ;
 		}
-
-		System.out.println("WaitStoreChunk: does not have stored chunk");
+		
 		if( randomWait() && condition() )
 			service();
 	}

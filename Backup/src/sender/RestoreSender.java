@@ -84,10 +84,8 @@ public class RestoreSender extends ChannelSender {
 			return ;
 		
 		BasicMessage receivedMessage = MessagesHashmap.searchKey(m2);
-		if( receivedMessage == null ) {
-			System.out.println("null receivedMessage");
+		if( receivedMessage == null )
 			return ;
-		}
 		
 		ChunkStored chunk = new ChunkStored (new String(), 
 				restoreMessage.getFileID(), 

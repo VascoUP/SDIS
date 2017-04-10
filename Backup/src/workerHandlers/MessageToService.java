@@ -28,12 +28,13 @@ public class MessageToService {
 		if( senderID == PeerInfo.peerInfo.getServerID() ||
 			!versionProtocol.equals(Version.instance.getVersionProtocol()) )
 			return ;
-		
-		System.out.println("MessageToService: Received " + messageType + " message");
 
 		switch(messageType) {
 		case MessageConst.PUTCHUNK_MESSAGE_TYPE:
 			WaitStoreChunk.serve(time, message);
+			break;
+		case MessageConst.STORED_MESSAGE_TYPE:
+			MessageServiceStored.serve(time, message);
 			break;
 		case MessageConst.RESTORE_MESSAGE_TYPE:
 			WaitGetChunk.serve(time, message);
