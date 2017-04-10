@@ -83,7 +83,6 @@ public class WaitPutChunk extends MessageServiceWait {
 			data = HandleFile.readFile(fileName);
 			if( data == null )
 				return ;
-			System.out.println("WaitPutChunk: Init putchunk protocol");
 			ThreadManager.initBackUp(
 					new BackUpSender(
 						fileName,
@@ -103,10 +102,8 @@ public class WaitPutChunk extends MessageServiceWait {
 	 * Starts the service
 	 */
 	public void start() {
-		if( !canInitiateProtocol() ) {
-			System.out.println("WaitPutChunk: Can't initiate Putchunk protocol");
+		if( !canInitiateProtocol() )
 			return ;
-		}
 
 		MessageInfoRemoved restoreMessage = (MessageInfoRemoved) info;
 		MessageInfoPutChunk m1 = new MessageInfoPutChunk(
@@ -121,8 +118,6 @@ public class WaitPutChunk extends MessageServiceWait {
 		
 		if( randomWait() && condition() )
 			service();
-		else
-			System.out.println("WaitPutChunk: Didnt pass the condition");
 	}
 	
 	/**

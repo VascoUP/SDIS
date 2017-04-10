@@ -50,7 +50,7 @@ public class MessagesHashmap {
 	 */
 	public static synchronized void removeKey(BasicMessage message) {
 		String key = MessageToString.getName(message);
-		System.out.println(messages.remove(key) == null ? "null" : "not null");
+		messages.remove(key);
 	}
 
 	/**

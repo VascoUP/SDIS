@@ -27,7 +27,6 @@ public class WaitStoreChunkEnhancedVersion extends WaitStoreChunk {
 	@Override
 	public boolean condition() {
 		getValue();
-		System.out.println(prepdeg + " vs" + info.getReplicationDegree());
 		return 	((	info != null && 
 					prepdeg < info.getReplicationDegree()
 				) ||

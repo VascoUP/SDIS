@@ -54,10 +54,8 @@ public class SpaceManager {
 		}
 		int currCapacity = diskCapacity;
 		diskCapacity = nCapacity;
-		if( currCapacity <= nCapacity ) {
-			System.out.println("SpaceManager: " + currCapacity + " - " + nCapacity + " no need to remove chunks");
+		if( currCapacity <= nCapacity )
 			return ;
-		}
 		Set<ChunkStored> removableChunks = ProcessChunks.bestRemovableChunks();
 		Remove remove = new Remove(removableChunks);
 		remove.run_service();

@@ -73,7 +73,6 @@ public class RMIRunner {
 	 * @param rep_degree Replication's degree
 	 */
 	public static String backUp(String path, int rep_degree) {
-		System.out.println("Backup");
 		Protocol backup = new BackUp(path, rep_degree);
 		backup.run_service();
 		return "Successful backup";
@@ -84,11 +83,9 @@ public class RMIRunner {
 	 * @return A string indicating the success of the closing operation 
 	 */
 	public static String close() {
-		System.out.println("Close");	
 		ThreadManager.closeThreads();
 		System.exit(0);
-		//RMIStorage.getRMI().unbind();
-		return "Successful close";
+		return null;
 	}
 	
 	/**
@@ -96,7 +93,6 @@ public class RMIRunner {
 	 * @param path File's pathname
 	 */
 	public static String delete(String path) {
-		System.out.println("Delete");
 		Protocol delete;
 		try {
 			delete = new Delete(path);
@@ -112,7 +108,6 @@ public class RMIRunner {
 	 * @param path File's pathname
 	 */
 	public static String restore(String path) {
-		System.out.println("Restore");		
 		try {
 			Protocol restore = new Restore(path);
 			restore.run_service();

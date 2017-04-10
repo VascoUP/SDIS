@@ -49,9 +49,6 @@ public class Restore implements Protocol {
 		
 		this.receivedChunks = new ChunkStored[backedupChunks.length];
 		this.fileID = backedupChunks[0].getFileId();
-		
-		System.out.println("Restore: backedupChunks " + backedupChunks.length);
-		System.out.println("Restore: receivedChunks " + receivedChunks.length);
 	}
 	
 	/**
@@ -90,7 +87,6 @@ public class Restore implements Protocol {
 		try {
 			while( !allChunks() ) {
 				lastChunk.await(10, TimeUnit.SECONDS); //Causes the current thread to wait until it is signaled or interrupted, or the specified waiting time elapse
-				System.out.println(allChunks() ? "Got all the answers" : "No answers");
 				break;
 			}
 		} finally {
