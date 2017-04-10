@@ -30,32 +30,32 @@ public class RMIRunner {
 		switch(protocol) {
 		case RMIConst.BACKUP_ARG:
 			if( rmiArgs.length != RMIConst.BACKUP_ARG_SIZE )
-				return "Wrong arguments for protocol BACKUP";
+				return "\nWrong arguments for protocol BACKUP\njava TestApp <peer> BACKUP <file> <rep_degree>";
 			path = rmiArgs[1];
 			rep_degree = Integer.parseInt(rmiArgs[2]);
 			return backUp(path, rep_degree);
 			
 		case RMIConst.RESTORE_ARG:
 			if( rmiArgs.length != RMIConst.RESTORE_ARG_SIZE )
-				return "Wrong arguments for protocol RESTORE";
+				return "\nWrong arguments for protocol RESTORE\njava TestApp <peer> RESTORE <file>";
 			path = rmiArgs[1];
 			return restore(path);
 			
 		case RMIConst.DELETE_ARG:
 			if( rmiArgs.length != RMIConst.DELETE_ARG_SIZE )
-				return "Wrong arguments for protocol DELETE";
+				return "\nWrong arguments for protocol DELETE\njava TestApp <peer> DELETE <file>";
 			path = rmiArgs[1];
 			return delete(path);
 			
 		case RMIConst.RECLAIM_ARG:
 			if( rmiArgs.length != RMIConst.RECLAIM_ARG_SIZE )
-				return "Wrong arguments for protocol RECLAIM";
+				return "\nWrong arguments for protocol RECLAIM\njava TestApp <peer> RECLAIM <space>";
 			String capacity = rmiArgs[1];
 			return reclaim(capacity);
 			
 		case RMIConst.STATE_ARG:
 			if( rmiArgs.length != RMIConst.STATE_ARG_SIZE )
-				return "Wrong arguments for protocol STATE";
+				return "\nWrong arguments for protocol STATE\njava TestApp <peer> STATE";
 			return state();
 			
 		case RMIConst.CLOSE_ARG:

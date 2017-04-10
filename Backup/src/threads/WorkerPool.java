@@ -14,7 +14,7 @@ public class WorkerPool implements ThreadPool {
 	private static final int NUMBER_THREADS = 10;		//Maximum number of threads
 	
 	private ExecutorService service;					//Service's executor
-	private int nThreads = 0;							//Atual number of threads
+	private int nThreads = 0;							//Actual number of threads
 	
 	/**
 	 * WorkerPool's constructor
