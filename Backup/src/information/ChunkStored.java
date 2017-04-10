@@ -67,7 +67,7 @@ public class ChunkStored extends Chunk {
 
 	/**
 	 * Sets the variable prepdeg to a new value
-	 * @param prepdeg the new value of prepdeg
+	 * @param prepdeg The new value of prepdeg
 	 */
 	public void setPRepDeg(int prepdeg) {
 		this.prepdeg = prepdeg;

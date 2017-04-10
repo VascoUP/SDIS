@@ -94,7 +94,7 @@ public class FileInfo {
 	 * @param chunk Chunk that will be compared
 	 */
 	public static void eliminateSameBackedUpChunk(Chunk chunk) {
-		lock.lock();
+		lock.lock(); //Acquires the lock
 		try {
 			for (Iterator<ChunkBackedUp> iterator = backedUpChunks.iterator(); iterator.hasNext(); ) {
 				ChunkBackedUp c = iterator.next();
@@ -105,7 +105,7 @@ public class FileInfo {
 			    }
 			}
 		} finally {
-			lock.unlock();
+			lock.unlock(); //Releases the lock
 		}
 	}
 	

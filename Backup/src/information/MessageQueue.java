@@ -11,6 +11,7 @@ import message.QueueableMessage;
  *
  */
 public class MessageQueue {
+	
 	private static BlockingQueue<QueueableMessage> messageQueue = new LinkedBlockingQueue<QueueableMessage>(64); //Creates a BlockingQueue with the queueable messages
 	
 	/**
