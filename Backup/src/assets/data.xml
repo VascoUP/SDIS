@@ -2,5 +2,5 @@
 <!DOCTYPE metadata SYSTEM "metadata.dtd">
 <metadata>
 <!--This is where we store information about the chunks-->
-<diskspace size="7000000"/>
+<diskspace size="64000"/>
 </metadata>
