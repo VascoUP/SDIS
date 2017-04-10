@@ -113,6 +113,7 @@ public class RestoreSender extends ChannelSender {
 		
 		do {
 			sendMessage();
+			System.out.println("RestoreSender: sent message");
 			cooldown(1000);			
 		} while( !condition() && ++nTries < MAX_NUMBER_TRIES );
 

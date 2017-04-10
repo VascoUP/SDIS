@@ -3,9 +3,11 @@ package workerHandlers;
 import java.io.IOException;
 
 import file.HandleFile;
+import information.MessagesHashmap;
 import information.PeerInfo;
 import information.Version;
 import message.BasicMessage;
+import message.InfoToMessage;
 import message.MessageInfoChunk;
 import message.MessageInfoGetChunk;
 import message.MessageToInfo;
@@ -70,12 +72,30 @@ public abstract class WaitGetChunk extends MessageServiceWait {
 	}
 	
 	/**
+	 * Starts the service
+	 */
+	public void start() {
+		MessageInfoGetChunk restoreMessage = (MessageInfoGetChunk) info;
+		MessageInfoChunk m1 = new MessageInfoChunk(
+								Version.instance.getVersionProtocol(),
+								PeerInfo.peerInfo.getServerID(), 
+								restoreMessage.getFileID(), 
+								restoreMessage.getChunkID(),
+								new byte[0]);
+		BasicMessage m2 = InfoToMessage.toMessage(m1);
+		MessagesHashmap.removeKey(m2);
+		
+		if( randomWait() && condition() )
+			service();
+	}
+	
+	/**
 	 * Starts the service provided
 	 * @param time Service's time
 	 * @param message Basic message
 	 */
 	public static void serve(long time, BasicMessage message) {
-		WaitGetChunk gc;
+		WaitGetChunk gc;		
 		if( Version.isEnhanced() )
 			gc = new WaitGetChunkEnhancedVersion(time, message);
 		else

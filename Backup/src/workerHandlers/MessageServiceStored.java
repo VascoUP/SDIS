@@ -33,9 +33,6 @@ public class MessageServiceStored extends MessageService {
 			return ;
 		cStored.setPRepDeg(1+cStored.getPRepDeg());
 		FileInfo.updateStoredChunk(cStored);
-		System.out.println("MessageServiceStored: Update PREPDEG of \n" + 
-				stored.getFileID() + " - " + stored.getChunkID() + "\n" +
-				"to " + cStored.getPRepDeg());
 	}
 
 	/**

@@ -1,5 +1,6 @@
 package workerHandlers;
 
+import information.MessagesHashmap;
 import information.PeerInfo;
 import information.Version;
 import message.BasicMessage;
@@ -28,21 +29,21 @@ public class MessageToService {
 		if( senderID == PeerInfo.peerInfo.getServerID() ||
 			!versionProtocol.equals(Version.instance.getVersionProtocol()) )
 			return ;
+		
+		MessagesHashmap.addMessage(message);
 
 		switch(messageType) {
 		case MessageConst.PUTCHUNK_MESSAGE_TYPE:
-			System.out.println("MessageToService: recieved PUTCHUNK");
 			WaitStoreChunk.serve(time, message);
 			break;
 		case MessageConst.STORED_MESSAGE_TYPE:
-			System.out.println("MessageToService: recieved STORED");
 			MessageServiceStored.serve(time, message);
 			break;
 		case MessageConst.RESTORE_MESSAGE_TYPE:
 			WaitGetChunk.serve(time, message);
 			break;
 		case MessageConst.CHUNK_MESSAGE_TYPE:
-			MessageServiceChunk.serve(time, message);
+			//MessageServiceChunk.serve(time, message);
 			break;
 		case MessageConst.DELETE_MESSAGE_TYPE:
 			MessageServiceDelete.serve(time, message);

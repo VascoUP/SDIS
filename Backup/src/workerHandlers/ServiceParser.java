@@ -1,7 +1,6 @@
 package workerHandlers;
 
 import information.MessageQueue;
-import information.MessagesHashmap;
 import message.BasicMessage;
 import message.MessageParser;
 import message.QueueableMessage;
@@ -46,7 +45,6 @@ public class ServiceParser {
 		if( bm == null )
 			return ;
 		
-		MessagesHashmap.addMessage(bm);
 		MessageToService.processMessage(message.getTime(), bm);
 	}
 }
