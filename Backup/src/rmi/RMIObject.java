@@ -54,7 +54,6 @@ public class RMIObject implements Instructable {
             // This call will throw an exception if the registry does not already exist\
 			registry.unbind(PeerInfo.peerInfo.getAccessPoint());
 		} catch (Exception e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 			return ;
 		}

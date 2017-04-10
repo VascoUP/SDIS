@@ -1,5 +1,5 @@
 Para compilar o programa deve-se compilar todos os packages e ficheiros do mesmo, através do comando:
-	- Para Windows:
+	- Para Windows e Linux:
 		javac connection/*.java file/*.java information/*.java listener/*.java message/*.java protocol/*.java rmi/*.java sender/*.java spacemanaging/*.java threads/*.java workerHandlers/*.java *.java
 
 Para executar a aplicação no lado do cliente, utiliza-se o comando:

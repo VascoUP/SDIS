@@ -92,6 +92,11 @@ public class HandleXMLFile {
 		}
 	}
 
+	/**
+	 * Updates the disk's space
+	 * @param capacity Disk's capacity
+	 * @throws Exception The class Exception and its subclasses are a form of Throwable that indicates conditions that a reasonable application might want to catch
+	 */
 	public static void updateDiskSpace(int capacity) throws Exception {
 		lock.lock(); //Acquires the lock
 		try {
