@@ -400,9 +400,9 @@ public class FileInfo {
 	public static String getString(){
 		StringBuilder message = new StringBuilder();
 		
-		lock.lock();
+		lock.lock(); //Acquires the lock
 		try {
-			message.append("Stored size: ");
+			message.append("\nStored size: ");
 			message.append(getStoredSize());
 			message.append("\n");
 			
@@ -438,7 +438,7 @@ public class FileInfo {
 				message.append("\n");
 			}
 		} finally {
-			lock.unlock();
+			lock.unlock(); //Releases the lock
 		}
 		
 		return new String(message);

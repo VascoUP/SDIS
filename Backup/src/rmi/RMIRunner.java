@@ -44,9 +44,9 @@ public class RMIRunner {
 				return "Wrong arguments for protocol DELETE";
 			path = rmiArgs[1];
 			return delete(path);
-		case "SETCAPACITY":
+		case "RECLAIM":
 			if( rmiArgs.length != 2 )
-				return "Wrong arguments for protocol SETCAPACITY";
+				return "Wrong arguments for protocol RECLAIM";
 			String capacity = rmiArgs[1];
 			return reclaim(capacity);
 		case "STATE":
