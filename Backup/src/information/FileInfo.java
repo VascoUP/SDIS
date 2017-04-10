@@ -406,36 +406,40 @@ public class FileInfo {
 			message.append(getStoredSize());
 			message.append("\n");
 			
-			message.append("\nStored Chunks\n");
-			for(int i=0; i<storedChunks.size(); i++) {
-				message.append("Chunk ID: ");
-				message.append(storedChunks.get(i).chunkId);
-				message.append("\n");
-				message.append("- Size: ");
-				message.append(storedChunks.get(i).getSize());
-				message.append("\n");
-				message.append("- Perceived Replication Degree: ");
-				message.append(storedChunks.get(i).getPRepDeg());
-				message.append("\n");
+			if(storedChunks.size() != 0){
+				message.append("\nStored Chunks\n");
+				for(int i=0; i<storedChunks.size(); i++) {
+					message.append("Chunk ID: ");
+					message.append(storedChunks.get(i).chunkId);
+					message.append("\n");
+					message.append("- Size: ");
+					message.append(storedChunks.get(i).getSize());
+					message.append("\n");
+					message.append("- Perceived Replication Degree: ");
+					message.append(storedChunks.get(i).getPRepDeg());
+					message.append("\n");
+				}
 			}
 			
-			message.append("\nBackuped Chunks\n");
-			for(int j=0; j<backedUpChunks.size(); j++) {
-				message.append("File pathname: ");
-				message.append(backedUpChunks.get(j).getStorePath());
-				message.append("\n");
-				message.append("- Backup ID: ");
-				message.append(backedUpChunks.get(j).getServiceID());
-				message.append("\n");
-				message.append("- Desired Replication Degree: ");
-				message.append(backedUpChunks.get(j).getDRepDeg());
-				message.append("\n");
-				message.append("- Chunk ID: ");
-				message.append(backedUpChunks.get(j).getChunkId());
-				message.append("\n");
-				message.append("- Chunk Perceived Replication Degree: ");
-				message.append(backedUpChunks.get(j).getPRepDeg());
-				message.append("\n");
+			if(backedUpChunks.size() != 0){
+				message.append("\nBackuped Chunks\n");
+				for(int j=0; j<backedUpChunks.size(); j++) {
+					message.append("File pathname: ");
+					message.append(backedUpChunks.get(j).getStorePath());
+					message.append("\n");
+					message.append("- Backup ID: ");
+					message.append(backedUpChunks.get(j).getServiceID());
+					message.append("\n");
+					message.append("- Desired Replication Degree: ");
+					message.append(backedUpChunks.get(j).getDRepDeg());
+					message.append("\n");
+					message.append("- Chunk ID: ");
+					message.append(backedUpChunks.get(j).getChunkId());
+					message.append("\n");
+					message.append("- Chunk Perceived Replication Degree: ");
+					message.append(backedUpChunks.get(j).getPRepDeg());
+					message.append("\n");
+				}
 			}
 		} finally {
 			lock.unlock(); //Releases the lock
