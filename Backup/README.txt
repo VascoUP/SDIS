@@ -30,3 +30,7 @@ onde:
 
 Exemplo:
 java Peer 1.0 1 2 225.4.5.6 5000 226.4.5.6 5001 227.4.5.6 5002
+
+
+Sara Fernandes, up201405955
+Vasco Pereira, up201403485
