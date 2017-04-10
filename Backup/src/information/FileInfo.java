@@ -2,8 +2,6 @@ package information;
 
 import java.util.ArrayList;
 import java.util.Iterator;
-import java.util.concurrent.locks.Lock;
-import java.util.concurrent.locks.ReentrantLock;
 
 import file.HandleFile;
 import file.HandleXMLFile;
@@ -17,8 +15,6 @@ public class FileInfo {
 	private static ArrayList<ChunkStored> storedChunks;			//ArrayList with the stored chunks
 	private static ArrayList<ChunkBackedUp> backedUpChunks;		//ArrayList with the backed up chunks
 	
-	private static Lock lock = new ReentrantLock(); 			//Creates an instance of ReentrantLock
-
 	/**
 	 * Gets the ArrayList with the stored chunks
 	 * @return The ArrayList with the stored chunks
@@ -74,8 +70,7 @@ public class FileInfo {
 	 * @param path File's path
 	 */
 	public static void eliminateBackedUpFile(String path) {
-		lock.lock(); //Acquires the lock
-		try {
+		 synchronized(FileInfo.class) {
 			for (Iterator<ChunkBackedUp> iterator = backedUpChunks.iterator(); iterator.hasNext(); ) {
 			    Chunk c = iterator.next();
 			    if (c.getStorePath().equals(path)) {
@@ -84,8 +79,6 @@ public class FileInfo {
 			}
 			
 	    	fileElimBackedUpFile(path);
-		} finally {
-			lock.unlock(); //Releases the lock
 		}
 	}
 	
@@ -94,8 +87,7 @@ public class FileInfo {
 	 * @param chunk Chunk that will be compared
 	 */
 	public static void eliminateSameBackedUpChunk(Chunk chunk) {
-		lock.lock(); //Acquires the lock
-		try {
+		synchronized(FileInfo.class) {
 			for (Iterator<ChunkBackedUp> iterator = backedUpChunks.iterator(); iterator.hasNext(); ) {
 				ChunkBackedUp c = iterator.next();
 			    if (c.getChunkId() == chunk.getChunkId() && 
@@ -104,8 +96,6 @@ public class FileInfo {
 			        iterator.remove();
 			    }
 			}
-		} finally {
-			lock.unlock(); //Releases the lock
 		}
 	}
 	
@@ -114,8 +104,7 @@ public class FileInfo {
 	 * @param fileID File's ID
 	 */
 	public static void eliminateStoredFile(String fileID) {
-		lock.lock(); //Acquires the lock
-		try {
+		 synchronized(FileInfo.class) {
 			for (Iterator<ChunkStored> iterator = storedChunks.iterator(); iterator.hasNext(); ) {
 			    Chunk c = iterator.next();
 			    if (c.getFileId().equals(fileID)) {
@@ -125,8 +114,6 @@ public class FileInfo {
 			}
 			
 			fileElimStoredFile(fileID);
-		} finally {
-			lock.unlock(); //Releases the lock
 		}
 	}
 	
@@ -135,8 +122,7 @@ public class FileInfo {
 	 * @param chunk Chunk that will be compared
 	 */
 	public static void eliminateSameStoredChunk(Chunk chunk) {
-		lock.lock(); //Acquires the lock
-		try {
+		 synchronized(FileInfo.class) {
 			for (Iterator<ChunkStored> iterator = storedChunks.iterator(); iterator.hasNext(); ) {
 				ChunkStored c = iterator.next();
 			    if (c.getChunkId() == chunk.getChunkId() && 
@@ -145,8 +131,6 @@ public class FileInfo {
 			        iterator.remove();
 			    }
 			}
-		} finally {
-			lock.unlock(); //Releases the lock
 		}
 	}
 	
@@ -184,8 +168,7 @@ public class FileInfo {
 	 * @param chunk update chunk with new values
 	 */
 	public static void updateStoredChunk(ChunkStored chunk) {
-		lock.lock(); //Acquires the lock
-		try {
+		 synchronized(FileInfo.class) {
 			for (Iterator<ChunkStored> iterator = storedChunks.iterator(); iterator.hasNext(); ) {
 				ChunkStored c = iterator.next();
 			    if (c.getChunkId() == chunk.getChunkId() && 
@@ -193,8 +176,6 @@ public class FileInfo {
 			        iterator.remove();
 			}
 			storedChunks.add(chunk);
-		} finally {
-			lock.unlock(); //Releases the lock
 		}
 	}
 	
@@ -317,19 +298,14 @@ public class FileInfo {
 	 * @return A array with all the backed up chunks
 	 */
 	public static ChunkBackedUp[] findAllBackedUpChunks(String path) {
-		ArrayList<Chunk> chunks = new ArrayList<Chunk>();
-		
-		lock.lock(); //Acquires the lock
-		try {
+		synchronized(FileInfo.class) {
+			ArrayList<Chunk> chunks = new ArrayList<Chunk>();
 			for( ChunkBackedUp c : backedUpChunks ) {
 				if( c.getStorePath().equals(path) )
 					chunks.add(c);			
 			}
-		} finally {
-			lock.unlock(); //Releases the lock
+			return chunks.toArray(new ChunkBackedUp[chunks.size()]);
 		}
-		
-		return chunks.toArray(new ChunkBackedUp[chunks.size()]);
 	}
 	
 	/**
@@ -338,10 +314,8 @@ public class FileInfo {
 	 * @return A array with all the backed up chunks
 	 */
 	public static ChunkBackedUp findBackedUpChunk(String fileID, int chunkID) {
-		ChunkBackedUp chunk = null;
-		
-		lock.lock(); //Acquires the lock
-		try {
+		synchronized(FileInfo.class) {
+			ChunkBackedUp chunk = null;
 			for( ChunkBackedUp c : backedUpChunks ) {
 				if( c.getChunkId() == chunkID &&
 					c.getFileId().equals(fileID) ) {
@@ -349,11 +323,8 @@ public class FileInfo {
 					break;
 				}
 			}
-		} finally {
-			lock.unlock(); //Releases the lock
+			return chunk;
 		}
-		
-		return chunk;
 	}
 	
 	/**
@@ -362,19 +333,14 @@ public class FileInfo {
 	 * @return A array with all the stored chunks
 	 */
 	public static Chunk[] findAllStoredChunks(String fileID) {
-		ArrayList<Chunk> chunks = new ArrayList<Chunk>();
-
-		lock.lock(); //Acquires the lock
-		try {
+		synchronized(FileInfo.class) {
+			ArrayList<Chunk> chunks = new ArrayList<Chunk>();
 			for( Chunk c : storedChunks ) {
 				if( c.getFileId().equals(fileID) )
 					chunks.add(c);			
 			}
-		} finally {
-			lock.unlock(); //Releases the lock
+			return chunks.toArray(new Chunk[chunks.size()]);
 		}
-		
-		return chunks.toArray(new Chunk[chunks.size()]);
 	}
 	
 	/**
@@ -384,20 +350,16 @@ public class FileInfo {
 	 * @return The stored chunk found
 	 */
 	public static ChunkStored findStoredChunk(String fileID, int chunkID) {
-		ChunkStored chunk = null;
-		lock.lock(); //Acquires the lock
-		try {
+		synchronized(FileInfo.class) {
+			ChunkStored chunk = null;
 			for( ChunkStored c : storedChunks ) {
 				if( c.getChunkId() == chunkID && c.getFileId().equals(fileID) ) {
 					chunk = c;
 					break;
 				}
 			}
-		} finally {
-			lock.unlock(); //Releases the lock
+			return chunk;
 		}
-		
-		return chunk;
 	}
 	
 	
@@ -417,10 +379,9 @@ public class FileInfo {
 	 * @return The information saved into the backed up chunks and the stored chunks
 	 */
 	public static String getString(){
-		StringBuilder message = new StringBuilder();
-		
-		lock.lock(); //Acquires the lock
-		try {
+		synchronized(FileInfo.class) {
+			StringBuilder message = new StringBuilder();
+
 			message.append("\nStored size: ");
 			message.append(getStoredSize());
 			message.append("\n");
@@ -428,6 +389,9 @@ public class FileInfo {
 			if(storedChunks.size() != 0){
 				message.append("\nStored Chunks\n");
 				for(int i=0; i<storedChunks.size(); i++) {
+					message.append("Chunk ID: ");
+					message.append(storedChunks.get(i).fileId);
+					message.append("\n");
 					message.append("Chunk ID: ");
 					message.append(storedChunks.get(i).chunkId);
 					message.append("\n");
@@ -449,21 +413,19 @@ public class FileInfo {
 					message.append("- Backup ID: ");
 					message.append(backedUpChunks.get(j).getServiceID());
 					message.append("\n");
-					message.append("- Desired Replication Degree: ");
-					message.append(backedUpChunks.get(j).getDRepDeg());
-					message.append("\n");
 					message.append("- Chunk ID: ");
 					message.append(backedUpChunks.get(j).getChunkId());
+					message.append("\n");
+					message.append("- Desired Replication Degree: ");
+					message.append(backedUpChunks.get(j).getDRepDeg());
 					message.append("\n");
 					message.append("- Chunk Perceived Replication Degree: ");
 					message.append(backedUpChunks.get(j).getPRepDeg());
 					message.append("\n");
 				}
 			}
-		} finally {
-			lock.unlock(); //Releases the lock
-		}
 		
-		return new String(message);
+			return new String(message);
+		}
 	}
 }
