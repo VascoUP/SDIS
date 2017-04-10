@@ -57,9 +57,11 @@ public class WaitPutChunk extends MessageServiceWait {
 								0,
 								new byte[0]);
 		BasicMessage m2 = InfoToMessage.toMessage(m1);
+		ChunkStored chunk = FileInfo.findStoredChunk(info.getFileID(), info.getChunkID());
 		
 		return 	info != null && m2 != null &&
-				MessagesHashmap.getSize(m2) < 1;
+				MessagesHashmap.getSize(m2) < 1 &&
+				chunk.getPRepDeg() - 1 < chunk.getDRepDeg();
 	}
 	
 	/**
@@ -81,6 +83,7 @@ public class WaitPutChunk extends MessageServiceWait {
 			data = HandleFile.readFile(fileName);
 			if( data == null )
 				return ;
+			System.out.println("WaitPutChunk: Init putchunk protocol");
 			ThreadManager.initBackUp(
 					new BackUpSender(
 						fileName,
@@ -100,8 +103,10 @@ public class WaitPutChunk extends MessageServiceWait {
 	 * Starts the service
 	 */
 	public void start() {
-		if( !canInitiateProtocol() )
+		if( !canInitiateProtocol() ) {
+			System.out.println("WaitPutChunk: Can't initiate Putchunk protocol");
 			return ;
+		}
 
 		MessageInfoRemoved restoreMessage = (MessageInfoRemoved) info;
 		MessageInfoPutChunk m1 = new MessageInfoPutChunk(
@@ -116,6 +121,8 @@ public class WaitPutChunk extends MessageServiceWait {
 		
 		if( randomWait() && condition() )
 			service();
+		else
+			System.out.println("WaitPutChunk: Didnt pass the condition");
 	}
 	
 	/**

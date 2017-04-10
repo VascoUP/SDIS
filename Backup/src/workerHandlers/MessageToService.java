@@ -42,9 +42,6 @@ public class MessageToService {
 		case MessageConst.RESTORE_MESSAGE_TYPE:
 			WaitGetChunk.serve(time, message);
 			break;
-		case MessageConst.CHUNK_MESSAGE_TYPE:
-			//MessageServiceChunk.serve(time, message);
-			break;
 		case MessageConst.DELETE_MESSAGE_TYPE:
 			MessageServiceDelete.serve(time, message);
 			break;

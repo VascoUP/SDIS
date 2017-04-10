@@ -33,6 +33,7 @@ public class Remove implements Protocol {
 	@Override
 	public void initialize_sender() throws IOException {
 		for( ChunkStored c : removeChunks ) {
+			System.out.println(c.getPRepDeg() + " vs " + c.getDRepDeg());
 			if( c.getPRepDeg() - 1 < c.getDRepDeg() ) {
 				RemovedSender sender = new RemovedSender(
 						new MessageInfoRemoved(
@@ -40,6 +41,7 @@ public class Remove implements Protocol {
 								PeerInfo.peerInfo.getServerID(),
 								c.getFileId(),
 								c.getChunkId()));
+				System.out.println("Sending removed");
 				sender.execute();
 			}
 		}

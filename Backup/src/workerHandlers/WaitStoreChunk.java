@@ -128,7 +128,7 @@ public abstract class WaitStoreChunk extends MessageServiceWait {
 		fileID = info.getFileID();
 		chunkID = info.getChunkID();
 		fileName = HandleFile.getFileName(fileID, chunkID);
-		
+		System.out.println("Sending stored message");
 		chunk = new ChunkStored(fileName, fileID, chunkID, info.getReplicationDegree(), prepdeg + 1, info.getChunk());
 		try {
 			sendMessage();
@@ -157,8 +157,19 @@ public abstract class WaitStoreChunk extends MessageServiceWait {
 			return ;
 		}
 		
+		MessageInfoPutChunk restoreMessage = (MessageInfoPutChunk) info;
+		MessageInfoStored m1 = new MessageInfoStored(
+								Version.instance.getVersionProtocol(),
+								PeerInfo.peerInfo.getServerID(), 
+								restoreMessage.getFileID(), 
+								restoreMessage.getChunkID());
+		BasicMessage m2 = InfoToMessage.toMessage(m1);
+		MessagesHashmap.removeKey(m2);
+		
 		if( randomWait() && condition() )
 			service();
+		else
+			System.out.println("WaitStoreChunk: Didnt passe the condition");
 	}
 	
 	/**
@@ -167,6 +178,7 @@ public abstract class WaitStoreChunk extends MessageServiceWait {
 	 * @param message Basic message
 	 */
 	public static void serve(long time, BasicMessage message) {
+		System.out.println("Recieved PutChunk");
 		WaitStoreChunk wsc;
 		if( Version.isEnhanced() )
 			wsc = new WaitStoreChunkEnhancedVersion(time, message);
