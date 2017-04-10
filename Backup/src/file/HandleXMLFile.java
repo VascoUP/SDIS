@@ -92,6 +92,21 @@ public class HandleXMLFile {
 		}
 	}
 
+	public static void updateDiskSpace(int capacity) throws Exception {
+		lock.lock(); //Acquires the lock
+		try {
+	        Document doc = initXML(); //Initiates the XML file
+
+	        NodeList nodes = doc.getElementsByTagName(FileConst.DISKSPACE_ELEM);
+            Element diskspace = (Element)nodes.item(0);
+            diskspace.setAttribute(FileConst.SIZE_ELEM, capacity + "");
+	        
+	        finalizeXML(doc);
+		} finally {
+			lock.unlock(); //Releases the lock
+		}
+	}
+	
 	/**
 	 * Reads the XML document
 	 * @throws Exception Indicates conditions that a reasonable application might want to catch

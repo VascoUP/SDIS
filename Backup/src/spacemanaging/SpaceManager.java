@@ -2,6 +2,7 @@ package spacemanaging;
 
 import java.util.Set;
 
+import file.HandleXMLFile;
 import information.ChunkStored;
 import information.FileInfo;
 import protocol.Remove;
@@ -47,6 +48,10 @@ public class SpaceManager {
 	 * @param nCapacity New disk's capacity
 	 */
 	public void setCapacity(int nCapacity) {
+		try {
+			HandleXMLFile.updateDiskSpace(nCapacity);
+		} catch (Exception ignore) {
+		}
 		int currCapacity = diskCapacity;
 		diskCapacity = nCapacity;
 		if( currCapacity <= nCapacity ) {
