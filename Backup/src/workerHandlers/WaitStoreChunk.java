@@ -44,6 +44,9 @@ public abstract class WaitStoreChunk extends MessageServiceWait {
 			return ;
 		cStored.setPRepDeg(prepdeg);
 		FileInfo.updateStoredChunk(cStored);
+		System.out.println("WaitStoreChunk: Update PREPDEG of \n" + 
+				cStored.getFileId() + " - " + cStored.getChunkId() + "\n" +
+				"to " + cStored.getPRepDeg());
 	}
 	
 	/**

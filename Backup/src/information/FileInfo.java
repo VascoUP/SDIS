@@ -388,7 +388,7 @@ public class FileInfo {
 		lock.lock(); //Acquires the lock
 		try {
 			for( ChunkStored c : storedChunks ) {
-				if( c.getFileId().equals(fileID) ) {
+				if( c.getChunkId() == chunkID && c.getFileId().equals(fileID) ) {
 					chunk = c;
 					break;
 				}

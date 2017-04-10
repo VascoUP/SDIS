@@ -31,9 +31,11 @@ public class MessageToService {
 
 		switch(messageType) {
 		case MessageConst.PUTCHUNK_MESSAGE_TYPE:
+			System.out.println("MessageToService: recieved PUTCHUNK");
 			WaitStoreChunk.serve(time, message);
 			break;
 		case MessageConst.STORED_MESSAGE_TYPE:
+			System.out.println("MessageToService: recieved STORED");
 			MessageServiceStored.serve(time, message);
 			break;
 		case MessageConst.RESTORE_MESSAGE_TYPE:
