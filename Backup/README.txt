@@ -1,8 +1,14 @@
-Para compilar o programa deve-se compilar todos os packages e ficheiros do mesmo, através do comando:
-	- Para Windows e Linux:
-		javac connection/*.java file/*.java information/*.java listener/*.java message/*.java protocol/*.java rmi/*.java sender/*.java spacemanaging/*.java threads/*.java workerHandlers/*.java *.java
+Para compilar o programa pode-se usar os scripts criados quer para Windows quer para Linux ou correr através da linha de comandos/terminal.
+- Caso se queira correr através da linha de comandos/terminal, quer no Windows quer no Linux, deve-se entrar na pasta src do projeto (através de cd src) e depois para compilar todos os ficheiros é necessário escrever:
+		
+	javac connection/*.java file/*.java information/*.java listener/*.java message/*.java protocol/*.java rmi/*.java sender/*.java spacemanaging/*.java threads/*.java workerHandlers/*.java *.java
 
-NOTA: Para Windows existe ainda um ficheiro .bat que pode ser executado através da linha de comandos. Para tal basta escrever "script" e o ficheiro é executado e o programa é compilado.
+- Caso se queria usar os scripts:
+	- Para Windows:
+		Basta estar na pasta do projeto (não a pasta src) e escrever "script" na linha de comandos, uma vez que o script entra na pasta "src" e compila os ficheiros.
+	
+	- Para Linux:
+		Basta estar na pasta do projeto (não a pasta src) e escrever o seguinte comando no terminal, para compilar os ficheiros: sh scriptLinux.sh
 
 
 
