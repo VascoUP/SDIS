@@ -389,14 +389,17 @@ public class FileInfo {
 			if(storedChunks.size() != 0){
 				message.append("\nStored Chunks\n");
 				for(int i=0; i<storedChunks.size(); i++) {
-					message.append("Chunk ID: ");
-					message.append(storedChunks.get(i).fileId);
+					message.append("File ID: ");
+					message.append(storedChunks.get(i).getFileId());
 					message.append("\n");
-					message.append("Chunk ID: ");
-					message.append(storedChunks.get(i).chunkId);
+					message.append("- Chunk ID: ");
+					message.append(storedChunks.get(i).getChunkId());
 					message.append("\n");
 					message.append("- Size: ");
 					message.append(storedChunks.get(i).getSize());
+					message.append("\n");
+					message.append("- Desired Replication Degree: ");
+					message.append(storedChunks.get(i).getDRepDeg());
 					message.append("\n");
 					message.append("- Perceived Replication Degree: ");
 					message.append(storedChunks.get(i).getPRepDeg());
@@ -410,11 +413,11 @@ public class FileInfo {
 					message.append("File pathname: ");
 					message.append(backedUpChunks.get(j).getStorePath());
 					message.append("\n");
-					message.append("- Backup ID: ");
-					message.append(backedUpChunks.get(j).getServiceID());
-					message.append("\n");
 					message.append("- Chunk ID: ");
 					message.append(backedUpChunks.get(j).getChunkId());
+					message.append("\n");
+					message.append("- Backup ID: ");
+					message.append(backedUpChunks.get(j).getServiceID());
 					message.append("\n");
 					message.append("- Desired Replication Degree: ");
 					message.append(backedUpChunks.get(j).getDRepDeg());

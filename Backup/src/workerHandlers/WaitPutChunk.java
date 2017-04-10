@@ -12,7 +12,9 @@ import message.BasicMessage;
 import message.InfoToMessage;
 import message.MessageInfoPutChunk;
 import message.MessageInfoRemoved;
+import message.MessageInfoStored;
 import message.MessageToInfo;
+import sender.AnswerBackUpSender;
 import sender.BackUpSender;
 import threads.ThreadManager;
 
@@ -92,8 +94,18 @@ public class WaitPutChunk extends MessageServiceWait {
 								PeerInfo.peerInfo.getServerID(),
 								fileID, 
 								chunkID,
-								chunk.getDRepDeg() - 1, 
+								chunk.getDRepDeg(), 
 								data)));
+			
+			wait(50);
+			
+			AnswerBackUpSender abup = new AnswerBackUpSender(
+					new MessageInfoStored(
+						Version.instance.getVersionProtocol(),
+						PeerInfo.peerInfo.getServerID(),
+						fileID, 
+						chunkID));
+			abup.execute();
 		} catch (IOException ignore) {
 		}
 	}

@@ -83,7 +83,8 @@ public class BackUpSender extends ChannelSender {
 							backupMessage.getChunkID(),
 							backupMessage.getReplicationDegree(),
 							prepdeg));
-		else
+		else {
+			System.out.println(prepdeg);
 			FileInfo.addStoredChunk(
 					new ChunkStored(
 						filePath, 
@@ -92,6 +93,7 @@ public class BackUpSender extends ChannelSender {
 						backupMessage.getReplicationDegree(),
 						prepdeg + 1, 
 						new byte[0]));
+		}
 	}
 	
 	/**
@@ -109,6 +111,15 @@ public class BackUpSender extends ChannelSender {
 	@Override
 	public void execute() {
 		int nTries = 0;
+
+		MessageInfoPutChunk backupMessage = (MessageInfoPutChunk) message;
+		MessageInfoStored m1 = new MessageInfoStored(
+				Version.instance.getVersionProtocol(), 
+				PeerInfo.peerInfo.getServerID(), 
+				backupMessage.getFileID(), 
+				backupMessage.getChunkID());
+		BasicMessage m2 = InfoToMessage.toMessage(m1);
+		MessagesHashmap.removeKey(m2);
 		
 		do {
 			sendMessage();
