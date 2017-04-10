@@ -37,6 +37,7 @@ public class MessageToService {
 			WaitStoreChunk.serve(time, message);
 			break;
 		case MessageConst.STORED_MESSAGE_TYPE:
+			System.out.println("Recieved store");
 			MessageServiceStored.serve(time, message);
 			break;
 		case MessageConst.RESTORE_MESSAGE_TYPE:

@@ -50,7 +50,7 @@ public class BackUpSender extends ChannelSender {
 				backupMessage.getChunkID());
 		BasicMessage m2 = InfoToMessage.toMessage(m1);
 		if( m2 != null )
-			prepdeg = MessagesHashmap.getSize(m2);
+			prepdeg = MessagesHashmap.getSize(m2) + (addToFile ? 0 : 1);
 		return prepdeg;
 	}
 	
@@ -91,7 +91,7 @@ public class BackUpSender extends ChannelSender {
 						backupMessage.getFileID(), 
 						backupMessage.getChunkID(),
 						backupMessage.getReplicationDegree(),
-						prepdeg + 1, 
+						prepdeg, 
 						new byte[0]));
 		}
 	}

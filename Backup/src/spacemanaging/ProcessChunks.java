@@ -94,6 +94,6 @@ public class ProcessChunks {
 		double percentageSize = 100 * chunk.getSize() / MessageConst.CHUNKSIZE;
 		double percentageRemainingSpace = 
 				 100 * (FileInfo.getStoredSize() - chunk.getSize()) / SpaceManager.instance.getCapacity();
-		return percentageTime + 4 * percentageRemainingSpace + 0.2 * percentageSize;
+		return percentageTime - 4 * percentageRemainingSpace + 400  + 0.2 * percentageSize;
 	}
 }
