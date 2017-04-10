@@ -83,8 +83,7 @@ public class BackUpSender extends ChannelSender {
 							backupMessage.getChunkID(),
 							backupMessage.getReplicationDegree(),
 							prepdeg));
-		else {
-			System.out.println(prepdeg);
+		else 
 			FileInfo.addStoredChunk(
 					new ChunkStored(
 						filePath, 
@@ -93,7 +92,6 @@ public class BackUpSender extends ChannelSender {
 						backupMessage.getReplicationDegree(),
 						prepdeg, 
 						new byte[0]));
-		}
 	}
 	
 	/**
