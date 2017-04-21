@@ -112,6 +112,7 @@ public class RMIRunner {
 			Protocol restore = new Restore(path);
 			restore.run_service();
 		} catch (Exception e) {
+			e.printStackTrace();
 			return "Unsuccessful restore";
 		}
 		return "Successful restore";

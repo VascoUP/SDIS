@@ -301,6 +301,7 @@ public class FileInfo {
 		synchronized(FileInfo.class) {
 			ArrayList<Chunk> chunks = new ArrayList<Chunk>();
 			for( ChunkBackedUp c : backedUpChunks ) {
+				System.out.println(path + " vs " + c.getStorePath());
 				if( c.getStorePath().equals(path) )
 					chunks.add(c);			
 			}
